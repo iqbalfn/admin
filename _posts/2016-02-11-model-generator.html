@@ -1,0 +1,77 @@
+---
+layout: post
+title: Model Generator
+---
+
+<form id="the-form">
+    <input type="text" id="the-table" placeholder="Table Name" autofocus="autofocus" required="required">
+    <button>Generate</button>
+</form>
+
+<div>&#160;</div>
+
+<pre id="the-result"></pre>
+
+<div id="the-downloader" style="text-align:righ"></div>
+
+<script>
+document.querySelector('#the-form')
+.addEventListener('submit', function(e){
+    var tx, modelName, tableName;
+    
+    tableName = document.querySelector('#the-table').value;
+    modelName = tableName[0].toUpperCase() + tableName.substr(1).toLowerCase();
+    
+    modelName = modelName.replace(/[^a-zA-Z0-9]/g, '');
+    
+    tx = [
+        '&lt;?php',
+        '',
+        'if(!defined(\'BASEPATH\'))',
+        '    die;',
+        '',
+        '/**',
+        ' * The model of table `' + tableName + '`',
+        ' */',
+        'class ' + modelName + '_model extends MY_Model',
+        '{',
+        '    /**',
+        '     * Table name',
+        '     * @var string',
+        '     */',
+        '    public $table = \'' + tableName + '\';',
+        '',
+        '    /**',
+        '     * List of table field for formatter rule.',
+        '     * @var array',
+        '     */',
+        '    public $fields = [',
+        '       \'id\'      => \'integer\',',
+        '       \'created\' => \'date\'',
+        '    ];',
+        '',
+        '    /**',
+        '     * Constructor',
+        '     */',
+        '    function __construct(){',
+        '        $this->load->database();',
+        '        parent::__construct();',
+        '    }',
+        '}'
+    ];
+    
+    tx = tx.join('\n');
+    document.querySelector('#the-result').innerHTML = tx;
+    
+    var a = document.createElement('a');
+    a.setAttribute('download', modelName + '_model.php');
+    a.innerHTML = 'Download';
+    
+    tx = tx.replace('&lt;', '<');
+    a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(tx));
+    
+    document.querySelector('#the-downloader').innerHTML = '';
+    document.querySelector('#the-downloader').appendChild(a);
+    e.preventDefault();
+});
+</script>
