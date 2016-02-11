@@ -43,7 +43,7 @@ create_batch
  *
  * @param array rows List of the row to insert.
  *
- * @return boolean true on success false otherwise.
+ * @return number of inserted rows or false.
  */
 {% endhighlight %}
 
