@@ -1,0 +1,54 @@
+DROP TABLE IF EXISTS `enum`;
+CREATE TABLE `enum` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `group` VARCHAR(50),
+    `label` VARCHAR(25),
+    `value` TEXT,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS `site_params`;
+CREATE TABLE `site_params` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(50),
+    `value` TEXT,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS `site_ranks`;
+CREATE TABLE `site_ranks` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `vendor` VARCHAR(50),
+    `rank_international` INTEGER DEFAULT 0,
+    `rank_local` INTEGER DEFAULT 0,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(25) NOT NULL UNIQUE,
+    `fullname` VARCHAR(50),
+    `password` VARCHAR(125),
+    `avatar` VARCHAR(100),
+    `about` TEXT,
+    `website` VARCHAR(125),
+    `socials` TEXT,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS `user_perms`;
+CREATE TABLE `user_perms` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `user` BIGINT NOT NULL,
+    `perms` INTEGER,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS `user_session`;
+CREATE TABLE `user_session` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `user` BIGINT NOT NULL,
+    `hash` VARCHAR(150) NOT NULL UNIQUE,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
