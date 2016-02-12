@@ -3,6 +3,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 /*
 |--------------------------------------------------------------------------
+| Site Vendor
+|--------------------------------------------------------------------------
+|
+| The stuff to add to all respond header as X-Powered-By
+|
+*/
+$config['system_vendor'] = 'IceJJFish';
+
+/*
+|--------------------------------------------------------------------------
+| Site Joke
+|--------------------------------------------------------------------------
+|
+| The message to add to respond header as X-Deadpool
+|
+*/
+$config['header_message'] = 'Please don\'t hurt me. :(';
+
+/*
+|--------------------------------------------------------------------------
 | Base Site URL
 |--------------------------------------------------------------------------
 |
@@ -368,8 +388,8 @@ $config['encryption_key'] = '';
 |
 */
 $config['sess_driver'] = 'files';
-$config['sess_cookie_name'] = 'ci_session';
-$config['sess_expiration'] = 7200;
+$config['sess_cookie_name'] = 'admu';
+$config['sess_expiration'] = 604800;
 $config['sess_save_path'] = NULL;
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;

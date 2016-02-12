@@ -23,3 +23,11 @@ function deb(){
     echo $ctx;
     die;
 }
+
+/**
+ * Check if current env is development
+ * @return boolean true on dev~ false otherwise.
+ */
+function is_dev(){
+    return ENVIRONMENT == 'development';
+}

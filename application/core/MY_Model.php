@@ -92,6 +92,107 @@ class MY_Model extends CI_Model
     }
     
     /**
+     * Get avg value of field.
+     * @param string field The field name to calculate.
+     * @return integer average or false.
+     */
+    public function avg($field){
+        return $this->avgByCond([], $field);
+    }
+    
+    /**
+     * Get avg value of field by field.
+     * @param string where_field The field for condition.
+     * @param mixed|array value The row `$where_field` value or list of `$where_field` values.
+     * @param string field The field name to calculate.
+     * @return integer average number or false.
+     */
+    public function avgBy($where_field, $value, $field){
+        return $this->avgByCond([$where_field=>$value], $field);
+    }
+    
+    /**
+     * Get avg value of field by field.
+     * @param array cond The conditions.
+     * @param string field The field name to calculate.
+     * @return integer avg number or false.
+     */
+    public function avgByCond($cond, $field){
+        $this->_implementCondition($cond);
+        $this->db->select_avg($field);
+        
+        $result = $this->db->get($this->table);
+        
+        if(!$result->num_rows())
+            return false;
+        return $result->row()->$field;
+    }
+    
+    /**
+     * Get total rows
+     * @return integer total rows or false.
+     */
+    public function count(){
+        return $this->countByCond([]);
+    }
+    
+    /**
+     * Get total rows by fields
+     * @param string field The field for condition.
+     * @param mixed|array value The row `$field` value or list of `$field` values.
+     * @return integer total rows or false.
+     */
+    public function countBy($field, $value){
+        return $this->countByCond([$field=>$value]);
+    }
+    
+    /**
+     * Get total rows by conditions
+     * @param array cond The conditions.
+     * @return integer total rows or false.
+     */
+    public function countByCond($cond){
+        $this->_implementCondition($cond);
+        return $this->db->count_all_results($this->table);
+    }
+    
+    /**
+     * Get total rows
+     * @param string field The field to group by
+     * @return integer total rows or false.
+     */
+    public function countGrouped($field){
+        return $this->countGroupedByCond([], $field);
+    }
+    
+    /**
+     * Get total rows by fields
+     * @param string where_field The field for condition
+     * @param mixed|array value The row `$where_field` value or list of `$where_field` values.
+     * @param string field The field for condition.
+     * @return integer total rows or false.
+     */
+    public function countGroupedBy($where_field, $value, $field){
+        return $this->countGroupedByCond([$field=>$value], $field);
+    }
+    
+    /**
+     * Get total rows by conditions
+     * @param array cond The conditions.
+     * @return integer total rows or false.
+     */
+    public function countGroupedByCond($cond, $field){
+        $this->_implementCondition($cond);
+        $this->db->select("$field, COUNT(*) AS total");
+        $this->db->group_by($field);
+        
+        $result = $this->db->get($this->table);
+        if(!$result->num_rows())
+            return false;
+        return prop_as_key($result->result(), $field, 'total');
+    }
+    
+    /**
      * Create new row
      * @param array row The row to insert
      * @return integer inserted id or false.
@@ -109,6 +210,42 @@ class MY_Model extends CI_Model
      */
     public function create_batch($rows){
         return $this->db->insert_batch($this->table, $rows);
+    }
+    
+    /**
+     * Decrease table field by 1 by id.
+     * @param integer|array id The row id or list of row id.
+     * @param string field The field name to update.
+     * @param integer total Total number the field to decrease.
+     * @return true on success, false otherwise.
+     */
+    public function dec($id, $field, $total=1){
+        return $this->decByCond(['id'=>$id], $field, $total);
+    }
+    
+    /**
+     * Decrease table field by 1 by table field.
+     * @param string where_field The field for condition.
+     * @param mixed|array value The row `$where_field` value or list of `$where_field` values.
+     * @param string field The field name to update.
+     * @param integer total Total number the field to decrease.
+     * @return true on success, false otherwise.
+     */
+    public function decBy($where_field, $value, $field, $total=1){
+        return $this->decByCond([$where_field=>$value], $field, $total);
+    }
+    
+    /**
+     * Decrease table field by 1 by conditions
+     * @param array cond The conditions.
+     * @param string field The field name to update.
+     * @param integer total Total number the field to decrease.
+     * @return true on success, false otherwise.
+     */
+    public function decByCond($cond, $field, $total=1){
+        $this->_implementCondition($cond);
+        $this->db->set($field, "$field-$total", false);
+        return $this->db->update($this->table);
     }
     
     /**
@@ -155,8 +292,217 @@ class MY_Model extends CI_Model
         if(!$rows->num_rows())
             return false;
         
-        if($total == 1)
+        if($total === 1)
             return $rows->row();
         return $rows->result();
+    }
+    
+    /**
+     * Increase table field by 1 by id.
+     * @param integer|array id The row id or list of row id.
+     * @param string field The field name to update.
+     * @param integer total Total number the field to increase.
+     * @return true on success, false otherwise.
+     */
+    public function inc($id, $field, $total=1){
+        return $this->incByCond(['id'=>$id], $field, $total);
+    }
+    
+    /**
+     * Increase table field by 1 by table field.
+     * @param string where_field The field for condition.
+     * @param mixed|array value The row `$where_field` value or list of `$where_field` values.
+     * @param string field The field name to update.
+     * @param integer total Total number the field to increase.
+     * @return true on success, false otherwise.
+     */
+    public function incBy($where_field, $value, $field, $total=1){
+        return $this->incByCond([$where_field=>$value], $field, $total);
+    }
+    
+    /**
+     * Increase table field by 1 by conditions
+     * @param array cond The conditions.
+     * @param string field The field name to update.
+     * @param integer total Total number the field to increase.
+     * @return true on success, false otherwise.
+     */
+    public function incByCond($cond, $field, $total=1){
+        $this->_implementCondition($cond);
+        $this->db->set($field, "$field+$total", false);
+        return $this->db->update($this->table);
+    }
+    
+    /**
+     * Get max value of field.
+     * @param string field The field name to select.
+     * @return integer max number or false.
+     */
+    public function max($field){
+        return $this->maxByCond([], $field);
+    }
+    
+    /**
+     * Get max value of field by field.
+     * @param string where_field The field for condition.
+     * @param mixed|array value The row `$where_field` value or list of `$where_field` values.
+     * @param string field The field name to calculate.
+     * @return integer max number or false.
+     */
+    public function maxBy($where_field, $value, $field){
+        return $this->maxByCond([$where_field=>$value], $field);
+    }
+    
+    /**
+     * Get max value of field by field.
+     * @param array cond The conditions.
+     * @param string field The field name to calculate.
+     * @return integer max number or false.
+     */
+    public function maxByCond($cond, $field){
+        $this->_implementCondition($cond);
+        $this->db->select_max($field);
+        
+        $result = $this->db->get($this->table);
+        
+        if(!$result->num_rows())
+            return false;
+        return $result->row()->$field;
+    }
+    
+    /**
+     * Get min value of field.
+     * @param string field The field name to select.
+     * @return integer min number or false.
+     */
+    public function min($field){
+        return $this->minByCond([], $field);
+    }
+    
+    /**
+     * Get min value of field by field.
+     * @param string where_field The field for condition.
+     * @param mixed|array value The row `$where_field` value or list of `$where_field` values.
+     * @param string field The field name to calculate.
+     * @return integer min number or false.
+     */
+    public function minBy($where_field, $value, $field){
+        return $this->minByCond([$where_field=>$value], $field);
+    }
+    
+    /**
+     * Get min value of field by field.
+     * @param array cond The conditions.
+     * @param string field The field name to calculate.
+     * @return integer min number or false.
+     */
+    public function minByCond($cond, $field){
+        $this->_implementCondition($cond);
+        $this->db->select_min($field);
+        
+        $result = $this->db->get($this->table);
+        
+        if(!$result->num_rows())
+            return false;
+        return $result->row()->$field;
+    }
+    
+    /**
+     * Remove row by id.
+     * @param integer|array id The row id or list of row id.
+     * @return true on success, false otherwise.
+     */
+    public function remove($id){
+        return $this->removeByCond(['id'=>$id]);
+    }
+    
+    /**
+     * Remove rows by table field.
+     * @param string field The field name.
+     * @param mixed|array value The field value for selection.
+     * @return true on success, false otherwise.
+     */
+    public function removeBy($field, $value){
+        return $this->removeByCond([$field=>$value]);
+    }
+    
+    /**
+     * Remove table by conditions
+     * @param array cond The conditions.
+     * @param string fields field-value pair of new data to update to table
+     * @return true on success, false otherwise.
+     */
+    public function removeByCond($cond){
+        $this->_implementCondition($cond);
+        return $this->db->delete($this->table);
+    }
+    
+    /**
+     * Update table by id.
+     * @param integer|array id The row id or list of row id.
+     * @param array fields field-value pair of the new row data to update.
+     * @return true on success, false otherwise.
+     */
+    public function set($id, $fields){
+        return $this->setByCond(['id'=>$id], $fields);
+    }
+    
+    /**
+     * Update table by table field.
+     * @param string field The field name.
+     * @param mixed|array value The field value for selection.
+     * @param array fields field-value pair of new data to update to table.
+     * @return true on success, false otherwise.
+     */
+    public function setBy($field, $value, $fields){
+        return $this->setByCond([$field=>$value], $fields);
+    }
+    
+    /**
+     * Update table by conditions
+     * @param array cond The conditions.
+     * @param string fields field-value pair of new data to update to table
+     * @return true on success, false otherwise.
+     */
+    public function setByCond($cond, $fields){
+        $this->_implementCondition($cond);
+        return $this->db->update($this->table, $fields);
+    }
+    
+    /**
+     * Get sum value of field.
+     * @param string field The field name to calculate.
+     * @return integer sum or false.
+     */
+    public function sum($field){
+        return $this->sumByCond([], $field);
+    }
+    
+    /**
+     * Get sum value of field by field.
+     * @param string where_field The field for condition.
+     * @param mixed|array value The row `$where_field` value or list of `$where_field` values.
+     * @param string field The field name to calculate.
+     * @return integer sum number or false.
+     */
+    public function sumBy($where_field, $value, $field){
+        return $this->sumByCond([$where_field=>$value], $field);
+    }
+    
+    /**
+     * Get sum value of field by field.
+     * @param array cond The conditions.
+     * @param string field The field name to calculate.
+     * @return integer sum number or false.
+     */
+    public function sumByCond($cond, $field){
+        $this->_implementCondition($cond);
+        $this->db->select_sum($field);
+        
+        $result = $this->db->get($this->table);
+        
+        if(!$result->num_rows())
+            return false;
+        return $result->row()->$field;
     }
 }

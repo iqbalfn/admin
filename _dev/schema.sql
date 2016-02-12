@@ -2,8 +2,8 @@ DROP TABLE IF EXISTS `enum`;
 CREATE TABLE `enum` (
     `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `group` VARCHAR(50),
+    `value` VARCHAR(50),
     `label` VARCHAR(25),
-    `value` TEXT,
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
