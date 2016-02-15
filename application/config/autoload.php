@@ -86,7 +86,9 @@ $autoload['drivers'] = array('cache');
 $autoload['helper'] = array(
     'developer',
     'object',
-    'locale'
+    'language',
+    'locale',
+    'url'
 );
 
 /*

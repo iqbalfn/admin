@@ -8,8 +8,8 @@ class MY_Controller extends CI_Controller
     private $site_params = [];
     private $system_enum = [];
     
-    public $user;
     public $session;
+    public $user;
     
     function __construct(){
         parent::__construct();
@@ -17,45 +17,24 @@ class MY_Controller extends CI_Controller
         $this->output->set_header('X-Powered-By: ' . config_item('system_vendor'));
         $this->output->set_header('X-Deadpool: ' . config_item('header_message'));
         
-        // site_params
-        $site_params = $this->cache->file->get('site-params');
-        if(!$site_params || is_dev()){
-            $this->load->model('Siteparams_model', 'Siteparams');
-            $site_params = $this->Siteparams->getByCond([], true);
-            if($site_params)
-                $site_params = prop_as_key($site_params, 'name', 'value');
-            $this->cache->file->save('site-params', $site_params, 604800);
-        }
-        $this->site_params = $site_params;
-        
-        // system_enum
-        $system_enum = $this->cache->file->get('system-enum');
-        if(!$system_enum || is_dev()){
-            $this->load->model('Enum_model', 'Enum');
-            $system_enum = $this->Enum->getByCond([], true, false, ['id'=>'ASC']);
-            if($system_enum){
-                $system_enum = group_by_prop($system_enum, 'group');
-                foreach($system_enum as $group => $values)
-                    $system_enum[$group] = prop_as_key($values, 'value', 'label');
-            }
-            
-            $this->cache->file->save('system-enum', $site_params, 604800);
-        }
-        $this->system_enum = $system_enum;
-        
-        // current user
+        $this->load->library('SiteEnum', '', 'enum');
+        $this->load->library('SiteParams', '', 'setting');
+        $this->load->library('SiteTheme', '', 'theme');
+        $this->load->library('SiteMenu', '', 'menu');
+        $this->load->library('SiteForm', '', 'form');
+
         $cookie_name = config_item('sess_cookie_name');
         $hash = $this->input->cookie($cookie_name);
+        
         if($hash){
             $this->load->model('Usersession_model', 'USession');
-            
             $session = $this->USession->getBy('hash', $hash);
             $this->session = $session;
             
             if($session){
                 $this->load->model('User_model', 'User');
-                
                 $user = $this->User->get($session->user);
+                
                 $this->user = $user;
                 $this->user->perms = array();
                 
@@ -66,6 +45,9 @@ class MY_Controller extends CI_Controller
                 }
             }
         }
+        
+        if($this->theme->current() == 'admin/')
+            $this->lang->load('admin', config_item('language'));
     }
     
     /**
@@ -109,34 +91,14 @@ class MY_Controller extends CI_Controller
     }
     
     /**
-     * The system enum setter/getter
-     *
-     * @param mixed group The enum group name.
-     * @param mixed value The option value, for setter label, or label getter.
-     * @param mixed label The option label, for setter label only
+     * Check if current admin user can do something
+     * @param string perms The perms to check.
+     * @return boolean true on allowed, false otherwise.
      */
-    public function enum($group, $value=null, $label=null){
-        if($label){
-            if(!array_key_exists($group, $this->system_enum))
-                $this->system_enum[$group] = array();
-            $this->system_enum[$group][$value] = $label;
-        }
-        
-        if(is_null($value)){
-            if(array_key_exists($group, $this->system_enum))
-                return $this->system_enum[$group];
+    public function can_i($perms){
+        if(!$this->user)
             return false;
-        }
-        
-        if(is_null($label)){
-            if(!array_key_exists($group, $this->system_enum))
-                return false;
-            if(array_key_exists($value, $this->system_enum[$group]))
-                return $this->system_enum[$group][$value];
-            return false;
-        }
-        
-        return $label;
+        return in_array($perms, $this->user->perms);
     }
     
     /**
@@ -160,31 +122,11 @@ class MY_Controller extends CI_Controller
         $page_title = '';
         if(array_key_exists('title', $params))
             $page_title = $params['title'] . ' - ';
-        $page_title.= $this->setting('site_name');
+        $page_title.= $this->setting->item('site_name');
         
         $params['page_title'] = $page_title;
         
-        // template
-        if($this->uri->segment(1) == 'admin')
-            $this->setting('site_theme', 'admin');
-        
-        $view = $this->setting('site_theme') . '/' . $view;
-        
-        $this->load->view($view, $params);
-    }
-    
-    /**
-     * Set or get setting
-     * @param string name The setting name
-     * @param mixed value The setting value, only for setter.
-     * @return setting value.
-     */
-    public function setting($name, $value=null){
-        if($value)
-            $this->site_params[$name] = $value;
-        if(array_key_exists($name, $this->site_params))
-            return $this->site_params[$name];
-        return false;
+        $this->theme->load($view, $params);
     }
     
     /**
@@ -192,6 +134,15 @@ class MY_Controller extends CI_Controller
      */
     public function show_404(){
         $this->output->set_status_header('404');
+        
+        $object = (object)array(
+            'email' => 'iqbalfawz@gmail.com'
+        );
+        
+        $this->form
+            ->setForm('test/form')
+            ->setError('with-error', 'Youre an error')
+            ->setObject($object);
         
         $params = array(
             'title' => _l('Page not found')

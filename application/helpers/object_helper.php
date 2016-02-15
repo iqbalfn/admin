@@ -1,16 +1,13 @@
 <?php
 
 /**
- * Format the object property as defined rules
- * @param string key The key name.
- * @param mixed value The property value.
- * @param array rules Property data formatter.
+ * Check if array key exists and return the value or alternative
+ * @param string key The array key.
+ * @param array array The array.
+ * @param mixed alt The alternative to return if key not exists, default false.
  */
-function format_property($key, $value, $rules){
-    if(!array_key_exists($key, $rules))
-        return $value;
-    
-    return $value;
+function array_key_value_or($key, $array, $alt=false){ 
+    return array_key_exists($key, $array) ? $array[$key] : $alt;
 }
 
 /**

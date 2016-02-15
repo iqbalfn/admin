@@ -41,7 +41,7 @@ DROP TABLE IF EXISTS `user_perms`;
 CREATE TABLE `user_perms` (
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user` BIGINT NOT NULL,
-    `perms` INTEGER,
+    `perms` VARCHAR(50),
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

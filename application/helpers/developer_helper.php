@@ -31,3 +31,12 @@ function deb(){
 function is_dev(){
     return ENVIRONMENT == 'development';
 }
+
+/**
+ * Short-hand of get_instance of CodeIgniter
+ * @return the CI object.
+ */
+function ci(){
+    $ci =&get_instance();
+    return $ci;
+}
