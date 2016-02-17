@@ -194,7 +194,7 @@ $config = array(
     
         'select' => array(
             'field' => 'select',
-            'label' => 'select',
+            'label' => 'Select',
             'rules' => 'required',
             'input' => array(
                 'type' => 'select'

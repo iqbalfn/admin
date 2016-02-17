@@ -5,6 +5,7 @@ module.exports = function(grunt) {
             default: {
                 src: [
                     'javascript/functions.js',
+                    'javascript/moment.js',
                     'javascript/transition.js',
 //                     'javascript/alert.js',
 //                     'javascript/button.js',
@@ -19,6 +20,9 @@ module.exports = function(grunt) {
 //                     'javascript/affix.js',
                     'javascript/colorpicker-color.js',
                     'javascript/colorpicker.js',
+                    'javascript/bootstrap-datetimepicker.js',
+                    'javascript/bootstrap-select.js',
+                    'javascript/jquery.autosize.js',
                     'javascript/main.js'
                 ],
                 dest: 'js/portal.js'

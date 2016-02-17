@@ -18,6 +18,7 @@ class SiteForm
     private $input_name;
     private $input_options;
     private $input_type;
+    private $input_value;
     
     function __construct(){
         $this->CI =&get_instance();
@@ -112,21 +113,40 @@ class SiteForm
      * input boolean
      */
     public function _inputBoolean(){
-        return '';
-    }
-    
-    /**
-     * input date
-     */
-    public function _inputDate(){
-        return '';
-    }
-    
-    /**
-     * input color
-     */
-    public function _inputColor(){
-        return '';
+        // the container
+        $div = array(
+            'attrs' => array(
+                'class' => 'checkbox'
+            )
+        );
+        
+        // the label
+        $label = array(
+            'tag' => 'label',
+            'attrs' => array(
+                'for' => $this->input_id
+            ),
+            'children' => $this->input_label
+        );
+        
+        // the checkbox
+        $input = array(
+            'tag' => 'input'
+        );
+        
+        $preset_attrs = array(
+            'type'          => 'checkbox',
+            'value'         => 1
+        );
+        $input['attrs'] = $this->_genAttribute($preset_attrs);
+        
+        if($this->input_label_show)
+            $input['attrs']['aria-labelledby'] = $this->input_id . '-label';
+        else
+            $input['attrs']['aria-label'] = $this->input_label;
+        
+        $div['children'] = array($input, $label);
+        return $div;
     }
     
     /**
@@ -137,14 +157,10 @@ class SiteForm
             'tag' => 'input'
         );
         
-        $default_value = '';
-        if(property_exists($this->object, $this->input_name))
-            $default_value = $this->object->{$this->input_name};
-        
         $preset_attrs = array(
             'type'          => $this->input_type,
             'class'         => 'form-control',
-            'value'         => set_value($this->input_name, $default_value)
+            'value'         => set_value($this->input_name, $this->input_value)
         );
         $input['attrs'] = $this->_genAttribute($preset_attrs);
         
@@ -164,7 +180,13 @@ class SiteForm
         $with_prefix = array_key_value_or('prefix', $this->input);
         $special_input = in_array($this->input_type, [
             'color',
-            'password'
+            'date',
+            'datetime',
+            'file',
+            'image',
+            'month',
+            'password',
+            'time'
         ]);
         
         if($special_input || $with_prefix)
@@ -210,22 +232,9 @@ class SiteForm
             $input_group['children'][] = $span;
         }
         
-        $input_group['children'][] = $input;
+        $input_group['children'][] =&$input;
         
-        // input[type=search]
-        if($this->input_type == 'search'){
-            $span = array(
-                'tag' => 'span',
-                'attrs' => array(
-                    'class' => 'input-group-addon',
-                    'id'    => $this->input_id . '-suffix'
-                ),
-                'children' => '<i class="glyphicon glyphicon-search"></i>'
-            );
-            
-            $input_group['children'][] = $span;
-        }
-        
+        // password with mask toggler
         if($this->input_type == 'password'){
             $span = array(
                 'tag' => 'span',
@@ -255,6 +264,90 @@ class SiteForm
             $input_group['children'][] = $span;
         }
         
+        // date with date-picker
+        if(in_array($this->input_type, array('date', 'datetime', 'month', 'time'))){
+            $icons = array(
+                'date' => 'th-list',
+                'datetime' => 'calendar',
+                'month' => 'th',
+                'time' => 'time'
+            );
+            
+            $span = array(
+                'tag' => 'span',
+                'attrs' => array(
+                    'class' => 'input-group-addon'
+                ),
+                'children' => [
+                    array(
+                        'tag' => 'i',
+                        'attrs' => array(
+                            'class' => 'glyphicon glyphicon-' . $icons[$this->input_type]
+                        )
+                    )
+                ]
+            );
+            
+            $input_group['children'][] = $span;
+            $input_group['attrs']['class'][] = 'date ' . $this->input_type . '-picker';
+            $input['attrs']['type'] = 'text';
+        }
+        
+        if(in_array($this->input_type, array('file', 'image'))){
+            $span = array(
+                'tag' => 'span',
+                'attrs' => array(
+                    'class' => 'input-group-btn'
+                ),
+                'children' => array(
+                    array(
+                        'tag' => 'button',
+                        'attrs' => array(
+                            'class' => 'btn btn-default btn-uploader',
+                            'data-target' => $this->input_id
+                        ),
+                        'children' => array(
+                            array(
+                                'tag' => 'i',
+                                'attrs' => array(
+                                    'class' => 'glyphicon glyphicon-open-file'
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+            
+            $input_group['children'][] = $span;
+            $input['attrs']['type'] = 'text';
+            
+            // type image need image previewer
+            if($this->input_type == 'image'){
+                $previewer_id = $this->input_id . '-preview';
+                
+                $input['attrs']['data-preview'] = $previewer_id;
+                
+                $preview_cont = array(
+                    'children' => array(
+                        $input_group
+                    )
+                );
+                
+                $preview_div = array(
+                    'attrs' => array(
+                        'id' => $previewer_id,
+                        'class' => 'form-control-preview'
+                    )
+                );
+                
+                if($this->input_value)
+                    $preview_div['children'] = '<img src="' . $this->input_value . '" alt="Image">';
+                
+                $preview_cont['children'][] = $preview_div;
+                $input_group = $preview_cont;
+            }
+        }
+        
         return $input_group;
     }
     
@@ -266,38 +359,64 @@ class SiteForm
     }
     
     /**
-     * input range
-     */
-    public function _inputRange(){
-        return '';
-    }
-    
-    /**
      * input select
      */
     public function _inputSelect(){
-        return '';
+        $input = array(
+            'tag' => 'select',
+            'children' => array()
+        );
+        
+        $preset_attrs = array(
+            'class'         => 'select-box'
+        );
+        $input['attrs'] = $this->_genAttribute($preset_attrs);
+        
+        if($this->input_label_show)
+            $input['attrs']['aria-labelledby'] = $this->input_id . '-label';
+        else
+            $input['attrs']['aria-label'] = $this->input_label;
+        
+        if($this->input_options){
+            foreach($this->input_options as $val => $label){
+                $option = array(
+                    'tag' => 'option',
+                    'attrs' => array(
+                        'value' => $val
+                    ),
+                    'children' => $label
+                );
+                
+                $input['children'][] = $option;
+            }
+        }
+        
+        return $input;
     }
     
     /**
      * input textarea
      */
     public function _inputTextArea(){
-        return '';
-    }
-    
-    /**
-     * input tinymce
-     */
-    public function _inputTinyMCE(){
-        return '';
-    }
-    
-    /**
-     * input upload
-     */
-    public function _inputUpload(){
-        return '';
+        $input = array(
+            'tag' => 'textarea',
+            'children' => set_value($this->input_name, $this->input_value)
+        );
+        
+        $preset_attrs = array();
+        if($this->input_type == 'textarea')
+            $preset_attrs['class'] = 'form-control textarea-dynamic';
+        else
+            $preset_attrs['class'] = 'tinymce';
+        
+        $input['attrs'] = $this->_genAttribute($preset_attrs);
+        
+        if($this->input_label_show)
+            $input['attrs']['aria-labelledby'] = $this->input_id . '-label';
+        else
+            $input['attrs']['aria-label'] = $this->input_label;
+        
+        return $input;
     }
     
     /**
@@ -320,6 +439,10 @@ class SiteForm
         $this->input_options    = $options;
         $this->input_type       = $this->input['type'];
         
+        $this->input_value = '';
+        if(property_exists($this->object, $this->input_name))
+            $this->input_value = $this->object->{$this->input_name};
+        
         if(array_key_exists('attrs', $this->input)){
             if(array_key_exists('id', $this->input['attrs']))
                 $this->input_id = $this->input['attrs']['id'];
@@ -332,6 +455,10 @@ class SiteForm
             if($this->input['label'] === true || $this->input_error)
                 $this->input_label_show = true;
         }
+        
+        // list of type without label
+        if(in_array($this->input_type, array('boolean')))
+            $this->input_label_show = false;
         
         // .form-group
         $form_group = array(
@@ -365,19 +492,8 @@ class SiteForm
         
         // form input generator
         $methods = array(
-            'date'      => '_inputDate',
-            'datetime'  => '_inputDate',
-            'month'     => '_inputDate',
-            'time'      => '_inputDate',
-            
-            'range'     => '_inputRange',
-            
-            'image'     => '_inputUpload',
-            'file'      => '_inputUpload',
-            
             'textarea'  => '_inputTextArea',
-            
-            'tinymce'   => '_inputTinyMCE',
+            'tinymce'   => '_inputTextArea',
             
             'select'    => '_inputSelect',
             

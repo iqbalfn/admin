@@ -49,6 +49,7 @@ class SiteTheme
     /**
      * Get absolute path to theme static file.
      * @param string name The theme static file name.
+     * @param boolean version Add versioning on production system.
      * @return string absolute path to theme static file.
      */
     public function static($file){

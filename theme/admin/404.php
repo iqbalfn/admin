@@ -28,11 +28,14 @@
                 <?= $this->form->field('range') ?>
                 <?= $this->form->field('image') ?>
                 <?= $this->form->field('textarea') ?>
-                <?= $this->form->field('tinymce') ?>
-                <?= $this->form->field('select') ?>
+                <?= $this->form->field('select', array('a'=>'Lorem', 'b'=>'Ipsum', 'c'=>'Dolor', 'd'=>'Sit', 'e'=>'Amet')) ?>
                 <?= $this->form->field('boolean') ?>
                 <?= $this->form->field('file') ?>
                 <?= $this->form->field('multiple') ?>
+            </div>
+            <div class="col-md-8">
+                <?= $this->form->field('tinymce') ?>
+                <a href="lorem">I'm the link</a>
             </div>
         </div>
     </div>
