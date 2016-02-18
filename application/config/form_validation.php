@@ -39,7 +39,7 @@ $config = array(
         'number' => array(
             'field' => 'number',
             'label' => 'Number',
-            'rules' => 'required',
+            'rules' => 'required|less_than[10]|greater_than[2]',
             'input' => array(
                 'type' => 'number'
             )
@@ -169,8 +169,7 @@ $config = array(
             'label' => 'Image',
             'rules' => 'required',
             'input' => array(
-                'type' => 'image',
-                'file_type' => 'jpeg|jpg|gif|png'
+                'type' => 'image'
             )
         ),
     

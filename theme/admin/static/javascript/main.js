@@ -38,7 +38,7 @@ $(function(){
             autoresize_bottom_margin: 0,
             
             paste_as_text: true,
-            paste_word_valid_elements: 'b,strong,i,em,h1,h2,h3',
+            paste_word_valid_elements: 'b,strong,i,em,h1,h2,h3,a,li,ul',
             paste_retain_style_properties: '',
             
             pagebreak_separator: '<!-- PAGE BREAK -->',
@@ -48,7 +48,17 @@ $(function(){
             fix_list_elements: true,
             invalid_styles: {'*': 'color font-size font-family'},
             schema: 'html5',
-            browser_spellcheck: true
+            browser_spellcheck: true,
+            
+            rel_list: [
+                { title: 'None', value: '' },
+                { title: 'No Follow', value: 'nofollow' }
+            ],
+            
+            image_dimensions: false,
+            media_alt_source: false,
+            media_dimensions: false,
+            media_poster: false
         });
     }
 });

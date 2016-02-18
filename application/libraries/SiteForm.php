@@ -53,6 +53,55 @@ class SiteForm
             }
         }
         
+        // get from ci form validation rule.
+        $rules = explode('|', $this->field['rules']);
+        $html5_required_rules = array(
+            'required',
+            'valid_url',
+            'valid_email',
+            'numeric',
+            'integer',
+            'decimal'
+        );
+        foreach($rules as $rule){
+            if(in_array($rule, $html5_required_rules))
+                $attrs['required'] = 'required';
+            elseif($rule == 'alpha')
+                $attrs['pattern'] = '^[a-zA-Z]+$';
+            elseif($rule == 'alpha_numeric')
+                $attrs['pattern'] = '^[a-zA-Z0-9]+$';
+            elseif($rule == 'alpha_numeric_spaces')
+                $attrs['pattern'] = '^[a-zA-Z0-9 ]+$';
+            elseif($rule == 'alpha_dash')
+                $attrs['pattern'] = '^[a-zA-Z0-9_\-]+$';
+            elseif($rule == 'is_natural')
+                $attrs['pattern'] = '^[0-9]+$';
+            elseif($rule == 'is_natural_no_zero')
+                $attrs['min'] = 1;
+            elseif(preg_match('!(\w+)\[([^\]]+)\]!', $rule, $m)){
+                $rule_name = $m[1];
+                $rule_cond = $m[2];
+                
+                if($rule_name == 'regex_match'){
+                    $sep = substr($rule_cond, 0, 1);
+                    $attrs['pattern'] = trim($rule_cond, $sep);
+                }elseif($rule_name == 'min_length')
+                    $attrs['pattern'] = '.{' . $rule_cond . ',}';
+                elseif($rule_name == 'exact_length')
+                    $attrs['pattern'] = '.{' . $rule_cond . '}';
+                elseif($rule_name == 'greater_than')
+                    $attrs['min'] = $rule_cond + 1;
+                elseif($rule_name == 'greater_than_equal_to')
+                    $attrs['min'] = $rule_cond;
+                elseif($rule_name == 'less_than')
+                    $attrs['max'] = $rule_cond - 1;
+                elseif($rule_name == 'less_than_equal_to')
+                    $attrs['max'] = $rule_cond;
+                elseif($rule_name == 'max_length')
+                    $attrs['maxlength'] = $rule_cond;
+            }
+        }
+        
         if($preset){
             foreach($preset as $name => $value){
                 if($name == 'class')
@@ -85,6 +134,8 @@ class SiteForm
         $attrs = array_key_value_or('attrs', $el, array());
         $attr = array();
         foreach($attrs as $name => $value){
+            if($value === '')
+                continue;
             $value = is_array($value) ? implode(' ', $value) : $value;
             $attr[] = $name . '="' . $value . '"';
         }
@@ -138,6 +189,9 @@ class SiteForm
             'type'          => 'checkbox',
             'value'         => 1
         );
+        if($this->input_value == 1)
+            $preset_attrs['checked'] = 'checked';
+        
         $input['attrs'] = $this->_genAttribute($preset_attrs);
         
         if($this->input_label_show)
@@ -261,6 +315,7 @@ class SiteForm
                 ]
             );
             
+            $input['attrs']['value'] = '';
             $input_group['children'][] = $span;
         }
         
@@ -326,6 +381,8 @@ class SiteForm
                 $previewer_id = $this->input_id . '-preview';
                 
                 $input['attrs']['data-preview'] = $previewer_id;
+                $input['attrs']['data-accept'] = 'image/*';
+                $input['attrs']['class'][] = 'form-control-image';
                 
                 $preview_cont = array(
                     'children' => array(
@@ -345,6 +402,10 @@ class SiteForm
                 
                 $preview_cont['children'][] = $preview_div;
                 $input_group = $preview_cont;
+            
+            // find accepted upload file type
+            }else{
+                
             }
         }
         
@@ -355,7 +416,88 @@ class SiteForm
      * general input
      */
     public function _inputMultiple(){
-        return '';
+        $input = array(
+            'children' => array(),
+            'attrs' => array(
+                'class' => 'form-control-multiple'
+            )
+        );
+        
+        $options = $this->input_options;
+        if(!array_key_exists(0, $options))
+            return $input;
+        
+        $name = $this->input_name;
+        $values = $this->input_value;
+        
+        $recursiver = function($parent, &$container) use($options, $name, $values, &$recursiver){
+            if(!array_key_exists($parent, $options))
+                return;
+            
+            $opts = $options[$parent];
+            
+            foreach($opts as $opt){
+                $opt   = (object)$opt;
+                $id    = $name . '-' . $opt->id;
+                $label = '';
+                
+                if(property_exists($opt, 'label'))
+                    $label = $opt->label;
+                elseif(property_exists($opt, 'value'))
+                    $label = $opt->value;
+                elseif(property_exists($opt, 'title'))
+                    $label = $opt->title;
+                elseif(property_exists($opt, 'name'))
+                    $label = $opt->name;
+                
+                $div = array(
+                    'attrs' => array(
+                        'class' => 'form-control-multiple-item'
+                    ),
+                    'children' => array()
+                );
+                
+                $checkbox = array(
+                    'attrs' => array(
+                        'class' => 'checkbox'
+                    ),
+                    'children' => array()
+                );
+                
+                $label = array(
+                    'tag' => 'label',
+                    'attrs' => array(
+                        'for' => $id 
+                    ),
+                    'children' => $label
+                );
+                
+                $input = array(
+                    'tag' => 'input',
+                    'attrs' => array(
+                        'type' => 'checkbox',
+                        'value' => $opt->id,
+                        'id' => $id,
+                        'name' => $name . '[]'
+                    )
+                );
+                
+                if(in_array($opt->id, $values))
+                    $input['attrs']['checked'] = 'checked';
+                
+                $checkbox['children'] = array($input, $label);
+                $div['children'][] = $checkbox;
+                
+                if(array_key_exists($opt->id, $options))
+                    $recursiver($opt->id, $div);
+                
+                $container['children'][] = $div;
+            }
+        };
+        
+        $recursiver(0, $input);
+        
+        return $input;
     }
     
     /**
@@ -386,6 +528,8 @@ class SiteForm
                     ),
                     'children' => $label
                 );
+                if($this->input_value == $val)
+                    $option['attrs']['selected'] = 'selected';
                 
                 $input['children'][] = $option;
             }

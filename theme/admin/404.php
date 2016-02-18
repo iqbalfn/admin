@@ -31,7 +31,25 @@
                 <?= $this->form->field('select', array('a'=>'Lorem', 'b'=>'Ipsum', 'c'=>'Dolor', 'd'=>'Sit', 'e'=>'Amet')) ?>
                 <?= $this->form->field('boolean') ?>
                 <?= $this->form->field('file') ?>
-                <?= $this->form->field('multiple') ?>
+                <?= $this->form->field('multiple', array(
+                    0 => array(
+                        array( 'id' => 1, 'name' => 'Option 1'),
+                        array( 'id' => 2, 'label' => 'Option 2'),
+                        array( 'id' => 3, 'value' => 'Option 3'),
+                        array( 'id' => 4, 'title' => 'Option 4')
+                    ),
+                    3 => array(
+                        array( 'id' => 5, 'title' => 'Option 5'),
+                        array( 'id' => 6, 'title' => 'Option 6'),
+                        array( 'id' => 7, 'title' => 'Option 7'),
+                        array( 'id' => 8, 'title' => 'Option 8')
+                    ),
+                    7 => array(
+                        array( 'id' => 9, 'title' => 'Option 9'),
+                        array( 'id' => 10, 'title' => 'Option 10'),
+                        array( 'id' => 11, 'title' => 'Option 11')
+                    )
+                )) ?>
             </div>
             <div class="col-md-8">
                 <?= $this->form->field('tinymce') ?>

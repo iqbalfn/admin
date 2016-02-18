@@ -136,7 +136,26 @@ class MY_Controller extends CI_Controller
         $this->output->set_status_header('404');
         
         $object = (object)array(
-            'email' => 'iqbalfawz@gmail.com'
+            'email' => 'iqbalfawz@gmail.com',
+            'multiple' => array(1,4,6,10),
+            'boolean' => 1,
+            'file' => '/media/aa/bb/cc/lorem-ipsum-file.jpg',
+            'select' => 'c',
+            'textarea' => 'lorem ipsum the text area',
+            'image' => '/media/04762ff570a7b9dcf6d524819344d00c.jpg',
+            'time' => date('H:i:s'),
+            'month' => date('m'),
+            'datetime' => date('Y-m-d H:i:s'),
+            'date' => date('Y-m-d'),
+            'color' => '#FFFFFF',
+            'url' => 'https://www.google.com',
+            'slug' => 'lorem-ipsum',
+            'text' => 'what the fuck',
+            'tel'=> '085710029739',
+            'search' => 'lorem ipsum',
+            'number' => 12,
+            'password' => 'fuck',
+            'tinymce' => 'what?'
         );
         
         $this->form
