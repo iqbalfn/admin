@@ -48,6 +48,12 @@ class MY_Controller extends CI_Controller
         
         if($this->theme->current() == 'admin/')
             $this->lang->load('admin', config_item('language'));
+        
+        $this->user = (object)array(
+            'id' => 1,
+            'fullname' => 'Lorem Ipsum',
+            'perms' => array()
+        );
     }
     
     /**
@@ -134,7 +140,7 @@ class MY_Controller extends CI_Controller
      */
     public function show_404(){
         $this->output->set_status_header('404');
-        
+
         $object = (object)array(
             'email' => 'iqbalfawz@gmail.com',
             'multiple' => array(1,4,6,10),

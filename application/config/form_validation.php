@@ -182,8 +182,8 @@ $config = array(
             )
         ),
     
-        'tinymce' => array(
-            'field' => 'tinymce',
+        'tinymcelen' => array(
+            'field' => 'tinymcelen',
             'label' => 'Tinymce',
             'rules' => 'required',
             'input' => array(

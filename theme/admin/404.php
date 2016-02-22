@@ -52,11 +52,11 @@
                 )) ?>
             </div>
             <div class="col-md-8">
-                <?= $this->form->field('tinymce') ?>
-                <a href="lorem">I'm the link</a>
+                <?= $this->form->field('tinymcelen') ?>
             </div>
         </div>
     </div>
     <?= $this->theme->file('foot') ?>
+    <?= $this->form->javascript(); ?>
 </body>
 </html>

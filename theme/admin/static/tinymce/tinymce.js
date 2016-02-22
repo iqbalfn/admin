@@ -42500,12 +42500,12 @@ define("tinymce/ui/FormatControls", [
 
 			var defaultStyleFormats = [
 				{title: 'Headings', items: [
-					{title: 'Heading 1', format: 'h1'},
-					{title: 'Heading 2', format: 'h2'},
-					{title: 'Heading 3', format: 'h3'},
-					{title: 'Heading 4', format: 'h4'},
-					{title: 'Heading 5', format: 'h5'},
-					{title: 'Heading 6', format: 'h6'}
+// 					{title: 'Heading 1', format: 'h1'},
+					{title: 'Title', format: 'h2'},
+					{title: 'Subtitle', format: 'h3'},
+					{title: 'Section Title', format: 'h4'},
+					{title: 'Item Title', format: 'h5'},
+// 					{title: 'Heading 6', format: 'h6'}
 				]},
 
 				{title: 'Inline', items: [

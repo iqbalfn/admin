@@ -7,6 +7,18 @@ CREATE TABLE `enum` (
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+DROP TABLE IF EXISTS `media`;
+CREATE TABLE `media` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `user` BIGINT NOT NULL,
+    `original_name` VARCHAR(150),
+    `name` VARCHAR(50),
+    `path` VARCHAR(75),
+    `type` VARCHAR(100),
+    `object` BIGINT,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 DROP TABLE IF EXISTS `site_params`;
 CREATE TABLE `site_params` (
     `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,

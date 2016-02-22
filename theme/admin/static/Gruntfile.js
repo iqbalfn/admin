@@ -23,6 +23,7 @@ module.exports = function(grunt) {
                     'javascript/bootstrap-datetimepicker.js',
                     'javascript/bootstrap-select.js',
                     'javascript/jquery.autosize.js',
+                    'javascript/file-uploader.js',
                     'javascript/form-control-image.js',
                     'javascript/main.js'
                 ],

@@ -9439,6 +9439,82 @@ Color.prototype = {
 	};
 }(jQuery || $)); // jQuery or jQuery-like library, such as Zepto
 
+(function ($) {
+    'use strict';
+    
+    var navProgress = $('#nav-progress');
+    
+    $.uploadFile = function(file, opts, cb){
+        var progresBar = $('<div class="progress">'
+                       +    '<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">'
+                       +        '<span>' + file.name  + '</span></div></div>');
+        navProgress.append(progresBar);
+        
+        var formData = new FormData(),
+            xhr = new XMLHttpRequest();
+        
+        formData.append('file', file, file.name);
+        for(var k in opts)
+            formData.append(k, opts[k]);
+        
+        xhr.open('POST', '/upload', true);
+        
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState == 4){
+                if(xhr.status == 200){
+                    var res = window.JSON.parse(xhr.responseText);
+                    progresBar.remove();
+                    cb(res.error, res.data);
+                }
+            }
+        }
+        
+        xhr.send(formData);
+    }
+    
+    $.selectFile = function(accept, cb){
+        // create the input file element.
+        var input = $('<input type="file">');
+        if(accept)
+            input.attr('accept', accept);
+        
+        input.change(function(){
+            var file = $(this).get(0).files[0];
+            input.remove();
+            cb(file);
+        });
+        
+        window.setTimeout(function(){ input.click(); });
+    }
+    
+    $.fn.fileUploader = function(){
+        
+        $(this).click(function(){
+            var targetId = $(this).data('target');
+            var target   = $('#' + targetId);
+            var accept   = target.data('accept');
+            var type     = target.data('type');
+            var object   = target.data('object');
+            
+            $.selectFile(accept, function(file){
+                var opts = {'type': type};
+                if(object)
+                    opts.object = object;
+                opts.name = file.name;
+                
+                $.uploadFile(file, opts, function(err, res){
+                    if(err)
+                        return alert(err);
+                    
+                    target.val(res.media_file);
+                    target.change();
+                });
+            });
+        });
+        
+    };
+    
+})(jQuery);
 $(function(){
     $('.form-control-image').change(function(){
         var previewer = $(this).data('preview');
@@ -9466,7 +9542,6 @@ $(function(){
         i.removeClass(classToRemove).addClass(classToAdd);
     });
     
-    // color picker
     $('.color-picker').colorpicker();
     $('.date-picker').datetimepicker({format: 'YYYY-MM-DD'});
     $('.datetime-picker').datetimepicker({format: 'YYYY-MM-DD HH:mm:ss'});
@@ -9474,43 +9549,91 @@ $(function(){
     $('.time-picker').datetimepicker({format: 'HH:mm:ss'});
     $('.textarea-dynamic').autosize();
     $('.select-box').selectpicker();
+    $('.btn-uploader').fileUploader();
     
+    // tinymce
     if($('.tinymce').get(0)){
-        tinymce.init({
-            selector: '.tinymce',
-            menubar: false,
-            statusbar: false,
-            plugins: 'link table image media fullscreen pagebreak contextmenu autoresize paste',
-            toolbar: 'undo redo | styleselect | bold italic link | bullist numlist | table image media | pagebreak | fullscreen',
-            
-            content_css: '/theme/admin/static/css/tinymce-content.css',
-            
-            autoresize_min_height: 400,
-            
-            autoresize_bottom_margin: 0,
-            
-            paste_as_text: true,
-            paste_word_valid_elements: 'b,strong,i,em,h1,h2,h3,a,li,ul',
-            paste_retain_style_properties: '',
-            
-            pagebreak_separator: '<!-- PAGE BREAK -->',
-            
-            convert_fonts_to_spans: true,
-            element_format: 'html',
-            fix_list_elements: true,
-            invalid_styles: {'*': 'color font-size font-family'},
-            schema: 'html5',
-            browser_spellcheck: true,
-            
-            rel_list: [
-                { title: 'None', value: '' },
-                { title: 'No Follow', value: 'nofollow' }
-            ],
-            
-            image_dimensions: false,
-            media_alt_source: false,
-            media_dimensions: false,
-            media_poster: false
-        });
+        var options = {
+                // main options
+                selector: '.tinymce',
+                menubar: false,
+                statusbar: false,
+                plugins: 'link table image media fullscreen pagebreak contextmenu autoresize paste',
+                toolbar: 'undo redo | styleselect | bold italic link | bullist numlist | table image media | pagebreak | fullscreen',
+                content_css: '/theme/admin/static/css/tinymce-content.css',
+                
+                // autoresize plugins
+                autoresize_min_height: 400,
+                autoresize_bottom_margin: 0,
+                
+                // paste configuration
+                paste_as_text: true,
+                paste_word_valid_elements: 'b,strong,i,em,h1,h2,h3,a,li,ul',
+                paste_retain_style_properties: '',
+                
+                // pagebreak plugins
+                pagebreak_separator: '<!-- PAGE BREAK -->',
+                
+                // parser configuration
+                convert_fonts_to_spans: true,
+                element_format: 'html',
+                fix_list_elements: true,
+                invalid_styles: {'*': 'color font-size font-family'},
+                schema: 'html5',
+                browser_spellcheck: true,
+                
+                // link plugins
+                rel_list: [
+                    { title: 'None', value: '' },
+                    { title: 'No Follow', value: 'nofollow' }
+                ],
+                
+                // image plugins
+                image_dimensions: false,
+                image_caption: true,
+                image_prepend_url: false,
+  
+                // media plugins
+                media_alt_source: false,
+                media_dimensions: false,
+                media_poster: false,
+                video_template_callback: function(data){
+                    if(!/facebook\.com\//.test(data.source1)){
+                        return (
+                            '<video width="' + data.width + '" height="' + data.height + '"' + (data.poster ? ' poster="' + data.poster + '"' : '') + ' controls="controls">\n' +
+                                '<source src="' + data.source1 + '"' + (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' +
+                                (data.source2 ? '<source src="' + data.source2 + '"' + (data.source2mime ? ' type="' + data.source2mime + '"' : '') + ' />\n' : '') +
+                            '</video>'
+                        );
+                    }else{
+                        return (
+                            '<div class="fb-video" contenteditable="false" data-href="' + data.source1 + '" data-allowfullscreen="true" data-width="500">' +
+                                '<a href="' + data.source1 + '" target="_blank">&#160;</a>' +
+                            '</div>'
+                        );
+                    }
+                },
+                
+                file_browser_callback: function(form, url, type, wind, wah){
+                    var accept = type == 'image' ? 'image/*' : undefined;
+                    var cTextArea = $(tinyMCE.activeEditor.targetElm);
+                    var opts = {'type': cTextArea.data('type')};
+                    
+                    if(cTextArea.data('object'))
+                        opts.object = cTextArea.data('object');
+                    
+                    $.selectFile(accept, function(file){
+                        opts.name = file.name;
+                        
+                        $.uploadFile(file, opts, function(err, data){
+                            if(err)
+                                return alert(err);
+                            $('#'+form).val(data.media_file);
+                        });
+                    });
+                }
+            };
+        
+        tinymce.init(options);
     }
 });

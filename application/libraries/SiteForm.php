@@ -9,6 +9,8 @@ class SiteForm
     private $form = [];
     private $errors = [];
     
+    private $form_name;
+    
     private $field;
     private $input;
     private $input_error;
@@ -375,6 +377,9 @@ class SiteForm
             
             $input_group['children'][] = $span;
             $input['attrs']['type'] = 'text';
+            $input['attrs']['data-type'] = $this->form_name . '.' . $this->input_name;
+            if($this->object && property_exists($this->object, 'id'))
+                $input['attrs']['data-object'] = $this->object->id;
             
             // type image need image previewer
             if($this->input_type == 'image'){
@@ -405,7 +410,8 @@ class SiteForm
             
             // find accepted upload file type
             }else{
-                
+                $file_types = '.' . str_replace('|', ',.', $this->input['file_type']);
+                $input['attrs']['data-accept'] = $file_types;
             }
         }
         
@@ -550,8 +556,12 @@ class SiteForm
         $preset_attrs = array();
         if($this->input_type == 'textarea')
             $preset_attrs['class'] = 'form-control textarea-dynamic';
-        else
+        else{
             $preset_attrs['class'] = 'tinymce';
+            $preset_attrs['data-type'] = $this->form_name . '.' . $this->input_name;
+            if($this->object && property_exists($this->object, 'id'))
+                $preset_attrs['attrs']['data-object'] = $this->object->id;
+        }
         
         $input['attrs'] = $this->_genAttribute($preset_attrs);
         
@@ -656,6 +666,19 @@ class SiteForm
     }
     
     /**
+     * Get various javascript that the form need.
+     */
+    public function javascript(){
+        $s = '<script>';
+        $s.= 'window.CURRENT_FORM_NAME = \'' . $this->form_name . '\';';
+        if($this->object && property_exists($this->object, 'id'))
+                $s.= 'window. = ' . $this->object->id . ';';
+        $s.= '</script>';
+        
+        return $s;
+    }
+    
+    /**
      * Set error
      * @param string name The field name.
      * @param string error The error message.
@@ -674,6 +697,7 @@ class SiteForm
      */
     public function setForm($name){
         $rules = config_item($name);
+        $this->form_name = $name;
         if($rules)
             $this->form = $rules;
         return $this;
