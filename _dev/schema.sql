@@ -45,7 +45,6 @@ CREATE TABLE `user` (
     `avatar` VARCHAR(100),
     `about` TEXT,
     `website` VARCHAR(125),
-    `socials` TEXT,
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

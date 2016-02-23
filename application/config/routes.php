@@ -52,6 +52,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 $route['admin']                     = 'admin/home/object/index';
 
+$route['admin/enum']                = 'admin/enum/object/index';
+$route['admin/enum/(:num)']         = 'admin/enum/object/edit/$1';
+$route['admin/enum/(:num)/remove']  = 'admin/enum/object/remove/$1';
+
 $route['admin/me/login']            = 'admin/me/auth/login';
 $route['admin/me/logout']           = 'admin/me/auth/logout';
 $route['admin/me/setting']          = 'admin/me/setting/index';

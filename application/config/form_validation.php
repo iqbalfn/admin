@@ -1,6 +1,37 @@
 <?php
 
 $config = array(
+
+    '/admin/enum' => array(
+    
+        'group' => array(
+            'field' => 'group',
+            'label' => 'Group',
+            'rules' => 'required|strtolower',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'value' => array(
+            'field' => 'value',
+            'label' => 'Value',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'label' => array(
+            'field' => 'label',
+            'label' => 'Label',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'text'
+            )
+        )
+        
+    ),
     
     '/admin/me/login' => array(
     
