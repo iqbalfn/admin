@@ -22,4 +22,9 @@ INSERT INTO `user_perms` ( `user`, `perms` ) VALUES
     ( 1, 'create_system-enum' ),
     ( 1, 'delete_system-enum' ),
     ( 1, 'read_system-enum' ),
-    ( 1, 'update_system-enum' );
+    ( 1, 'update_system-enum' ),
+    
+    ( 1, 'create_site-param' ),
+    ( 1, 'delete_site-param' ),
+    ( 1, 'read_site-param' ),
+    ( 1, 'update_site-param' );

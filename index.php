@@ -53,10 +53,11 @@
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
-$env = 'PRODUCTION';
+$env = 'production';
 $env_file = dirname(__FILE__) . '/env';
 if(is_file($env_file))
     $env = file_get_contents($env_file);
+$env = trim($env);
 define('ENVIRONMENT', $env);
 /*
  *---------------------------------------------------------------

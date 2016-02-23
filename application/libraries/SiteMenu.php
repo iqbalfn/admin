@@ -39,25 +39,21 @@ class SiteMenu
             ),
             array(
                 'label' => 'User',
-                'perms' => 'read_admin-user',
+                'perms' => 'read-user',
                 'target'=> '/admin/user'
             ),
             array(
                 'label' => 'Setting',
                 'submenu' => array(
                     array(
+                        'label' => 'Site Params',
+                        'perms' => 'read_site-param',
+                        'target'=> '/admin/param'
+                    ),
+                    array(
                         'label' => 'System Enum',
                         'perms' => 'read_system-enum',
                         'target'=> '/admin/enum'
-                    ),
-                    array(
-                        'label' => '---',
-                        'perms' => 'read_site-param'
-                    ),
-                    array(
-                        'label' => 'System Params',
-                        'perms' => 'read_site-param',
-                        'target'=> '/admin/param'
                     )
                 )
             )
