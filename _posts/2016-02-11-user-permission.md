@@ -30,6 +30,8 @@ Allow user to see admin front page. This permission is required for user who nee
 to be able to access admin page.
 2. `create_alexa-rank`  
 Allow user to re-crawler alexa ranking.
+3. `read_google-analytics`  
+Allow user to see google analytics
 
 
 Site Parameters
@@ -52,11 +54,11 @@ User Management
 
 All permission user need to be able to do something with system user.
 
-1. `create_admin-user`  
+1. `create-user`  
 Create new system user.
-2. `delete_admin-user`  
+2. `delete-user`  
 Delete some user.
-3. `read_admin-user`  
+3. `read-user`  
 See all system user.
-4. `update_admin-user`  
+4. `update-user`  
 Update system user setting.

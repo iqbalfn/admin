@@ -20,4 +20,14 @@ Example of `user` controller:
 {% highlight php %}
 <?php
 
+if(!defined('BASEPATH'))
+    die;
+
+class User extends MY_Controller
+{
+    function __construct(){
+        parent::__construct();
+        
+    }
+}
 {% endhighlight %}

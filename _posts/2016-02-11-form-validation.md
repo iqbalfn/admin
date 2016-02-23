@@ -16,12 +16,12 @@ $config = array(
             'field'     => '$field_name',
             'label'     => '$label_text',
             'rules'     => '$list_of_rules',
-            'file_type' => '$list_of_filetype'
             'input'     => array(
                 'type'      => '$form_input_type',
                 'prefix'    => '$prefix_label',
                 'attrs'     => array($additional_attributes),
-                'label'     => '$show-or-hide-label'
+                'label'     => '$show-or-hide-label',
+                'file_type' => '$list_of_filetype'
             )
         )
     )

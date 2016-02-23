@@ -23,3 +23,6 @@ Index of contents
 5. [Site Params]({{ site.baseurl }}{% post_url 2016-02-11-site-params %})
 6. [Helpers]({{ site.baseurl }}{% post_url 2016-02-11-helpers %})
 7. [Form Validation]({{ site.baseurl }}{% post_url 2016-02-11-form-validation %})
+8. [File Uploader]({{ site.baseurl }}{% post_url 2016-02-11-file-upload %})
+9. Libraries
+    1. [SiteForm]({{ site.baseurl }}{% post_url 2016-02-11-library-site-form %})
