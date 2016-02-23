@@ -35,25 +35,23 @@ class MY_Controller extends CI_Controller
                 $this->load->model('User_model', 'User');
                 $user = $this->User->get($session->user);
                 
+                // TODO
+                // Increase session expiration if it's almost expired
+                
                 $this->user = $user;
                 $this->user->perms = array();
                 
                 if($user){
-                    $this->load->model('User_perms', 'UPerms');
+                    $this->load->model('Userperms_model', 'UPerms');
                     $user_perms = $this->UPerms->getBy('user', $user->id, true);
-                    $this->user->perms = prop_values($user_perms, 'perms');
+                    if($user_perms)
+                        $this->user->perms = prop_values($user_perms, 'perms');
                 }
             }
         }
         
         if($this->theme->current() == 'admin/')
             $this->lang->load('admin', config_item('language'));
-        
-        $this->user = (object)array(
-            'id' => 1,
-            'fullname' => 'Lorem Ipsum',
-            'perms' => array()
-        );
     }
     
     /**
@@ -141,34 +139,6 @@ class MY_Controller extends CI_Controller
     public function show_404(){
         $this->output->set_status_header('404');
 
-        $object = (object)array(
-            'email' => 'iqbalfawz@gmail.com',
-            'multiple' => array(1,4,6,10),
-            'boolean' => 1,
-            'file' => '/media/aa/bb/cc/lorem-ipsum-file.jpg',
-            'select' => 'c',
-            'textarea' => 'lorem ipsum the text area',
-            'image' => '/media/04762ff570a7b9dcf6d524819344d00c.jpg',
-            'time' => date('H:i:s'),
-            'month' => date('m'),
-            'datetime' => date('Y-m-d H:i:s'),
-            'date' => date('Y-m-d'),
-            'color' => '#FFFFFF',
-            'url' => 'https://www.google.com',
-            'slug' => 'lorem-ipsum',
-            'text' => 'what the fuck',
-            'tel'=> '085710029739',
-            'search' => 'lorem ipsum',
-            'number' => 12,
-            'password' => 'fuck',
-            'tinymce' => 'what?'
-        );
-        
-        $this->form
-            ->setForm('test/form')
-            ->setError('with-error', 'Youre an error')
-            ->setObject($object);
-        
         $params = array(
             'title' => _l('Page not found')
         );

@@ -10,7 +10,7 @@ module.exports = function(grunt) {
 //                     'javascript/alert.js',
 //                     'javascript/button.js',
 //                     'javascript/carousel.js',
-//                     'javascript/collapse.js',
+                    'javascript/collapse.js',
                     'javascript/dropdown.js',
 //                     'javascript/modal.js',
 //                     'javascript/tooltip.js',

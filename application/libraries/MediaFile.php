@@ -34,12 +34,15 @@ class MediaFile
         $local_path_abs  = dirname(BASEPATH);
         $local_path      = $local_path_abs . $local_media;
         
+        $index_file = APPPATH . 'index.html';
         for($i=0; $i<3; $i++){
             $sub_path = substr($local_file_name, ($i*2), 2);
             $local_media.= "$sub_path/";
             $local_path = $local_path_abs . $local_media;
-            if(!is_dir($local_path))
+            if(!is_dir($local_path)){
                 mkdir($local_path);
+                copy($index_file, $local_path.'index.html');
+            }
         }
         
         $result = array(

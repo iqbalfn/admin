@@ -50,6 +50,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 
+$route['admin']                     = 'admin/home/object/index';
+
+$route['admin/me/login']            = 'admin/me/auth/login';
+$route['admin/me/logout']           = 'admin/me/auth/logout';
+$route['admin/me/setting']          = 'admin/me/setting/index';
+
 $route['upload']                    = 'media/upload';
 
 $route['default_controller']        = 'home';

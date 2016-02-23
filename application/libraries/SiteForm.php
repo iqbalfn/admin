@@ -148,15 +148,19 @@ class SiteForm
         
         // the html string
         $tx = '<' . $tag . $attr . '>';
+        
         if(array_key_exists('children', $el)){
             
             if(!is_array($el['children']))
                 $el['children'] = array($el['children']);
             
-            foreach($el['children'] as $child)
-                $tx.= $this->_generateHTML($child);
+            foreach($el['children'] as $child){
+                if($child)
+                    $tx.= $this->_generateHTML($child);
+            }
             
         }
+        
         $tx.= '</' . $tag . '>';
         
         return $tx;
@@ -165,7 +169,7 @@ class SiteForm
     /**
      * input boolean
      */
-    public function _inputBoolean(){
+    private function _inputBoolean(){
         // the container
         $div = array(
             'attrs' => array(
@@ -208,7 +212,7 @@ class SiteForm
     /**
      * general input
      */
-    public function _inputGeneral(){
+    private function _inputGeneral(){
         $input = array(
             'tag' => 'input'
         );
@@ -421,7 +425,7 @@ class SiteForm
     /**
      * general input
      */
-    public function _inputMultiple(){
+    private function _inputMultiple(){
         $input = array(
             'children' => array(),
             'attrs' => array(
@@ -509,7 +513,7 @@ class SiteForm
     /**
      * input select
      */
-    public function _inputSelect(){
+    private function _inputSelect(){
         $input = array(
             'tag' => 'select',
             'children' => array()
@@ -547,7 +551,7 @@ class SiteForm
     /**
      * input textarea
      */
-    public function _inputTextArea(){
+    private function _inputTextArea(){
         $input = array(
             'tag' => 'textarea',
             'children' => set_value($this->input_name, $this->input_value)
@@ -574,6 +578,16 @@ class SiteForm
     }
     
     /**
+     * Getter
+     * @param string name the field name.
+     */
+    public function __get($field){
+        if($field == 'name')
+            return $this->form_name;
+        return null;
+    }
+    
+    /**
      * Create field element.
      * @param string name The field name.
      * @param array options List of value-label pair of the options.
@@ -594,7 +608,7 @@ class SiteForm
         $this->input_type       = $this->input['type'];
         
         $this->input_value = '';
-        if(property_exists($this->object, $this->input_name))
+        if($this->object && property_exists($this->object, $this->input_name))
             $this->input_value = $this->object->{$this->input_name};
         
         if(array_key_exists('attrs', $this->input)){
@@ -666,16 +680,20 @@ class SiteForm
     }
     
     /**
-     * Get various javascript that the form need.
+     * Script that create script to focus error element or first element.
+     * @return string javascript
      */
-    public function javascript(){
-        $s = '<script>';
-        $s.= 'window.CURRENT_FORM_NAME = \'' . $this->form_name . '\';';
-        if($this->object && property_exists($this->object, 'id'))
-                $s.= 'window. = ' . $this->object->id . ';';
-        $s.= '</script>';
+    public function focusInput(){
+        $tx = '<script>';
+        if($this->errors){
+            $keys = array_keys($this->errors);
+            $tx.= '$("#field-' . $keys[0] . '").focus();';
+        }else{
+            $tx.= '$($(\'form input\').get(0)).focus();';
+        }
+        $tx.= '</script>';
         
-        return $s;
+        return $tx;
     }
     
     /**
@@ -710,5 +728,50 @@ class SiteForm
      */
     public function setObject($object){
         $this->object = $object;
+    }
+    
+    /**
+     * Validate the form based on posted data.
+     * @param preset_object The preset object that need to ignore on same.
+     * @return array field-value pair of new data
+     * @return false on error found
+     * @return true on no error and no new data exists.
+     */
+    public function validate($preset_object=null){
+        $this->CI->load->helper(array('form', 'url'));
+        $rules = config_item($this->form_name);
+        
+        if(!$this->CI->form_validation->run($this->form_name))
+            return !!($this->errors = $this->CI->form_validation->error_array());
+        
+        $preset_object = (array)$preset_object;
+        
+        if(!$preset_object)
+            $preset_object = array();
+        
+        $obj = array();
+        foreach($rules as $prop => $rul){
+            $value = $this->CI->input->post($prop);
+            $input = $rul['input'];
+            
+            if($value === NULL){
+                if($input['type'] != 'boolean')
+                    continue;
+                $value = 0;
+            }
+            
+            // TODO
+            // should we download media file if it's not on our server?
+            if($input['type'] == 'image' || $input == 'file'){
+                
+            }
+            
+            if(!array_key_exists($prop, $preset_object))
+                $obj[$prop] = $value;
+            elseif($value != $preset_object[$prop])
+                $obj[$prop] = $value;
+        }
+        
+        return $obj ? $obj : true;
     }
 }

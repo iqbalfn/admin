@@ -28,7 +28,12 @@ class SiteMenu
                     array(
                         'label' => 'Generate Alexa Rank',
                         'perms' => 'create_alexa-rank',
-                        'target'=> '/admin/rank/alexa'
+                        'target'=> '/admin/statistic/alexa'
+                    ),
+                    array(
+                        'label' => 'Google Analytics',
+                        'perms' => 'read_google-analytics',
+                        'target'=> '/admin/statistic/google-analytics'
                     )
                 )
             ),

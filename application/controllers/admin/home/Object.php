@@ -13,5 +13,13 @@ class Object extends MY_Controller
     public function index(){
         if(!$this->user)
             return $this->redirect('/admin/me/login');
+        if(!$this->can_i('read_admin-page'))
+            return $this->show_404();
+        
+        $params = array(
+            'title' => _l('Admin')
+        );
+        
+        $this->respond('home/index', $params);
     }
 }
