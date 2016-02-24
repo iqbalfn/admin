@@ -251,7 +251,7 @@ document.querySelector('#the-form')
         ls.push('           \'' + c.index_variable + '\' => []');
         ls.push('       );');
         ls.push('');
-        ls.push('       $cond = array()');
+        ls.push('       $cond = array();');
         if(c.index_mine)
             ls.push('       $cond[\'user\'] = $this->user->id;');
         
@@ -286,6 +286,9 @@ document.querySelector('#the-form')
             ls.push('           $this->load->library(\'ObjectFormatter\', \'\', \'format\');');
             ls.push('           $params[\'' + c.index_variable + '\'] = $this->format->' + c.table + '($result, false, true);');
             ls.push('       }');
+        }else{
+            ls.push('       if($result)');
+            ls.push('           $params[\'' + c.index_variable + '\'] = $result;');
         }
         
         ls.push('');
