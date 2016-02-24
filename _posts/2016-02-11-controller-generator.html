@@ -2,3 +2,397 @@
 layout: post
 title: Controller Generator
 ---
+
+<form id="the-form">
+    <fieldset>
+        <legend>Properties</legend>
+        <input type="text" id="c-name" placeholder="Name" autofocus="autofocus">
+        <input type="text" id="c-parent" placeholder="Parent">
+        <input type="text" id="c-table" placeholder="Table">
+        <button>Generate</button>
+    </fieldset>
+    <fieldset>
+        <legend><label><input type="checkbox" id="c-remove"> Remove</label></legend>
+        <label><input type="checkbox" id="c-remove-login"> Require login</label>
+        <label><input type="checkbox" id="c-remove-cache"> Remove cache</label>
+        <label><input type="checkbox" id="c-remove-mine"> Only if mine</label>
+        <br>
+        <input type="text" id="c-remove-perms" placeholder="Permission">
+        <input type="text" id="c-remove-redirect" placeholder="Redirect">
+    </fieldset>
+    <fieldset>
+        <legend><label><input type="checkbox" id="c-index"> Index</label></legend>
+        <label><input type="checkbox" id="c-index-login"> Require login</label>
+        <label><input type="checkbox" id="c-index-format"> Format</label>
+        <label><input type="checkbox" id="c-index-mine"> View Mine Only</label>
+        <br>
+        <input type="text" id="c-index-view" placeholder="View">
+        <input type="text" id="c-index-variable" placeholder="Variable">
+        <input type="text" id="c-index-title" placeholder="Title">
+        <input type="text" id="c-index-perms" placeholder="Permission">
+        <input type="text" id="c-index-rpp" placeholder="Result per page">
+        <input type="text" id="c-index-parameters" placeholder="Perameters">
+    </fieldset>
+    <fieldset>
+        <legend><label><input type="checkbox" id="c-single"> Single</label></legend>
+        <label><input type="checkbox" id="c-single-login"> Require login</label>
+        <label><input type="checkbox" id="c-single-format"> Format</label>
+        <label><input type="checkbox" id="c-single-mine"> View Mine Only</label>
+        <br>
+        <input type="text" id="c-single-view" placeholder="View">
+        <input type="text" id="c-single-variable" placeholder="Variable">
+        <input type="text" id="c-single-title" placeholder="Title Field">
+        <input type="text" id="c-single-perms" placeholder="Permission">
+    </fieldset>
+    <fieldset>
+        <legend><label><input type="checkbox" id="c-create"> Create/Edit</label></legend>
+        <label><input type="checkbox" id="c-create-login"> Require login</label>
+        <label><input type="checkbox" id="c-create-cache"> Remove cache</label>
+        <label><input type="checkbox" id="c-create-mine"> Edit mine only</label>
+        <br>
+        <input type="text" id="c-create-view" placeholder="View">
+        <input type="text" id="c-create-variable" placeholder="Variable">
+        <input type="text" id="c-create-title-create" placeholder="Title For Create">
+        <input type="text" id="c-create-title-edit" placeholder="Title For Edit">
+        <input type="text" id="c-create-perms-create" placeholder="Permission For Create">
+        <input type="text" id="c-create-perms-edit" placeholder="Permission For Edit">
+        <input type="text" id="c-create-form" placeholder="Form Name">
+        <input type="text" id="c-create-fields" placeholder="Preset Properties Sep By Comma">
+        <input type="text" id="c-create-redirect" placeholder="Redirect">
+    </fieldset>
+</form>
+
+<div>&#160;</div>
+
+<pre id="the-result"></pre>
+
+<div id="the-downloader" style="text-align:righ"></div>
+
+<script>
+document.querySelector('#the-form')
+.addEventListener('submit', function(e){
+    var tx,ls;
+    var c = {};
+    var def = {
+            name: 'object',
+            parent: 'MY_Controller'
+        };
+    
+    var inputs = document.querySelectorAll('input');
+    for(var i=0; i<inputs.length; i++){
+        var input = inputs[i];
+        var id    = input.getAttribute('id');
+        id = id.replace(/^c\-/, '').replace(/\-/g, '_');
+        
+        var value = input.value;
+        if(input.getAttribute('type') == 'checkbox')
+            value = input.checked;
+        else if(!value)
+            value = def[id];
+        
+        c[id] = value;
+    }
+    
+    c.name = c.name[0].toUpperCase() + c.name.slice(1).toLowerCase();
+    if(c.table){
+        c.model = c.table[0].toUpperCase() + c.table.slice(1).toLowerCase();
+        c.model = c.model.replace(/[^a-zA-Z]/g, '');
+        c.model_name = '';
+        var cmd = c.table.split('_');
+        for(var i=0;i<cmd.length; i++){
+            c.model_name+= cmd[i][0].toUpperCase();
+            if(i==cmd.length-1)
+                c.model_name+= cmd[i].slice(1).toLowerCase();
+        }
+    }
+    
+    tx = [
+        '&lt;?php',
+        '',
+        'if(!defined(\'BASEPATH\'))',
+        '    die;',
+        '',
+        '/**',
+        ' * The `' + c.name + '` controller',
+        ' */',
+        'class ' + c.name + ' extends ' + c.parent,
+        '{',
+    ];
+    
+    /* CONSTRUCTOR */
+    ls = [
+        '',
+        '   function __construct(){',
+        '       parent::__construct();'];
+    if(c.model){
+        ls.push('');
+        ls.push('       $this->load->model(\''+c.model+'_model\', \'' + c.model_name + '\');');
+    }
+    ls.push('   }');
+    
+    tx = tx.concat(ls);
+    
+    /* EDIT/CREATE */
+    if(c.create){
+        ls = [
+            '',
+            '   function edit($id=null){'];
+        
+        if(c.create_login){
+            ls.push('       if(!$this->user)');
+            ls.push('           return $this->redirect(\'/admin/me/login?next=\' . uri_string());');
+        }
+        
+        if(c.create_perms_create){
+            ls.push('       if(!$id && !$this->can_i(\'' + c.create_perms_create + '\'))')
+            ls.push('           return $this->show_404();');
+        }
+        
+        if(c.create_perms_edit){
+            ls.push('       if($id && !$this->can_i(\'' + c.create_perms_edit + '\'))')
+            ls.push('           return $this->show_404();');
+        }
+        
+        ls.push('');
+        ls.push('       $this->load->library(\'SiteForm\', \'\', \'form\');');
+        ls.push('');
+        
+        if(c.create_fields){
+            ls.push('       $get_field = [\'' + c.create_fields.split(',').join('\',\'') + '\']');
+            ls.push('');
+        }
+        
+        ls.push('       $params = [];');
+        ls.push('');
+        
+        ls.push('       if($id){');
+        ls.push('           $object = $this->' + c.model_name + '->get($id);');
+        ls.push('           if(!$object)');
+        ls.push('               return $this->show_404();');
+        if(c.create_mine){
+            ls.push('           if($object->user != $this->user->id)');
+            ls.push('               return $this->show_404();');
+        }
+        ls.push('           $params[\'title\'] = _l(\''+c.create_title_edit+'\');');
+        ls.push('       }else{');
+        ls.push('           $object = (object)array();');
+        if(c.create_fields){
+            ls.push('           foreach($get_field as $get){');
+            ls.push('               $get_val = $this->input->get($get);');
+            ls.push('               if($get_val)');
+            ls.push('                   $object->$get = $get_val;');
+            ls.push('           }');
+        }
+        ls.push('           $params[\'title\'] = _l(\''+c.create_title_create+'\');');
+        ls.push('       }');
+        
+        ls.push('');
+        
+        ls.push('       $this->form->setObject($object);');
+        ls.push('       $this->form->setForm(\''+c.create_form+'\');');
+        
+        ls.push('');
+        ls.push('       $params[\''+c.create_variable+'\'] = $object;');
+        
+        ls.push('');
+        ls.push('       if(!($object=$this->form->validate($object)))');
+        ls.push('           return $this->respond(\''+c.create_view+'\', $params);');
+        
+        ls.push('');
+        ls.push('       if($object === true)');
+        ls.push('           return $this->redirect(\''+c.create_redirect+'\');');
+        
+        ls.push('');
+        ls.push('       if(!$id){');
+        if(c.create_fields){
+            ls.push('           foreach($get_field as $get){');
+            ls.push('               $get_val = $this->input->get($get);');
+            ls.push('               if(!property_exists($object, $get))');
+            ls.push('                   $object->$get = $get_val;');
+            ls.push('           }');
+        }
+        ls.push('           $object[\'id\'] = $this->' + c.model_name + '->create($object);');
+        ls.push('       }else{');
+        ls.push('           $this->' + c.model_name + '->set($id, $object);');
+        ls.push('       }');
+        
+        ls.push('');
+        
+        if(c.create_cache)
+            ls.push('       $this->cache->file->delete(\'' + c.table + '\');');
+        
+        ls.push('       $this->redirect(\''+c.create_redirect+'\');');
+        
+        ls.push('   }');
+        
+        tx = tx.concat(ls);
+    }
+    
+    
+    /* INDEXER */
+    if(c.index){
+        ls = [
+            '',
+            '   function index(){'];
+        
+        if(c.index_login){
+            ls.push('       if(!$this->user)');
+            ls.push('           return $this->redirect(\'/admin/me/login?next=\' . uri_string());');
+        }
+        
+        if(c.index_perms){
+            ls.push('       if(!$this->can_i(\'' + c.index_perms + '\'))')
+            ls.push('           return $this->show_404();');
+        }
+        
+        ls.push('');
+        ls.push('       $params = array(');
+        ls.push('           \'title\' => _l(\'' + c.index_title + '\'),');
+        ls.push('           \'' + c.index_variable + '\' => []');
+        ls.push('       );');
+        ls.push('');
+        ls.push('       $cond = array()');
+        if(c.index_mine)
+            ls.push('       $cond[\'user\'] = $this->user->id;');
+        
+        if(c.index_parameters){
+            var params = c.index_parameters.split(',');
+            params = '\'' + params.join('\',\'') + '\'';
+            ls.push('');
+            ls.push('       $args = [' + params + '];');
+            ls.push('       foreach($args as $arg){');
+            ls.push('           $arg_val = $this->input->get($arg);');
+            ls.push('           if($arg_val)');
+            ls.push('               $cond[$arg] = $arg_val;');
+            ls.push('       }');
+        }
+        
+        ls.push('');
+        
+        if(c.index_rpp){
+            ls.push('       $rpp = ' + c.index_rpp + ';');
+            ls.push('       $page= $this->input->get(\'page\');');
+            ls.push('       if(!$page)');
+            ls.push('           $page = 1;');
+        }else{
+            ls.push('       $rpp = true;');
+            ls.push('       $page= false;');
+        }
+        ls.push('');
+        ls.push('       $result = $this->' + c.model_name + '->getByCond($cond, $rpp, $page);');
+        
+        if(c.index_format){
+            ls.push('       if($result){');
+            ls.push('           $this->load->library(\'ObjectFormatter\', \'\', \'format\');');
+            ls.push('           $params[\'' + c.index_variable + '\'] = $this->format->' + c.table + '($result, false, true);');
+            ls.push('       }');
+        }
+        
+        ls.push('');
+        
+        ls.push('       $this->respond(\'' + c.index_view + '\', $params);');
+        
+        ls.push('   }');
+        
+        tx = tx.concat(ls);
+    }
+    
+    
+    /* REMOVER */
+    if(c.remove){
+        ls = [
+            '',
+            '   function remove($id){'];
+        
+        if(c.remove_login){
+            ls.push('       if(!$this->user)');
+            ls.push('           return $this->redirect(\'/admin/me/login?next=\' . uri_string());');
+        }
+        
+        if(c.remove_perms){
+            ls.push('       if(!$this->can_i(\'' + c.remove_perms + '\'))')
+            ls.push('           return $this->show_404();');
+        }
+        
+        ls.push('');
+        if(c.remove_cache)
+            ls.push('       $this->cache->file->delete(\'' + c.table + '\');');
+        
+        ls.push('       $this->' + c.model_name + '->remove($id);');
+        ls.push('       $this->redirect(\'' + c.remove_redirect + '\');');
+        
+        ls.push('   }');
+        
+        tx = tx.concat(ls);
+    }
+    
+    
+    /* SINGLE */
+    if(c.single){
+        ls = [
+            '',
+            '   function single($id){'];
+        
+        if(c.single_login){
+            ls.push('       if(!$this->user)');
+            ls.push('           return $this->redirect(\'/admin/me/login?next=\' . uri_string());');
+        }
+        
+        if(c.single_perms){
+            ls.push('       if(!$this->can_i(\'' + c.single_perms + '\'))')
+            ls.push('           return $this->show_404();');
+        }
+        
+        ls.push('');
+        
+        ls.push('       $params = array();');
+        
+        ls.push('');
+        ls.push('       $cond = array(\'id\'=>$id)');
+        if(c.single_mine)
+            ls.push('       $cond[\'user\'] = $this->user->id;');
+        
+        ls.push('');
+        ls.push('       $result = $this->' + c.model_name + '->getByCond($cond, 1);');
+        ls.push('       if(!$result)');
+        ls.push('           return $this->show_404();');
+        
+        ls.push('');
+        ls.push('       $params[\'title\'] = $result->title;');
+        ls.push('');
+        
+        if(c.single_format){
+            ls.push('       $this->load->library(\'ObjectFormatter\', \'\', \'format\');');
+            ls.push('       $params[\'' + c.single_variable + '\'] = $this->format->' + c.table + '($result);');
+        }
+        
+        ls.push('');
+        
+        ls.push('       $this->respond(\'' + c.single_view + '\', $params);');
+        
+        ls.push('   }');
+        
+        tx = tx.concat(ls);
+    }
+    
+    
+    
+    /* END OF THE BUILDER */
+    tx.push('}');
+    
+    tx = tx.join('\n');
+    document.querySelector('#the-result').innerHTML = tx;
+    
+    var a = document.createElement('a');
+    a.setAttribute('download', c.name + '.php');
+    a.innerHTML = 'Download';
+    
+    tx = tx.replace('&lt;', '<');
+    a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(tx));
+    
+    document.querySelector('#the-downloader').innerHTML = '';
+    document.querySelector('#the-downloader').appendChild(a);
+    
+    e.preventDefault();
+});
+</script>
