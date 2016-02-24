@@ -8,13 +8,13 @@ class SiteParams
     function __construct(){
         $this->CI =&get_instance();
         
-        $site_params = $this->CI->cache->file->get('site-params');
+        $site_params = $this->CI->cache->file->get('site_params');
         if(!$site_params || is_dev()){
             $this->CI->load->model('Siteparams_model', 'Siteparams');
             $site_params = $this->CI->Siteparams->getByCond([], true);
             if($site_params)
                 $site_params = prop_as_key($site_params, 'name', 'value');
-            $this->CI->cache->file->save('site-params', $site_params, 604800);
+            $this->CI->cache->file->save('site_params', $site_params, 604800);
         }
         
         $this->site_params = $site_params;

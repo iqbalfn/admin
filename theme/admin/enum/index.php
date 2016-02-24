@@ -25,16 +25,20 @@
                                 <div class="panel-heading" id="<?= $panel_header ?>" role="tab">
                                     <h4 class="panel-title">
                                         <a aria-controls="<?= $panel_id ?>" aria-expanded="true" data-toggle="collapse" href="#<?= $panel_id ?>" role="button"><?= $group ?></a>
+                                        <?php if(ci()->can_i('create_system-enum')): ?>
                                         <a href="<?= base_url('/admin/enum/0') ?>?group=<?= $group ?>" class="pull-right"><i class="glyphicon glyphicon-plus"></i></a>
+                                        <?php endif; ?>
                                     </h4>
                                 </div>
                                 
                                 <div aria-expanded="true" aria-labelledby="<?= $panel_header ?>" class="panel-collapse collapse" id="<?= $panel_id ?>" role="tabpanel">
                                     <div class="list-group">
                                         <?php foreach($opts as $opt): ?>
-                                        <a href="<?= base_url('/admin/enum/'.$opt->id) ?>" class="list-group-item">
-                                            [ <?= $opt->value ?> ] <?= $opt->label ?>
-                                        </a>
+                                            <?php if(ci()->can_i('update_system-enum')): ?>
+                                                <a href="<?= base_url('/admin/enum/'.$opt->id) ?>" class="list-group-item">[ <?= $opt->value ?> ] <?= $opt->label ?></a>
+                                            <?php else: ?>
+                                                <div class="list-group-item">[ <?= $opt->value ?> ] <?= $opt->label ?></div>
+                                            <?php endif; ?>
                                         <?php endforeach; ?>
                                     </div>
                                 </div>

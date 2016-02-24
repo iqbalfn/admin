@@ -56,7 +56,7 @@ class Object extends MY_Controller
             
         }
         
-        $this->cache->file->delete('system-enum');
+        $this->cache->file->delete('enum');
         
         $this->redirect('/admin/enum');
     }
@@ -86,7 +86,7 @@ class Object extends MY_Controller
             return $this->show_404();
         
         $this->Enum->remove($id);
-        $this->cache->file->delete('system-enum');
+        $this->cache->file->delete('enum');
         $this->redirect('/admin/enum');
     }
 }

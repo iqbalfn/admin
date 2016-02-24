@@ -8,7 +8,7 @@ class SiteEnum
     function __construct(){
         $this->CI =&get_instance();
         
-        $system_enum = $this->CI->cache->file->get('system-enum');
+        $system_enum = $this->CI->cache->file->get('enum');
         if(!$system_enum || is_dev()){
             $this->CI->load->model('Enum_model', 'Enum');
             $system_enum = $this->CI->Enum->getByCond([], true, false, ['id'=>'ASC']);
@@ -17,7 +17,7 @@ class SiteEnum
                 foreach($system_enum as $group => $values)
                     $system_enum[$group] = prop_as_key($values, 'value', 'label');
             }
-            $this->CI->cache->file->save('system-enum', $system_enum, 604800);
+            $this->CI->cache->file->save('enum', $system_enum, 604800);
         }
         
         $this->system_enum = $system_enum;

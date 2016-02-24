@@ -50,18 +50,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 
-$route['admin']                     = 'admin/home/object/index';
+$route['admin']                         = 'admin/home/object/index';
 
-$route['admin/enum']                = 'admin/enum/object/index';
-$route['admin/enum/(:num)']         = 'admin/enum/object/edit/$1';
-$route['admin/enum/(:num)/remove']  = 'admin/enum/object/remove/$1';
+$route['admin/enum']                    = 'admin/enum/object/index';
+$route['admin/enum/(:num)']             = 'admin/enum/object/edit/$1';
+$route['admin/enum/(:num)/remove']      = 'admin/enum/object/remove/$1';
 
-$route['admin/me/login']            = 'admin/me/auth/login';
-$route['admin/me/logout']           = 'admin/me/auth/logout';
-$route['admin/me/setting']          = 'admin/me/setting/index';
+$route['admin/me/login']                = 'admin/me/auth/login';
+$route['admin/me/logout']               = 'admin/me/auth/logout';
+$route['admin/me/setting']              = 'admin/me/setting/index';
 
-$route['upload']                    = 'media/upload';
+$route['admin/param']                   = 'admin/param/object/index';
+$route['admin/param/(:num)']            = 'admin/param/object/edit/$1';
+$route['admin/param/(:num)/remove']     = 'admin/param/object/remove/$1';
 
-$route['default_controller']        = 'home';
-$route['404_override']              = 'my_controller/show_404';
-$route['translate_uri_dashes']      = FALSE;
+$route['upload']                        = 'media/upload';
+
+$route['default_controller']            = 'home';
+$route['404_override']                  = 'my_controller/show_404';
+$route['translate_uri_dashes']          = FALSE;

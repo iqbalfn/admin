@@ -1,6 +1,12 @@
 TRUNCATE `site_params`;
 INSERT INTO `site_params` ( `name`, `value` ) VALUES
+    ( 'site_description', 'The standart site description that will appear on meta tag of site front page' ),
+    ( 'site_keywords', 'list of, site keywords, that will, appear on meta, tag of site, front page' ),
     ( 'site_name', 'Admin' ),
+    ( 'site_x_social_facebook', '' ),
+    ( 'site_x_social_gplus', '' ),
+    ( 'site_x_social_instagram', '' ),
+    ( 'site_x_social_twitter', '' ),
     ( 'site_theme', 'default' );
 
 TRUNCATE `enum`;

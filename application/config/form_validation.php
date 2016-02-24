@@ -111,5 +111,26 @@ $config = array(
                 'type' => 'url'
             )
         )
+    ),
+    
+    '/admin/param' => array(
+        
+        'name' => array(
+            'field' => 'name',
+            'label' => 'Name',
+            'rules' => 'required|strtolower|alpha_dash',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'value' => array(
+            'field' => 'value',
+            'label' => 'Value',
+            'rules' => '',
+            'input' => array(
+                'type' => 'textarea'
+            )
+        )
     )
 );
