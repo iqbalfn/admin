@@ -9,7 +9,11 @@ class ObjectFormatter
     
     function __construct(){
         $this->CI =&get_instance();
+        $this->CI->load->config('object_formatter');
         
+        $x_objs = ['objDate', 'objEnum', 'objMedia', 'objText'];
+        foreach($x_objs as $obj)
+            require_once(APPPATH . 'object/' . $obj . '.php');
     }
     
     /**
@@ -32,7 +36,7 @@ class ObjectFormatter
      * @return as of format()
      */
     public function __call($name, $args){
-        array_unshift($arguments, $method);
-        return call_user_func_array(array($this, 'format'), $arguments);
+        array_unshift($args, $name);
+        return call_user_func_array(array($this, 'format'), $args);
     }
 }
