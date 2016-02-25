@@ -25,4 +25,5 @@ Index of contents
 7. [Form Validation]({{ site.baseurl }}{% post_url 2016-02-11-form-validation %})
 8. [File Uploader]({{ site.baseurl }}{% post_url 2016-02-11-file-upload %})
 9. Libraries
-    1. [SiteForm]({{ site.baseurl }}{% post_url 2016-02-11-library-site-form %})
+    1. [ObjectFormatter]({{ site.baseurl }}{% post_url 2016-02-11-object-formatter %})
+    2. [SiteForm]({{ site.baseurl }}{% post_url 2016-02-11-library-site-form %})
