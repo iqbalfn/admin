@@ -118,7 +118,7 @@ countGrouped
  *
  * @param string field The field to group by
  *
- * @return integer total rows or false.
+ * @return array field-total pair of the result
  */
 {% endhighlight %}
 
@@ -134,7 +134,7 @@ countGroupedBy
  * @param mixed|array value The row `$where_field` value or list of the values.
  * @param string field The field for condition.
  *
- * @return integer total rows or false.
+ * @return array field-total pair of the result
  */
 {% endhighlight %}
 
@@ -148,7 +148,7 @@ countGroupedByCond
  *
  * @param array cond The conditions.
  *
- * @return integer total rows or false.
+ * @return array field-total pair of the result
  */
 {% endhighlight %}
 

@@ -27,3 +27,4 @@ Index of contents
 9. Libraries
     1. [ObjectFormatter]({{ site.baseurl }}{% post_url 2016-02-11-object-formatter %})
     2. [SiteForm]({{ site.baseurl }}{% post_url 2016-02-11-library-site-form %})
+    3. [SiteMenu]({{ site.baseurl }}{% post_url 2016-02-11-library-site-menu %})

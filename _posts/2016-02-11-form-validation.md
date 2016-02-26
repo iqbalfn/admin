@@ -110,6 +110,8 @@ The form field input type, they can be one of:
 1. Checkbox
     1. boolean
     1. multiple
+1. Radio
+    1. parent
 
 $prefix_label
 -------------

@@ -32,7 +32,7 @@ format config name `{the table name}` exists.
  * Start formatting the object.
  * @param object|array objects Single object or list of object to format.
  * @param boolean arraykey Set field as the array key. Default false. True for id.
- * @param array|boolean condition List of field to format/force fetch the data from
+ * @param array|boolean fetch List of field to format/force fetch the data from
  *  database for format type start with @.
  * @return formatted object.
  */
