@@ -1,12 +1,3 @@
-DROP TABLE IF EXISTS `enum`;
-CREATE TABLE `enum` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `group` VARCHAR(50),
-    `value` VARCHAR(50),
-    `label` VARCHAR(25),
-    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 DROP TABLE IF EXISTS `media`;
 CREATE TABLE `media` (
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -16,6 +7,17 @@ CREATE TABLE `media` (
     `path` VARCHAR(75),
     `type` VARCHAR(100),
     `object` BIGINT,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS `site_menu`;
+CREATE TABLE `site_menu` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `group` VARCHAR(25),
+    `label` VARCHAR(50),
+    `url` VARCHAR(200),
+    `parent` INTEGER,
+    `index` TINYINT,
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -33,6 +35,15 @@ CREATE TABLE `site_ranks` (
     `vendor` VARCHAR(50),
     `rank_international` INTEGER DEFAULT 0,
     `rank_local` INTEGER DEFAULT 0,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS `site_enum`;
+CREATE TABLE `site_enum` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `group` VARCHAR(50),
+    `value` VARCHAR(50),
+    `label` VARCHAR(25),
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

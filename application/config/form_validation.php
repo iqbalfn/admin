@@ -113,6 +113,58 @@ $config = array(
         )
     ),
     
+    '/admin/menu' => array(
+        
+        'group' => array(
+            'field' => 'group',
+            'label' => 'Group',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'text',
+                'attrs'=> array(
+                    'readonly' => 'readonly'
+                )
+            )
+        ),
+        
+        'label' => array(
+            'field' => 'label',
+            'label' => 'Label',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'url' => array(
+            'field' => 'url',
+            'label' => 'URL',
+            'rules' => '',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'index' => array(
+            'field' => 'index',
+            'label' => 'Index',
+            'rules' => 'is_natural_no_zero',
+            'input' => array(
+                'type' => 'number'
+            )
+        ),
+        
+        'parent' => array(
+            'field' => 'parent',
+            'label' => 'Parent',
+            'rules' => '',
+            'input' => array(
+                'type' => 'parent'
+            )
+        )
+        
+    ),
+    
     '/admin/param' => array(
         
         'name' => array(

@@ -15,15 +15,6 @@ class User_model extends MY_Model
     public $table = 'user';
 
     /**
-     * List of table field for formatter rule.
-     * @var array
-     */
-    public $fields = [
-       'id'      => 'integer',
-       'created' => 'date'
-    ];
-
-    /**
      * Constructor
      */
     function __construct(){

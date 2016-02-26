@@ -7,6 +7,21 @@ class SiteMenu
     
     function __construct(){
         $this->CI =&get_instance();
+        
+        $site_menus = $this->CI->cache->file->get('site_menu');
+        
+        if(!$site_menus || is_dev()){
+            $this->CI->load->model('Sitemenu_model', 'SMenu');
+            $site_menus = $this->CI->SMenu->getByCond([], true, false, ['index'=>'ASC']);
+            if($site_menus){
+                $site_menus = group_by_prop($site_menus, 'group');
+                foreach($site_menus as &$site_menu)
+                    $site_menu = group_by_prop($site_menu, 'parent');
+            }
+            $this->CI->cache->file->save('site_menu', $site_menus, 604800);
+        }
+        
+        $this->menus = $site_menus;
     }
     
     /**
@@ -46,14 +61,19 @@ class SiteMenu
                 'label' => 'Setting',
                 'submenu' => array(
                     array(
+                        'label' => 'Site Enum',
+                        'perms' => 'read_site-enum',
+                        'target'=> '/admin/enum'
+                    ),
+                    array(
+                        'label' => 'Site Menus',
+                        'perms' => 'read_site-menu',
+                        'target'=> '/admin/menu'
+                    ),
+                    array(
                         'label' => 'Site Params',
                         'perms' => 'read_site-param',
                         'target'=> '/admin/param'
-                    ),
-                    array(
-                        'label' => 'System Enum',
-                        'perms' => 'read_system-enum',
-                        'target'=> '/admin/enum'
                     )
                 )
             )

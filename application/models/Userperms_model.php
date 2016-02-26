@@ -15,15 +15,6 @@ class Userperms_model extends MY_Model
     public $table = 'user_perms';
 
     /**
-     * List of table field for formatter rule.
-     * @var array
-     */
-    public $fields = [
-       'id'      => 'integer',
-       'created' => 'date'
-    ];
-
-    /**
      * Constructor
      */
     function __construct(){

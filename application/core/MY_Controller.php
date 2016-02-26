@@ -5,9 +5,6 @@ if(!defined('BASEPATH'))
 
 class MY_Controller extends CI_Controller
 {
-    private $site_params = [];
-    private $system_enum = [];
-    
     public $session;
     public $user;
     

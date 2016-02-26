@@ -10,8 +10,8 @@ INSERT INTO `site_params` ( `name`, `value` ) VALUES
     ( 'site_x_social_twitter', '' ),
     ( 'site_theme', 'default' );
 
-TRUNCATE `enum`;
-INSERT INTO `enum` ( `group`, `value`, `label` ) VALUES
+TRUNCATE `site_enum`;
+INSERT INTO `site_enum` ( `group`, `value`, `label` ) VALUES
     ( 'post.status', 0, 'Deleted' ),
     ( 'post.status', 1, 'Draft' ),
     ( 'post.status', 2, 'Editor' ),
@@ -26,12 +26,17 @@ TRUNCATE `user_perms`;
 INSERT INTO `user_perms` ( `user`, `perms` ) VALUES
     ( 1, 'read_admin-page' ),
     
-    ( 1, 'create_system-enum' ),
-    ( 1, 'delete_system-enum' ),
-    ( 1, 'read_system-enum' ),
-    ( 1, 'update_system-enum' ),
-    
     ( 1, 'create_site-param' ),
     ( 1, 'delete_site-param' ),
     ( 1, 'read_site-param' ),
-    ( 1, 'update_site-param' );
+    ( 1, 'update_site-param' ),
+    
+    ( 1, 'delete_site-menu' ),
+    ( 1, 'create_site-menu' ),
+    ( 1, 'read_site-menu' ),
+    ( 1, 'update_site-menu' ),
+    
+    ( 1, 'create_site-enum' ),
+    ( 1, 'delete_site-enum' ),
+    ( 1, 'read_site-enum' ),
+    ( 1, 'update_site-enum' );

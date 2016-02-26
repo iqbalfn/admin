@@ -13,16 +13,7 @@ class Media_model extends MY_Model
      * @var string
      */
     public $table = 'media';
-
-    /**
-     * List of table field for formatter rule.
-     * @var array
-     */
-    public $fields = [
-       'id'      => 'integer',
-       'created' => 'date'
-    ];
-
+    
     /**
      * Constructor
      */

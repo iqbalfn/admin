@@ -13,16 +13,7 @@ class Siteranks_model extends MY_Model
      * @var string
      */
     public $table = 'site_ranks';
-
-    /**
-     * List of table field for formatter rule.
-     * @var array
-     */
-    public $fields = [
-       'id'      => 'integer',
-       'created' => 'date'
-    ];
-
+    
     /**
      * Constructor
      */

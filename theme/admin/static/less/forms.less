@@ -194,8 +194,17 @@ output {
     overflow: auto;
     padding: 0 10px 10px 0;
 }
-.form-control-multiple-item{
-    padding-left: 10px;
+.form-control-parent{
+    display: block;
+    width: 100%;
+    border: 1px solid @input-border;
+    .box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
+    overflow: auto;
+    padding: 0 10px 10px 0;
+}
+.form-control-multiple-item,
+.form-control-parent-item{
+    padding-left: 15px;
 }
 
 .textarea-dynamic{

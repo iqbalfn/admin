@@ -1,34 +1,34 @@
 <?php
-    $menus = $this->menu->item('admin');
-    if($menus){
+    $header_menus = $this->menu->item('admin');
+    if($header_menus){
         $tx = '';
-        foreach($menus as $menu){
+        foreach($header_menus as $header_menu){
             $classes = [];
-            $submenu = array_key_value_or('submenu', $menu);
-            if($submenu)
+            $header_submenu = array_key_value_or('submenu', $header_menu);
+            if($header_submenu)
                 $classes[] = 'dropdown';
-            $active_on_hover = array_key_exists('target', $menu);
-            if($active_on_hover && $submenu)
+            $active_on_hover = array_key_exists('target', $header_menu);
+            if($active_on_hover && $header_submenu)
                 $classes[] = 'dropdown-toggle-on-hover';
             
             $tx.= '<li'.($classes?' class="'.implode(' ',$classes).'"':'').'>';
             
             $tx.= '<a';
-            $tx.= array_key_exists('target', $menu) ? ' href="'.$menu['target'].'"' : '';
-            if($submenu){
+            $tx.= array_key_exists('target', $header_menu) ? ' href="'.$header_menu['target'].'"' : '';
+            if($header_submenu){
                 $tx.= ' aria-expanded="false" aria-haspopup="true" role="button" class="dropdown-toggle"';
                 if(!$active_on_hover)
                     $tx.= ' class="dropdown-toggle" data-toggle="dropdown"';
             }
             $tx.= '>';
             
-            $tx.= _l($menu['label']);
-            $tx.= $submenu ? ' <span class="caret"></span>' : '';
+            $tx.= _l($header_menu['label']);
+            $tx.= $header_submenu ? ' <span class="caret"></span>' : '';
             $tx.= '</a>';
             
-            if($submenu){
+            if($header_submenu){
                 $tx.= '<ul class="dropdown-menu">';
-                foreach($submenu as $sub){
+                foreach($header_submenu as $sub){
                     if($sub['label'] == '---'){
                         $tx.= '<li class="divider" role="separator"></li>';
                     }else{

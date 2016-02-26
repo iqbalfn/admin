@@ -4,16 +4,16 @@ if(!defined('BASEPATH'))
     die;
 
 /**
- * The model of table `site_params`
+ * The model of table `site_menu`
  */
-class Siteparams_model extends MY_Model
+class Sitemenu_model extends MY_Model
 {
     /**
      * Table name
      * @var string
      */
-    public $table = 'site_params';
-    
+    public $table = 'site_menu';
+
     /**
      * Constructor
      */

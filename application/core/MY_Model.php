@@ -159,7 +159,7 @@ class MY_Model extends CI_Model
     /**
      * Get total rows
      * @param string field The field to group by
-     * @return integer total rows or false.
+     * @return array field-total pair of the result
      */
     public function countGrouped($field){
         return $this->countGroupedByCond([], $field);
@@ -170,7 +170,7 @@ class MY_Model extends CI_Model
      * @param string where_field The field for condition
      * @param mixed|array value The row `$where_field` value or list of `$where_field` values.
      * @param string field The field for condition.
-     * @return integer total rows or false.
+     * @return array field-total pair of the result
      */
     public function countGroupedBy($where_field, $value, $field){
         return $this->countGroupedByCond([$field=>$value], $field);
@@ -179,7 +179,7 @@ class MY_Model extends CI_Model
     /**
      * Get total rows by conditions
      * @param array cond The conditions.
-     * @return integer total rows or false.
+     * @return array field-total pair of the result
      */
     public function countGroupedByCond($cond, $field){
         $this->_implementCondition($cond);

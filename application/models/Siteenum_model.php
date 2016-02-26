@@ -6,23 +6,14 @@ if(!defined('BASEPATH'))
 /**
  * The model of table `enum`
  */
-class Enum_model extends MY_Model
+class Siteenum_model extends MY_Model
 {
     /**
      * Table name
      * @var string
      */
-    public $table = 'enum';
-
-    /**
-     * List of table field for formatter rule.
-     * @var array
-     */
-    public $fields = [
-       'id'      => 'integer',
-       'created' => 'date'
-    ];
-
+    public $table = 'site_enum';
+    
     /**
      * Constructor
      */

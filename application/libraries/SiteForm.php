@@ -498,7 +498,101 @@ class SiteForm
                 $checkbox['children'] = array($input, $label);
                 $div['children'][] = $checkbox;
                 
-                if(array_key_exists($opt->id, $options))
+                if($opt->id && array_key_exists($opt->id, $options))
+                    $recursiver($opt->id, $div);
+                
+                $container['children'][] = $div;
+            }
+        };
+        
+        $recursiver(0, $input);
+        
+        return $input;
+    }
+    
+    /**
+     * input parent
+     */
+    private function _inputParent(){
+        $input = array(
+            'children' => array(),
+            'attrs' => array(
+                'class' => 'form-control-parent'
+            )
+        );
+        
+        $options = $this->input_options;
+        if(!array_key_exists(0, $options))
+            return $input;
+        
+        $name = $this->input_name;
+        $value = $this->input_value;
+        $obj_id = -1;
+        if(property_exists($this->object, 'id'))
+            $obj_id = $this->object->id;
+        
+        $recursiver = function($parent, &$container) use($options, $name, $value, $obj_id, &$recursiver){
+            if(!array_key_exists($parent, $options))
+                return;
+            
+            $opts = $options[$parent];
+            
+            foreach($opts as $opt){
+                if($obj_id == $opt->id)
+                    continue;
+                
+                $opt   = (object)$opt;
+                $id    = $name . '-' . $opt->id;
+                $label = '';
+                
+                if(property_exists($opt, 'label'))
+                    $label = $opt->label;
+                elseif(property_exists($opt, 'value'))
+                    $label = $opt->value;
+                elseif(property_exists($opt, 'title'))
+                    $label = $opt->title;
+                elseif(property_exists($opt, 'name'))
+                    $label = $opt->name;
+                
+                $div = array(
+                    'attrs' => array(
+                        'class' => 'form-control-parent-item'
+                    ),
+                    'children' => array()
+                );
+                
+                $radio = array(
+                    'attrs' => array(
+                        'class' => 'radio'
+                    ),
+                    'children' => array()
+                );
+                
+                $label = array(
+                    'tag' => 'label',
+                    'attrs' => array(
+                        'for' => $id 
+                    ),
+                    'children' => $label
+                );
+                
+                $input = array(
+                    'tag' => 'input',
+                    'attrs' => array(
+                        'type' => 'radio',
+                        'value' => $opt->id,
+                        'id' => $id,
+                        'name' => $name
+                    )
+                );
+                
+                if($opt->id == $value)
+                    $input['attrs']['checked'] = 'checked';
+                
+                $radio['children'] = array($input, $label);
+                $div['children'][] = $radio;
+                
+                if($opt->id && array_key_exists($opt->id, $options))
                     $recursiver($opt->id, $div);
                 
                 $container['children'][] = $div;
@@ -667,7 +761,8 @@ class SiteForm
             
             'boolean'   => '_inputBoolean',
             
-            'multiple'  => '_inputMultiple'
+            'multiple'  => '_inputMultiple',
+            'parent'    => '_inputParent'
         );
         
         $method = array_key_value_or($this->input_type, $methods, '_inputGeneral');
@@ -689,7 +784,7 @@ class SiteForm
             $keys = array_keys($this->errors);
             $tx.= '$("#field-' . $keys[0] . '").focus();';
         }else{
-            $tx.= '$($(\'form input\').get(0)).focus();';
+            $tx.= '$($(\'form input:not([readonly])\').get(0)).focus();';
         }
         $tx.= '</script>';
         

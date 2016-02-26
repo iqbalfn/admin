@@ -60,6 +60,10 @@ $route['admin/me/login']                = 'admin/me/auth/login';
 $route['admin/me/logout']               = 'admin/me/auth/logout';
 $route['admin/me/setting']              = 'admin/me/setting/index';
 
+$route['admin/menu']                    = 'admin/menu/object/index';
+$route['admin/menu/(:num)']             = 'admin/menu/object/edit/$1';
+$route['admin/menu/(:num)/remove']      = 'admin/menu/object/remove/$1';
+
 $route['admin/param']                   = 'admin/param/object/index';
 $route['admin/param/(:num)']            = 'admin/param/object/edit/$1';
 $route['admin/param/(:num)/remove']     = 'admin/param/object/remove/$1';

@@ -3,24 +3,24 @@
 class SiteEnum
 {
     private $CI;
-    private $system_enum;
+    private $site_enum;
     
     function __construct(){
         $this->CI =&get_instance();
         
-        $system_enum = $this->CI->cache->file->get('enum');
-        if(!$system_enum || is_dev()){
-            $this->CI->load->model('Enum_model', 'Enum');
-            $system_enum = $this->CI->Enum->getByCond([], true, false, ['id'=>'ASC']);
-            if($system_enum){
-                $system_enum = group_by_prop($system_enum, 'group');
-                foreach($system_enum as $group => $values)
-                    $system_enum[$group] = prop_as_key($values, 'value', 'label');
+        $site_enum = $this->CI->cache->file->get('site_enum');
+        if(!$site_enum || is_dev()){
+            $this->CI->load->model('Siteenum_model', 'SEnum');
+            $site_enum = $this->CI->SEnum->getByCond([], true, false, ['id'=>'ASC']);
+            if($site_enum){
+                $site_enum = group_by_prop($site_enum, 'group');
+                foreach($site_enum as $group => $values)
+                    $site_enum[$group] = prop_as_key($values, 'value', 'label');
             }
-            $this->CI->cache->file->save('enum', $system_enum, 604800);
+            $this->CI->cache->file->save('site_enum', $site_enum, 604800);
         }
         
-        $this->system_enum = $system_enum;
+        $this->site_enum = $site_enum;
     }
     
     /**
@@ -32,22 +32,22 @@ class SiteEnum
      */
     public function item($group, $value=null, $label=null){
         if($label){
-            if(!array_key_exists($group, $this->system_enum))
-                $this->system_enum[$group] = array();
-            $this->system_enum[$group][$value] = $label;
+            if(!array_key_exists($group, $this->site_enum))
+                $this->site_enum[$group] = array();
+            $this->site_enum[$group][$value] = $label;
         }
         
         if(is_null($value)){
-            if(array_key_exists($group, $this->system_enum))
-                return $this->system_enum[$group];
+            if(array_key_exists($group, $this->site_enum))
+                return $this->site_enum[$group];
             return false;
         }
         
         if(is_null($label)){
-            if(!array_key_exists($group, $this->system_enum))
+            if(!array_key_exists($group, $this->site_enum))
                 return false;
-            if(array_key_exists($value, $this->system_enum[$group]))
-                return $this->system_enum[$group][$value];
+            if(array_key_exists($value, $this->site_enum[$group]))
+                return $this->site_enum[$group][$value];
             return false;
         }
         
