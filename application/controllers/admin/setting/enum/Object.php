@@ -14,9 +14,9 @@ class Object extends MY_Controller
     public function edit($id){
         if(!$this->user)
             return $this->redirect('/admin/me/login?next=' . uri_string());
-        if(!$id && !$this->can_i('create_site-enum'))
+        if(!$id && !$this->can_i('create-site_enum'))
             return $this->show_404();
-        if($id && !$this->can_i('update_site-enum'))
+        if($id && !$this->can_i('update-site_enum'))
             return $this->show_404();
         
         $this->load->library('SiteForm', '', 'form');
@@ -36,15 +36,15 @@ class Object extends MY_Controller
         }
         
         $this->form->setObject($enum);
-        $this->form->setForm('/admin/enum');
+        $this->form->setForm('/admin/setting/enum');
         
         $params['enum'] = $enum;
         
         if(!($enum=$this->form->validate($enum)))
-            return $this->respond('enum/edit', $params);
+            return $this->respond('setting/enum/edit', $params);
         
         if($enum === true)
-            return $this->redirect('/admin/enum');
+            return $this->redirect('/admin/setting/enum');
         
         if(!$id){
             if(!array_key_exists('group', $enum))
@@ -58,13 +58,13 @@ class Object extends MY_Controller
         
         $this->cache->file->delete('site_enum');
         
-        $this->redirect('/admin/enum');
+        $this->redirect('/admin/setting/enum');
     }
     
     public function index(){
         if(!$this->user)
             return $this->redirect('/admin/me/login?next=' . uri_string());
-        if(!$this->can_i('read_site-enum'))
+        if(!$this->can_i('read-site_enum'))
             return $this->show_404();
         
         $params = array(
@@ -76,17 +76,17 @@ class Object extends MY_Controller
         if($enums)
             $params['enums'] = group_by_prop($enums, 'group');
         
-        $this->respond('enum/index', $params);
+        $this->respond('setting/enum/index', $params);
     }
     
     public function remove($id){
         if(!$this->user)
             return $this->redirect('/admin/me/login?next=' . uri_string());
-        if(!$this->can_i('delete_site-enum'))
+        if(!$this->can_i('delete-site_enum'))
             return $this->show_404();
         
         $this->SEnum->remove($id);
         $this->cache->file->delete('site_enum');
-        $this->redirect('/admin/enum');
+        $this->redirect('/admin/setting/enum');
     }
 }

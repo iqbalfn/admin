@@ -19,7 +19,7 @@ class objMedia implements JsonSerializable
         
         if($base_url)
             return chop($base_url, ' /') . '/' . ltrim($file, ' /');
-        return $file;
+        return base_url($file);
     }
     
     function __get($prop){

@@ -56,6 +56,9 @@ class SiteTheme
         if(!is_dev())
             $file = preg_replace('!\.([a-z]+)$!','.min.$1', $file);
         
+        $base_url = $this->CI->setting->item('theme_host');
+        if($base_url)
+            return chop($base_url, ' /') . '/' . ltrim($file, ' /');
         return base_url('theme/' . $this->current($file));
     }
 }

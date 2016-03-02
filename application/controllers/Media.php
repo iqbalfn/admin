@@ -44,4 +44,42 @@ class Media extends MY_Controller
         );
         $this->ajax($result);
     }
+    
+    /**
+     * Resize image to another size.
+     */
+    public function resize($dir1, $dir2, $dir3, $file){
+        $width = null;
+        $height= null;
+        $ext   = 'jpg';
+        $name  = null;
+        
+        if(preg_match('!(.+)_([0-9]*)x([0-9]*)\.([a-z]+)!', $file, $m)){
+            $name  = $m[1];
+            $width = $m[2];
+            $height= $m[3];
+            $ext   = $m[4];
+        }
+        
+        if(!$width && !$height)
+            return $this->show_404();
+        
+        $file_original = dirname(BASEPATH) . "/media/$dir1/$dir2/$dir3/$name.$ext";
+        $file_requested= dirname(BASEPATH) . "/media/$dir1/$dir2/$dir3/$file";
+        
+        $this->load->library('MediaFile', '', 'media');
+        if(!$this->media->resizeImage($file_original, $file_requested, $width, $height))
+            return $this->show_404();
+        
+        $this->load->helper('file');
+        $content = file_get_contents($file_requested);
+        $mime = get_mime_by_extension($file_requested);
+        
+        $this->output
+            ->set_status_header(200)
+            ->set_content_type($mime)
+            ->set_output($content)
+            ->_display();
+        exit;
+    }
 }

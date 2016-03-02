@@ -15,28 +15,22 @@
                 
                 <form class="row" method="post">
                     <div class="col-md-3">
-                        <?= $this->form->field('group'); ?>
-                        <?= $this->form->field('label'); ?>
-                        <?= $this->form->field('url'); ?>
-                        <?= $this->form->field('index'); ?>
+                        <?= $this->form->field('name') ?>
+                        <?= $this->form->field('value') ?>
                         
                         <div class="row">
                             <div class="col-md-5">
-                                <?php if(ci()->can_i('delete_site-menu') && property_exists($menu, 'id')): ?>
-                                <a href="<?= base_url('/admin/menu/' . $menu->id . '/remove') ?>?group=<?= $menu->group ?>" class="btn btn-danger"><?= _l('Delete') ?></a>
+                                <?php if(ci()->can_i('delete-site_param') && property_exists($param, 'id')): ?>
+                                <a href="<?= base_url('/admin/setting/param/' . $param->id . '/remove') ?>" class="btn btn-danger"><?= _l('Delete') ?></a>
                                 <?php endif; ?>
                             </div>
                             <div class="col-md-7 text-right">
                                 <div class="form-group">
-                                    <a href="<?= base_url('/admin/menu') ?>?group=<?= $menu->group ?>" class="btn btn-default"><?= _l('Cancel') ?></a>
+                                    <a href="<?= base_url('/admin/setting/param') ?>" class="btn btn-default"><?= _l('Cancel') ?></a>
                                     <button class="btn btn-primary"><?= _l('Save') ?></button>
                                 </div>
                             </div>
                         </div>
-                        
-                    </div>
-                    <div class="col-md-9">
-                        <?= $this->form->field('parent', $parents); ?>
                     </div>
                 </form>
             </div>

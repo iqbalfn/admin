@@ -21,13 +21,13 @@
                         
                         <div class="row">
                             <div class="col-md-5">
-                                <?php if(ci()->can_i('delete_site-enum') && property_exists($enum, 'id')): ?>
-                                <a href="<?= base_url('/admin/enum/' . $enum->id . '/remove') ?>" class="btn btn-danger"><?= _l('Delete') ?></a>
+                                <?php if(ci()->can_i('delete-site_enum') && property_exists($enum, 'id')): ?>
+                                <a href="<?= base_url('/admin/setting/enum/' . $enum->id . '/remove') ?>" class="btn btn-danger"><?= _l('Delete') ?></a>
                                 <?php endif; ?>
                             </div>
                             <div class="col-md-7 text-right">
                                 <div class="form-group">
-                                    <a href="<?= base_url('/admin/enum') ?>" class="btn btn-default"><?= _l('Cancel') ?></a>
+                                    <a href="<?= base_url('/admin/setting/enum') ?>" class="btn btn-default"><?= _l('Cancel') ?></a>
                                     <button class="btn btn-primary"><?= _l('Save') ?></button>
                                 </div>
                             </div>

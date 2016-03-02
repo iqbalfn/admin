@@ -10253,6 +10253,30 @@ $(function(){
         $('#'+previewer).html('<img src="' + value + '" alt="Image not found">');
     });
 });
+(function ($) {
+    'use strict';
+    
+    $.fn.slugify = function(){
+        return this.each(function(i,e){
+            if($(e).val())
+                return;
+            
+            var dirty;
+            $(e).focus(function(){ dirty = true; });
+            
+            var source = $($(e).data('source'));
+            source.on('change keyup', function(){
+                if(dirty)
+                    return;
+                var slug = source.val().toLowerCase();
+                slug = slug.replace(/[^a-z0-9]/g, '-');
+                slug = slug.replace(/\-+/g, '-').replace(/^([^a-z0-9]+)|([^a-z0-9]+)$/g, '');
+                $(e).val(slug);
+            });
+        });
+    };
+    
+})(jQuery);
 $(function(){
     // btn-password-masker
     $('.btn-password-masker').click(function(e){
@@ -10277,6 +10301,7 @@ $(function(){
     $('.textarea-dynamic').autosize();
     $('.select-box').selectpicker();
     $('.btn-uploader').fileUploader();
+    $('.slugify').slugify();
     
     // tinymce
     if($('.tinymce').get(0)){

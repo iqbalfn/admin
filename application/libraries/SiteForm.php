@@ -42,7 +42,7 @@ class SiteForm
             'placeholder' => $this->input_label
         );
         
-        // get from user preset
+        // get from form_validation preset
         if(array_key_exists('attrs', $this->input)){
             foreach($this->input['attrs'] as $name => $value){
                 if($name == 'class'){
@@ -50,7 +50,8 @@ class SiteForm
                         $value = implode(' ', $value);
                     $attrs['class'][] = $value;
                 }else{
-                    $attrs[$name] = $value;
+                    if($value)
+                        $attrs[$name] = $value;
                 }
             }
         }
@@ -365,7 +366,8 @@ class SiteForm
                         'tag' => 'button',
                         'attrs' => array(
                             'class' => 'btn btn-default btn-uploader',
-                            'data-target' => $this->input_id
+                            'data-target' => $this->input_id,
+                            'type' => 'button'
                         ),
                         'children' => array(
                             array(

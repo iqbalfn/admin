@@ -56,8 +56,10 @@ class MediaFile
             'original_name'     => $name
         );
         
-        if(is_file($result['local_file_path']))
+        if(is_file($result['local_file_path'])){
+            sleep(1);
             return $this->_prepareTargetDir($name);
+        }
         
         return $result;
     }
@@ -119,14 +121,18 @@ class MediaFile
         
         $form_name = $form_validation[0];
         $field_name= $form_validation[1];
+        
         $form = config_item($form_validation[0]);
+        if(!$form || !array_key_exists($field_name, $form))
+            return 'Media type form not found';
+        
         $field = $form[$field_name];
         $input = $field['input'];
         
         if(array_key_exists('file_type', $input))
             $file_type = $input['file_type'];
         else
-            $file_type = 'jpg|jpeg|gif|png|bmp|avi|mp4|mpeg';
+            $file_type = 'jpg|jpeg|gif|png|bmp|avi|mp4|mpeg|mkv';
         
         $config['upload_path'] = $target['local_file_folder'];
         $config['allowed_types'] = $file_type;
@@ -188,5 +194,71 @@ class MediaFile
         unlink($local_temp);
         
         return $result;
+    }
+    
+    /**
+     * Resize image
+     * @param string original Absolute path to original file.
+     * @param string target Absolute path to target new file to create.
+     * @param integer width The target width.
+     * @param integer height The target height.
+     * @return boolean true on success, false otherwise.
+     */
+    public function resizeImage($original, $target, $width=0, $height=0){
+        if(!file_exists($original))
+            return false;
+        if(file_exists($target))
+            return true;
+        
+        if(!$width && !$height)
+            return false;
+        
+        $this->CI->load->library('image_lib');
+        
+        list($ori_width, $ori_height) = getimagesize($original);
+        
+        $tar_width = $width  ? $width  : ceil( $ori_height * $height / $ori_width );
+        $tar_height= $height ? $height : ceil( $ori_width  * $width  / $ori_height);
+        
+        $v_fact = $height / $ori_height;
+        $h_fact = $width / $ori_width;
+        
+        $im_fact = max($v_fact, $h_fact);
+        
+        $resize_height = ceil($ori_height * $im_fact);
+        $resize_width  = ceil($ori_width  * $im_fact);
+        
+        if(!$height)
+            $tar_height = $resize_height;
+        if(!$width)
+            $tar_width  = $resize_width;
+        
+        $config['image_library']    = 'gd2';
+        $config['source_image']     = $original;
+        $config['new_image']        = $target;
+        $config['quality']          = '75%';
+        $config['maintain_ratio']   = TRUE;
+        $config['width']            = $resize_width;
+        $config['height']           = $resize_height;
+        
+        $this->CI->image_lib->initialize($config);
+        if(!$this->CI->image_lib->resize())
+            return false;
+        
+        if($tar_width == $resize_width && $tar_height == $resize_height)
+            return true;
+        
+        $config['source_image']     = $target;
+        $config['create_thumb']     = FALSE;
+        $config['maintain_ratio']   = FALSE;
+        $config['x_axis']           = $tar_width  > $width  ? ceil( $tar_width  / 2 - ( $width  / 2 ) ) : 0;
+        $config['y_axis']           = $tar_height > $height ? ceil( $tar_height / 2 - ( $height / 2 ) ) : 0;
+        $config['width']            = $tar_width;
+        $config['height']           = $tar_height;
+        
+        $this->CI->image_lib->initialize($config);
+        if(!$this->CI->image_lib->crop())
+            return false;
+        return true;
     }
 }

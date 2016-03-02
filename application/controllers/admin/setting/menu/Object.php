@@ -18,9 +18,9 @@ class Object extends MY_Controller
     function edit($id=null){
         if(!$this->user)
             return $this->redirect('/admin/me/login?next=' . uri_string());
-        if(!$id && !$this->can_i('create_site-menu'))
+        if(!$id && !$this->can_i('create-site_menu'))
             return $this->show_404();
-        if($id && !$this->can_i('update_site-menu'))
+        if($id && !$this->can_i('update-site_menu'))
             return $this->show_404();
 
         $this->load->library('SiteForm', '', 'form');
@@ -45,7 +45,7 @@ class Object extends MY_Controller
         }
 
         $this->form->setObject($object);
-        $this->form->setForm('/admin/menu');
+        $this->form->setForm('/admin/setting/menu');
 
         $params['menu'] = $object;
         
@@ -57,10 +57,10 @@ class Object extends MY_Controller
         $params['parents'] = group_by_prop($parents, 'parent');
         
         if(!($new_object=$this->form->validate($object)))
-            return $this->respond('menu/edit', $params);
+            return $this->respond('setting/menu/edit', $params);
 
         if($new_object === true)
-            return $this->redirect('/admin/menu?group=' . $object->group);
+            return $this->redirect('/admin/setting/menu?group=' . $object->group);
 
         if(!$id){
             foreach($get_field as $get){
@@ -75,13 +75,13 @@ class Object extends MY_Controller
         }
 
         $this->cache->file->delete('site_menu');
-        $this->redirect('/admin/menu?group=' . $object->group);
+        $this->redirect('/admin/setting/menu?group=' . $object->group);
     }
 
     function index(){
         if(!$this->user)
             return $this->redirect('/admin/me/login?next=' . uri_string());
-        if(!$this->can_i('read_site-menu'))
+        if(!$this->can_i('read-site_menu'))
             return $this->show_404();
 
         $params = array(
@@ -106,16 +106,16 @@ class Object extends MY_Controller
                 $params['menus'] = $result;
         }
         
-        $this->respond('menu/index', $params);
+        $this->respond('setting/menu/index', $params);
     }
 
     function remove($id){
         if(!$this->user)
             return $this->redirect('/admin/me/login?next=' . uri_string());
-        if(!$this->can_i('delete_site-menu'))
+        if(!$this->can_i('delete-site_menu'))
             return $this->show_404();
            
-        $next = '/admin/menu';
+        $next = '/admin/setting/menu';
         if($this->input->get('group'))
             $next.= '?group=' . $this->input->get('group');
 

@@ -18,9 +18,9 @@ class Object extends MY_Controller
    function edit($id=null){
        if(!$this->user)
            return $this->redirect('/admin/me/login?next=' . uri_string());
-       if(!$id && !$this->can_i('create_site-param'))
+       if(!$id && !$this->can_i('create-site_param'))
            return $this->show_404();
-       if($id && !$this->can_i('update_site-param'))
+       if($id && !$this->can_i('update-site_param'))
            return $this->show_404();
 
        $this->load->library('SiteForm', '', 'form');
@@ -38,15 +38,15 @@ class Object extends MY_Controller
        }
 
        $this->form->setObject($object);
-       $this->form->setForm('/admin/param');
+       $this->form->setForm('/admin/setting/param');
 
        $params['param'] = $object;
 
        if(!($object=$this->form->validate($object)))
-           return $this->respond('param/edit', $params);
+           return $this->respond('setting/param/edit', $params);
 
        if($object === true)
-           return $this->redirect('/admin/param');
+           return $this->redirect('/admin/setting/param');
 
        if(!$id){
            $object['id'] = $this->SParams->create($object);
@@ -55,13 +55,13 @@ class Object extends MY_Controller
        }
 
        $this->cache->file->delete('site_params');
-       $this->redirect('/admin/param');
+       $this->redirect('/admin/setting/param');
    }
 
    function index(){
        if(!$this->user)
            return $this->redirect('/admin/me/login?next=' . uri_string());
-       if(!$this->can_i('read_site-param'))
+       if(!$this->can_i('read-site_param'))
            return $this->show_404();
 
        $params = array(
@@ -78,17 +78,17 @@ class Object extends MY_Controller
        if($result)
            $params['params'] = $result;
 
-       $this->respond('param/index', $params);
+       $this->respond('setting/param/index', $params);
    }
 
    function remove($id){
        if(!$this->user)
            return $this->redirect('/admin/me/login?next=' . uri_string());
-       if(!$this->can_i('delete_site-param'))
+       if(!$this->can_i('delete-site_param'))
            return $this->show_404();
 
        $this->cache->file->delete('site_params');
        $this->SParams->remove($id);
-       $this->redirect('/admin/param');
+       $this->redirect('/admin/setting/param');
    }
 }

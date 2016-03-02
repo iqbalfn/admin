@@ -50,26 +50,39 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 
-$route['admin']                         = 'admin/home/object/index';
+$route['admin'] = 'admin/home/object/index';
 
-$route['admin/enum']                    = 'admin/enum/object/index';
-$route['admin/enum/(:num)']             = 'admin/enum/object/edit/$1';
-$route['admin/enum/(:num)/remove']      = 'admin/enum/object/remove/$1';
+$route['admin/gallery']                = 'admin/gallery/object/index';
+$route['admin/gallery/(:num)']         = 'admin/gallery/object/edit/$1';
+$route['admin/gallery/(:num)/remove']  = 'admin/gallery/object/remove/$1';
 
-$route['admin/me/login']                = 'admin/me/auth/login';
-$route['admin/me/logout']               = 'admin/me/auth/logout';
-$route['admin/me/setting']              = 'admin/me/setting/index';
+$route['admin/gallery/(:num)/media']                = 'admin/gallery/media/index/$1';
+$route['admin/gallery/(:num)/media/(:num)']         = 'admin/gallery/media/edit/$2/$1';
+$route['admin/gallery/(:num)/media/(:num)/remove']  = 'admin/gallery/media/remove/$2/$1';
 
-$route['admin/menu']                    = 'admin/menu/object/index';
-$route['admin/menu/(:num)']             = 'admin/menu/object/edit/$1';
-$route['admin/menu/(:num)/remove']      = 'admin/menu/object/remove/$1';
+$route['admin/me/login']    = 'admin/me/auth/login';
+$route['admin/me/logout']   = 'admin/me/auth/logout';
+$route['admin/me/setting']  = 'admin/me/setting/index';
 
-$route['admin/param']                   = 'admin/param/object/index';
-$route['admin/param/(:num)']            = 'admin/param/object/edit/$1';
-$route['admin/param/(:num)/remove']     = 'admin/param/object/remove/$1';
+$route['admin/setting/enum']                = 'admin/setting/enum/object/index';
+$route['admin/setting/enum/(:num)']         = 'admin/setting/enum/object/edit/$1';
+$route['admin/setting/enum/(:num)/remove']  = 'admin/setting/enum/object/remove/$1';
 
-$route['upload']                        = 'media/upload';
+$route['admin/setting/menu']                = 'admin/setting/menu/object/index';
+$route['admin/setting/menu/(:num)']         = 'admin/setting/menu/object/edit/$1';
+$route['admin/setting/menu/(:num)/remove']  = 'admin/setting/menu/object/remove/$1';
 
-$route['default_controller']            = 'home';
-$route['404_override']                  = 'my_controller/show_404';
-$route['translate_uri_dashes']          = FALSE;
+$route['admin/setting/param']               = 'admin/setting/param/object/index';
+$route['admin/setting/param/(:num)']        = 'admin/setting/param/object/edit/$1';
+$route['admin/setting/param/(:num)/remove'] = 'admin/setting/param/object/remove/$1';
+
+$route['admin/setting/slideshow']                = 'admin/setting/slideshow/object/index';
+$route['admin/setting/slideshow/(:num)']         = 'admin/setting/slideshow/object/edit/$1';
+$route['admin/setting/slideshow/(:num)/remove']  = 'admin/setting/slideshow/object/remove/$1';
+
+$route['upload']                            = 'media/upload';
+$route['media/(:any)/(:any)/(:any)/(:any)'] = 'media/resize/$1/$2/$3/$4';
+
+$route['default_controller']    = 'home';
+$route['404_override']          = 'my_controller/show_404';
+$route['translate_uri_dashes']  = FALSE;

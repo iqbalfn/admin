@@ -1,3 +1,25 @@
+DROP TABLE IF EXISTS `gallery`;
+CREATE TABLE `gallery` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `user` BIGINT,
+    `slug` VARCHAR(50),
+    `name` VARCHAR(50),
+    `cover` VARCHAR(150),
+    `description` TEXT,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS `gallery_media`;
+CREATE TABLE `gallery_media` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `user` BIGINT,
+    `gallery` BIGINT,
+    `media` VARCHAR(150),
+    `title` VARCHAR(150),
+    `description` TEXT,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 DROP TABLE IF EXISTS `media`;
 CREATE TABLE `media` (
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -44,6 +66,19 @@ CREATE TABLE `site_enum` (
     `group` VARCHAR(50),
     `value` VARCHAR(50),
     `label` VARCHAR(25),
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS `slideshow`;
+CREATE TABLE `slideshow` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `user` BIGINT NOT NULL,
+    `group` VARCHAR(50),
+    `index` SMALLINT,
+    `image` VARCHAR(125),
+    `title` VARCHAR(100),
+    `link` VARCHAR(120),
+    `description` TEXT,
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

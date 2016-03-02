@@ -21,7 +21,8 @@ class SiteMenu
             $this->CI->cache->file->save('site_menu', $site_menus, 604800);
         }
         
-        $this->menus = $site_menus;
+        if($site_menus)
+            $this->menus = $site_menus;
     }
     
     /**
@@ -37,20 +38,25 @@ class SiteMenu
         $menus = array(
             array(
                 'label' => 'Home',
-                'perms' => 'read_admin-page',
+                'perms' => 'read-admin_page',
                 'target'=> '/admin',
                 'submenu' => array(
                     array(
                         'label' => 'Generate Alexa Rank',
-                        'perms' => 'create_alexa-rank',
+                        'perms' => 'create-alexa_rank',
                         'target'=> '/admin/statistic/alexa'
                     ),
                     array(
                         'label' => 'Google Analytics',
-                        'perms' => 'read_google-analytics',
+                        'perms' => 'read-google_analytics',
                         'target'=> '/admin/statistic/google-analytics'
                     )
                 )
+            ),
+            array(
+                'label' => 'Gallery',
+                'perms' => 'read-gallery',
+                'target'=> '/admin/gallery'
             ),
             array(
                 'label' => 'User',
@@ -62,18 +68,23 @@ class SiteMenu
                 'submenu' => array(
                     array(
                         'label' => 'Site Enum',
-                        'perms' => 'read_site-enum',
-                        'target'=> '/admin/enum'
+                        'perms' => 'read-site_enum',
+                        'target'=> '/admin/setting/enum'
                     ),
                     array(
                         'label' => 'Site Menus',
-                        'perms' => 'read_site-menu',
-                        'target'=> '/admin/menu'
+                        'perms' => 'read-site_menu',
+                        'target'=> '/admin/setting/menu'
                     ),
                     array(
                         'label' => 'Site Params',
-                        'perms' => 'read_site-param',
-                        'target'=> '/admin/param'
+                        'perms' => 'read-site_param',
+                        'target'=> '/admin/setting/param'
+                    ),
+                    array(
+                        'label' => 'SlideShow',
+                        'perms' => 'read-slide_show',
+                        'target'=> '/admin/setting/slideshow'
                     )
                 )
             )

@@ -22,6 +22,7 @@ $(function(){
     $('.textarea-dynamic').autosize();
     $('.select-box').selectpicker();
     $('.btn-uploader').fileUploader();
+    $('.slugify').slugify();
     
     // tinymce
     if($('.tinymce').get(0)){

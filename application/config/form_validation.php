@@ -1,36 +1,80 @@
 <?php
 
 $config = array(
-
-    '/admin/enum' => array(
     
-        'group' => array(
-            'field' => 'group',
-            'label' => 'Group',
-            'rules' => 'required|strtolower',
+    '/admin/gallery' => array(
+        
+        'cover' => array(
+            'field' => 'cover',
+            'label' => 'Cover',
+            'rules' => 'required',
             'input' => array(
-                'type' => 'text'
+                'type' => 'image'
             )
         ),
         
-        'value' => array(
-            'field' => 'value',
-            'label' => 'Value',
+        'slug' => array(
+            'field' => 'slug',
+            'label' => 'Slug',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'text',
+                'attrs' => array(
+                    'class' => 'slugify',
+                    'data-source' => '#field-name'
+                )
+            )
+        ),
+        
+        'name' => array(
+            'field' => 'name',
+            'label' => 'Name',
             'rules' => 'required',
             'input' => array(
                 'type' => 'text'
             )
         ),
         
-        'label' => array(
-            'field' => 'label',
-            'label' => 'Label',
-            'rules' => 'required',
+        'description' => array(
+            'field' => 'description',
+            'label' => 'Description',
+            'rules' => '',
             'input' => array(
-                'type' => 'text'
+                'type' => 'textarea'
             )
         )
         
+    ),
+    
+    '/admin/gallery/media' => array(
+        
+        'media' => array(
+            'field' => 'media',
+            'label' => 'Media',
+            'rules' => '',
+            'input' => array(
+                'type' => 'file',
+                'file_type' => 'gif|png|jpg|jpeg|bmp|avi|mp4|mpeg|mov|mkv'
+            )
+        ),
+        
+        'title' => array(
+            'field' => 'title',
+            'label' => 'Title',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'description' => array(
+            'field' => 'description',
+            'label' => 'Description',
+            'rules' => '',
+            'input' => array(
+                'type' => 'textarea'
+            )
+        )
     ),
     
     '/admin/me/login' => array(
@@ -112,8 +156,42 @@ $config = array(
             )
         )
     ),
+
+    '/admin/setting/enum' => array(
     
-    '/admin/menu' => array(
+        'group' => array(
+            'field' => 'group',
+            'label' => 'Group',
+            'rules' => 'required|strtolower',
+            'input' => array(
+                'type' => 'text',
+                'attrs' => array(
+                    'readonly' => 'readonly'
+                )
+            )
+        ),
+        
+        'value' => array(
+            'field' => 'value',
+            'label' => 'Value',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'label' => array(
+            'field' => 'label',
+            'label' => 'Label',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'text'
+            )
+        )
+        
+    ),
+    
+    '/admin/setting/menu' => array(
         
         'group' => array(
             'field' => 'group',
@@ -165,14 +243,17 @@ $config = array(
         
     ),
     
-    '/admin/param' => array(
+    '/admin/setting/param' => array(
         
         'name' => array(
             'field' => 'name',
             'label' => 'Name',
             'rules' => 'required|strtolower|alpha_dash',
             'input' => array(
-                'type' => 'text'
+                'type' => 'text',
+                'attrs' => array(
+                    'readonly' => (ci()->uri->segment(4) > 0 ? 'readonly' : false)
+                )
             )
         ),
         
@@ -184,5 +265,67 @@ $config = array(
                 'type' => 'textarea'
             )
         )
+    ),
+    
+    
+    '/admin/setting/slideshow' => array(
+    
+        'group' => array(
+            'field' => 'group',
+            'label' => 'Group',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'text',
+                'attrs'=> array(
+                    'readonly' => 'readonly'
+                )
+            )
+        ),
+        
+        'image' => array(
+            'field' => 'image',
+            'label' => 'Image',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'image'
+            )
+        ),
+        
+        'title' => array(
+            'field' => 'title',
+            'label' => 'Title',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'link' => array(
+            'field' => 'link',
+            'label' => 'URL',
+            'rules' => '',
+            'input' => array(
+                'type' => 'url'
+            )
+        ),
+        
+        'index' => array(
+            'field' => 'index',
+            'label' => 'Index',
+            'rules' => 'is_natural_no_zero',
+            'input' => array(
+                'type' => 'number'
+            )
+        ),
+        
+        'description' => array(
+            'field' => 'description',
+            'label' => 'Description',
+            'rules' => '',
+            'input' => array(
+                'type' => 'textarea'
+            )
+        )
+        
     )
 );

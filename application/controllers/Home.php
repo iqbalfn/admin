@@ -11,7 +11,6 @@ class Home extends MY_Controller
     }
     
     public function index(){
-        deb($this->menu->item('header-menu'));
         
     }
 }

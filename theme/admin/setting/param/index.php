@@ -10,8 +10,8 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="page-header">
-                    <?php if(ci()->can_i('create_site-param')): ?>
-                    <a class="btn btn-primary pull-right" href="<?= base_url('/admin/param/0') ?>"><?= _l('Create New') ?></a>
+                    <?php if(ci()->can_i('create-site_param')): ?>
+                    <a class="btn btn-primary pull-right" href="<?= base_url('/admin/setting/param/0') ?>"><?= _l('Create New') ?></a>
                     <?php endif; ?>
                     <h1><?= $title ?></h1>
                 </div>
@@ -27,8 +27,8 @@
                                     <td><?= $param->name ?></td>
                                     <td><?= $param->value ?></td>
                                     <td>
-                                        <?php if(ci()->can_i('update_site-param')): ?>
-                                        <a href="<?= base_url('/admin/param/' . $param->id) ?>"><?= _l('Edit') ?></a>
+                                        <?php if(ci()->can_i('update-site_param')): ?>
+                                        <a href="<?= base_url('/admin/setting/param/' . $param->id) ?>"><?= _l('Edit') ?></a>
                                         <?php endif; ?>
                                     </td>
                                 </tr>

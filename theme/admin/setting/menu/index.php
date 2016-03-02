@@ -10,24 +10,14 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="page-header">
-                    <?php if(ci()->can_i('create_site-menu') && $current_group): ?>
-                    <a class="btn btn-primary pull-right" href="<?= base_url('/admin/menu/0') ?>?group=<?= $current_group ?>"><?= _l('Create New Menu Item') ?></a>
+                    <?php if(ci()->can_i('create-site_menu') && $current_group): ?>
+                    <a class="btn btn-primary pull-right" href="<?= base_url('/admin/setting/menu/0') ?>?group=<?= $current_group ?>"><?= _l('Create New Menu Item') ?></a>
                     <?php endif; ?>
                     <h1><?= $title ?></h1>
                 </div>
                 
                 <div class="row">
                     <div class="col-md-3">
-                        <?php if(ci()->can_i('create_site-menu')): ?>
-                        <form method="get" class="form-group" action="<?= base_url('/admin/menu/0') ?>">
-                            <div class="input-group">
-                                <input type="text" name="group" pattern="^([a-zA-Z\.\-_]+)$" placeholder="<?= _l('Create New') ?>" class="form-control">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default"><i class="glyphicon glyphicon-plus"></i></button>
-                                </span>
-                            </div>
-                        </form>
-                        <?php endif; ?>
                         <?php if($groups): ?>
                         <div class="list-group">
                             <?php foreach($groups as $group => $total): ?>
@@ -35,12 +25,22 @@
                             <?php endforeach; ?>
                         </div>
                         <?php endif; ?>
+                        <?php if(ci()->can_i('create-site_menu')): ?>
+                        <form method="get" class="form-group" action="<?= base_url('/admin/setting/menu/0') ?>">
+                            <div class="input-group">
+                                <input type="text" name="group" pattern="^([a-zA-Z\.\-_]+)$" placeholder="<?= _l('Create New Group') ?>" class="form-control">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default"><i class="glyphicon glyphicon-plus"></i></button>
+                                </span>
+                            </div>
+                        </form>
+                        <?php endif; ?>
                     </div>
                     <div class="col-md-9">
                         <?php
                             if($menus){
                                 $menus = group_by_prop($menus, 'parent');
-                                $can_edit = ci()->can_i('update_site-menu');
+                                $can_edit = ci()->can_i('update-site_menu');
                                 
                                 $recursiver = function($parent) use($menus, $can_edit, &$recursiver){
                                     if(!array_key_exists($parent, $menus))
@@ -53,7 +53,7 @@
                                         if(!$can_edit)
                                             $tx.= '<span title="' . $local_menu->url . '" data-toggle="tooltip">' . $local_menu->label . '</span>';
                                         else
-                                            $tx.= '<a href="' . base_url('/admin/menu/' . $local_menu->id) . '" title="' . $local_menu->url . '" data-toggle="tooltip">' . $local_menu->label . '</a>';;
+                                            $tx.= '<a href="' . base_url('/admin/setting/menu/' . $local_menu->id) . '" title="' . $local_menu->url . '" data-toggle="tooltip">' . $local_menu->label . '</a>';;
                                         if(array_key_exists($local_menu->id, $menus))
                                             $tx.= $recursiver($local_menu->id);
                                         $tx.= '</li>';
