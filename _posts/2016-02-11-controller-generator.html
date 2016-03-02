@@ -7,9 +7,9 @@ title: Controller Generator
     <fieldset>
         <legend>Properties</legend>
         <input type="text" id="c-name" placeholder="Name" autofocus="autofocus">
-        <input type="text" id="c-parent" placeholder="Parent">
+        <input type="text" id="c-parent" placeholder="Parent" value="MY_Controller">
         <input type="text" id="c-table" placeholder="Table">
-        <button>Generate</button>
+        <input type="text" id="c-login" placeholder="Login URL">
     </fieldset>
     <fieldset>
         <legend><label><input type="checkbox" id="c-remove"> Remove</label></legend>
@@ -48,6 +48,7 @@ title: Controller Generator
         <legend><label><input type="checkbox" id="c-create"> Create/Edit</label></legend>
         <label><input type="checkbox" id="c-create-login"> Require login</label>
         <label><input type="checkbox" id="c-create-cache"> Remove cache</label>
+        <label><input type="checkbox" id="c-create-user-field"> Fill user field</label>
         <label><input type="checkbox" id="c-create-mine"> Edit mine only</label>
         <br>
         <input type="text" id="c-create-view" placeholder="View">
@@ -57,9 +58,11 @@ title: Controller Generator
         <input type="text" id="c-create-perms-create" placeholder="Permission For Create">
         <input type="text" id="c-create-perms-edit" placeholder="Permission For Edit">
         <input type="text" id="c-create-form" placeholder="Form Name">
-        <input type="text" id="c-create-fields" placeholder="Preset Properties Sep By Comma">
+        <input type="text" id="c-create-fields" placeholder="Preset Properties From _GET Sep By Comma">
+        <input type="text" id="c-create-fields-url" placeholder="Preset Properties From URL Sep By Comma">
         <input type="text" id="c-create-redirect" placeholder="Redirect">
     </fieldset>
+    <div style="text-align: right"><button>Generate</button></div>
 </form>
 
 <div>&#160;</div>
@@ -69,13 +72,18 @@ title: Controller Generator
 <div id="the-downloader" style="text-align:righ"></div>
 
 <script>
+var inpts = document.querySelectorAll('input');
+for(var i=0; i<inpts.length; i++)
+    inpts[i].setAttribute('title', inpts[i].getAttribute('placeholder'));
+
 document.querySelector('#the-form')
 .addEventListener('submit', function(e){
     var tx,ls;
     var c = {};
     var def = {
             name: 'object',
-            parent: 'MY_Controller'
+            parent: 'MY_Controller',
+            login: '/admin/me/login'
         };
     
     var inputs = document.querySelectorAll('input');
@@ -140,7 +148,7 @@ document.querySelector('#the-form')
         
         if(c.create_login){
             ls.push('        if(!$this->user)');
-            ls.push('            return $this->redirect(\'/admin/me/login?next=\' . uri_string());');
+            ls.push('            return $this->redirect(\'' + c.login + '?next=\' . uri_string());');
         }
         
         if(c.create_perms_create){
@@ -183,6 +191,9 @@ document.querySelector('#the-form')
             ls.push('                    $object->$get = $get_val;');
             ls.push('            }');
         }
+        if(c.create_fields_url){
+            
+        }
         ls.push('            $params[\'title\'] = _l(\''+c.create_title_create+'\');');
         ls.push('        }');
         
@@ -211,6 +222,9 @@ document.querySelector('#the-form')
             ls.push('                    $new_object[$get] = $get_val;');
             ls.push('            }');
         }
+        if(c.create_user_field){
+            ls.push('            $new_object[\'user\'] = $this->user->id;');
+        }
         ls.push('            $new_object[\'id\'] = $this->' + c.model_name + '->create($new_object);');
         ls.push('        }else{');
         ls.push('            $this->' + c.model_name + '->set($id, $new_object);');
@@ -237,7 +251,7 @@ document.querySelector('#the-form')
         
         if(c.index_login){
             ls.push('        if(!$this->user)');
-            ls.push('            return $this->redirect(\'/admin/me/login?next=\' . uri_string());');
+            ls.push('            return $this->redirect(\'' + c.login + '?next=\' . uri_string());');
         }
         
         if(c.index_perms){
@@ -305,26 +319,28 @@ document.querySelector('#the-form')
     if(c.remove){
         ls = [
             '',
-            '   function remove($id){'];
+            '    function remove($id){'];
         
         if(c.remove_login){
-            ls.push('       if(!$this->user)');
-            ls.push('           return $this->redirect(\'/admin/me/login?next=\' . uri_string());');
+            ls.push('        if(!$this->user)');
+            ls.push('            return $this->redirect(\'' + c.login + '?next=\' . uri_string());');
         }
         
         if(c.remove_perms){
-            ls.push('       if(!$this->can_i(\'' + c.remove_perms + '\'))')
-            ls.push('           return $this->show_404();');
+            ls.push('        if(!$this->can_i(\'' + c.remove_perms + '\'))')
+            ls.push('            return $this->show_404();');
         }
         
         ls.push('');
         if(c.remove_cache)
-            ls.push('       $this->cache->file->delete(\'' + c.table + '\');');
+            ls.push('        $this->cache->file->delete(\'' + c.table + '\');');
         
-        ls.push('       $this->' + c.model_name + '->remove($id);');
-        ls.push('       $this->redirect(\'' + c.remove_redirect + '\');');
+        ls.push('        $this->' + c.model_name + '->remove($id);');
         
-        ls.push('   }');
+        // normal redirect
+        ls.push('        $this->redirect(\'' + c.remove_redirect + '\');');
+        
+        ls.push('    }');
         
         tx = tx.concat(ls);
     }
@@ -334,46 +350,50 @@ document.querySelector('#the-form')
     if(c.single){
         ls = [
             '',
-            '   function single($id){'];
+            '    function single($id){'];
         
         if(c.single_login){
-            ls.push('       if(!$this->user)');
-            ls.push('           return $this->redirect(\'/admin/me/login?next=\' . uri_string());');
+            ls.push('        if(!$this->user)');
+            ls.push('            return $this->redirect(\'' + c.login + '?next=\' . uri_string());');
         }
         
         if(c.single_perms){
-            ls.push('       if(!$this->can_i(\'' + c.single_perms + '\'))')
-            ls.push('           return $this->show_404();');
+            ls.push('        if(!$this->can_i(\'' + c.single_perms + '\'))')
+            ls.push('            return $this->show_404();');
         }
         
         ls.push('');
         
-        ls.push('       $params = array();');
+        ls.push('        $params = array();');
         
         ls.push('');
-        ls.push('       $cond = array(\'id\'=>$id)');
+        ls.push('        $cond = array(\'id\'=>$id);');
         if(c.single_mine)
-            ls.push('       $cond[\'user\'] = $this->user->id;');
+            ls.push('        $cond[\'user\'] = $this->user->id;');
         
         ls.push('');
-        ls.push('       $result = $this->' + c.model_name + '->getByCond($cond, 1);');
-        ls.push('       if(!$result)');
-        ls.push('           return $this->show_404();');
+        ls.push('        $object = $this->' + c.model_name + '->getByCond($cond, 1);');
+        ls.push('        if(!$object)');
+        ls.push('            return $this->show_404();');
         
         ls.push('');
-        ls.push('       $params[\'title\'] = $result->title;');
-        ls.push('');
+        if(c.single_title){
+            ls.push('        $params[\'title\'] = $object->' + c.single_title + ';');
+            ls.push('');
+        }
         
         if(c.single_format){
-            ls.push('       $this->load->library(\'ObjectFormatter\', \'\', \'format\');');
-            ls.push('       $params[\'' + c.single_variable + '\'] = $this->format->' + c.table + '($result);');
+            ls.push('        $this->load->library(\'ObjectFormatter\', \'\', \'format\');');
+            ls.push('        $params[\'' + c.single_variable + '\'] = $this->format->' + c.table + '($object);');
+        }else{
+            ls.push('        $params[\'' + c.single_variable + '\'] = $object;');
         }
         
         ls.push('');
         
-        ls.push('       $this->respond(\'' + c.single_view + '\', $params);');
+        ls.push('        $this->respond(\'' + c.single_view + '\', $params);');
         
-        ls.push('   }');
+        ls.push('    }');
         
         tx = tx.concat(ls);
     }
