@@ -46,6 +46,20 @@ See all gallery media.
 4. `update-gallery_media`  
 Update gallery media.
 
+Page
+-------
+
+All permission user need to be able to do something with the static page.
+
+1. `create-page`  
+Create new page.
+2. `delete-page`  
+Remove page.
+3. `read-page`  
+See all page.
+4. `update-page`  
+Update page.
+
 Site Enum
 -----------
 
