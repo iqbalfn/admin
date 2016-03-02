@@ -59,6 +59,11 @@ class SiteMenu
                 'target'=> '/admin/gallery'
             ),
             array(
+                'label' => 'Page',
+                'perms' => 'read-page',
+                'target'=> '/admin/page'
+            ),
+            array(
                 'label' => 'User',
                 'perms' => 'read-user',
                 'target'=> '/admin/user'

@@ -10,6 +10,10 @@ $config['object_formatter'] = array(
         'media' => 'media'
     ),
     
+    'page' => array(
+        'page' => 'join(/page/|$slug)'
+    ),
+    
     'slideshow' => array(
         'image' => 'media'
     ),

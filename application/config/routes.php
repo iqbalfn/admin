@@ -64,6 +64,10 @@ $route['admin/me/login']    = 'admin/me/auth/login';
 $route['admin/me/logout']   = 'admin/me/auth/logout';
 $route['admin/me/setting']  = 'admin/me/setting/index';
 
+$route['admin/page']                = 'admin/page/object/index';
+$route['admin/page/(:num)']         = 'admin/page/object/edit/$1';
+$route['admin/page/(:num)/remove']  = 'admin/page/object/remove/$1';
+
 $route['admin/setting/enum']                = 'admin/setting/enum/object/index';
 $route['admin/setting/enum/(:num)']         = 'admin/setting/enum/object/edit/$1';
 $route['admin/setting/enum/(:num)/remove']  = 'admin/setting/enum/object/remove/$1';

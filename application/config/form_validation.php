@@ -156,6 +156,39 @@ $config = array(
             )
         )
     ),
+    
+    '/admin/page' => array(
+        'slug' => array(
+            'field' => 'slug',
+            'label' => 'Slug',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'text',
+                'attrs' => array(
+                    'class' => 'slugify',
+                    'data-source' => '#field-title'
+                )
+            )
+        ),
+        
+        'title' => array(
+            'field' => 'title',
+            'label' => 'Title',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'content' => array(
+            'field' => 'content',
+            'label' => 'Content',
+            'rules' => '',
+            'input' => array(
+                'type' => 'tinymce'
+            )
+        )
+    ),
 
     '/admin/setting/enum' => array(
     

@@ -37,6 +37,11 @@ INSERT INTO `user_perms` ( `user`, `perms` ) VALUES
     ( 1, 'read-gallery_media' ),
     ( 1, 'update-gallery_media' ),
     
+    ( 1, 'create-page' ),
+    ( 1, 'delete-page' ),
+    ( 1, 'read-page' ),
+    ( 1, 'update-page' ),
+    
     ( 1, 'create-site_param' ),
     ( 1, 'delete-site_param' ),
     ( 1, 'read-site_param' ),
