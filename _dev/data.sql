@@ -27,7 +27,13 @@ INSERT INTO `site_enum` ( `group`, `value`, `label` ) VALUES
     ( 'page.seo_schema', 'CheckoutPage', 'CheckoutPage' ),
     ( 'page.seo_schema', 'ContactPage ', 'ContactPage ' ),
     ( 'page.seo_schema', 'QAPage', 'QAPage' ),
-    ( 'page.seo_schema', 'SearchResultsPage', 'SearchResultsPage' );
+    ( 'page.seo_schema', 'SearchResultsPage', 'SearchResultsPage' ),
+    
+    ( 'user.status', 0, 'Deleted' ),
+    ( 'user.status', 1, 'Banned' ),
+    ( 'user.status', 2, 'Unverified' ),
+    ( 'user.status', 3, 'Verified' ),
+    ( 'user.status', 4, 'Official' );
 
 TRUNCATE `user`;
 INSERT INTO `user` ( `name`, `fullname`, `password` ) VALUES

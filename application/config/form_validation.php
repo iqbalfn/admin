@@ -16,7 +16,7 @@ $config = array(
         'media' => array(
             'field' => 'media',
             'label' => 'Media',
-            'rules' => 'required',
+            'rules' => 'required|media',
             'input' => array(
                 'type' => 'file',
                 'file_type' => 'jpg|jpeg|png|bmp|gif|mov|mp4|mpeg|mkv'
@@ -47,7 +47,7 @@ $config = array(
         'cover' => array(
             'field' => 'cover',
             'label' => 'Cover',
-            'rules' => 'required',
+            'rules' => 'required|media',
             'input' => array(
                 'type' => 'image'
             )
@@ -56,7 +56,7 @@ $config = array(
         'slug' => array(
             'field' => 'slug',
             'label' => 'Slug',
-            'rules' => 'required',
+            'rules' => 'required|is_unique_or_self[gallery.slug,3]',
             'input' => array(
                 'type' => 'text',
                 'attrs' => array(
@@ -91,7 +91,7 @@ $config = array(
         'media' => array(
             'field' => 'media',
             'label' => 'Media',
-            'rules' => '',
+            'rules' => 'media',
             'input' => array(
                 'type' => 'file',
                 'file_type' => 'gif|png|jpg|jpeg|bmp|avi|mp4|mpeg|mov|mkv'
@@ -154,9 +154,18 @@ $config = array(
         'avatar' => array(
             'field' => 'avatar',
             'label' => 'Avatar',
-            'rules' => '',
+            'rules' => 'media',
             'input' => array(
                 'type' => 'image'
+            )
+        ),
+        
+        'email' => array(
+            'field' => 'email',
+            'label' => 'Email',
+            'rules' => 'required|is_unique_or_self[user.email,0]',
+            'input' => array(
+                'type' => 'email'
             )
         ),
         
@@ -172,7 +181,7 @@ $config = array(
         'name' => array(
             'field' => 'name',
             'label' => 'Name',
-            'rules' => 'required|strtolower|alpha_dash',
+            'rules' => 'required|strtolower|alpha_dash|is_unique_or_self[user.name,0]',
             'input' => array(
                 'type' => 'text'
             )
@@ -201,7 +210,7 @@ $config = array(
         'slug' => array(
             'field' => 'slug',
             'label' => 'Slug',
-            'rules' => 'required',
+            'rules' => 'required|is_unique_or_self[page.slug,3]',
             'input' => array(
                 'type' => 'text',
                 'attrs' => array(
@@ -234,7 +243,7 @@ $config = array(
             'label' => 'Schema',
             'rules' => '',
             'input' => array(
-                'type' => 'enum'
+                'type' => 'select'
             )
         ),
         
@@ -394,7 +403,7 @@ $config = array(
         'image' => array(
             'field' => 'image',
             'label' => 'Image',
-            'rules' => 'required',
+            'rules' => 'required|media',
             'input' => array(
                 'type' => 'image'
             )
@@ -436,5 +445,80 @@ $config = array(
             )
         )
         
+    ),
+    
+    '/admin/user' => array(
+        
+        'about' => array(
+            'field' => 'about',
+            'label' => 'About',
+            'rules' => '',
+            'input' => array(
+                'type' => 'textarea'
+            )
+        ),
+        
+        'avatar' => array(
+            'field' => 'avatar',
+            'label' => 'Avatar',
+            'rules' => 'media',
+            'input' => array(
+                'type' => 'image'
+            )
+        ),
+        
+        'email' => array(
+            'field' => 'email',
+            'label' => 'Email',
+            'rules' => 'required|is_unique_or_self[user.email,3]',
+            'input' => array(
+                'type' => 'email'
+            )
+        ),
+        
+        'fullname' => array(
+            'field' => 'fullname',
+            'label' => 'Fullname',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'name' => array(
+            'field' => 'name',
+            'label' => 'Name',
+            'rules' => 'required|strtolower|alpha_dash|is_unique_or_self[user.name,3]',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'password' => array(
+            'field' => 'password',
+            'label' => 'Password',
+            'rules' => 'min_length[6]',
+            'input' => array(
+                'type' => 'password'
+            )
+        ),
+        
+        'website' => array(
+            'field' => 'website',
+            'label' => 'Website',
+            'rules' => 'valid_url',
+            'input' => array(
+                'type' => 'url'
+            )
+        ),
+        
+        'status' => array(
+            'field' => 'status',
+            'label' => 'Status',
+            'rules' => '',
+            'input' => array(
+                'type' => 'select'
+            )
+        )
     )
 );

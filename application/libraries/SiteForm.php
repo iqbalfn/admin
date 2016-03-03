@@ -763,7 +763,6 @@ class SiteForm
             'tinymce'   => '_inputTextArea',
             
             'select'    => '_inputSelect',
-            'enum'      => '_inputSelect',
             
             'boolean'   => '_inputBoolean',
             
@@ -842,8 +841,10 @@ class SiteForm
         $this->CI->load->helper(array('form', 'url'));
         $rules = config_item($this->form_name);
         
-        if(!$this->CI->form_validation->run($this->form_name))
-            return !!($this->errors = $this->CI->form_validation->error_array());
+        if(!$this->CI->form_validation->run($this->form_name)){
+             $this->errors = $this->CI->form_validation->error_array();
+             return false;
+        }
         
         $preset_object = (array)$preset_object;
         
@@ -859,12 +860,6 @@ class SiteForm
                 if($input['type'] != 'boolean')
                     continue;
                 $value = 0;
-            }
-            
-            // TODO
-            // should we download media file if it's not on our server?
-            if($input['type'] == 'image' || $input == 'file'){
-                
             }
             
             if(!array_key_exists($prop, $preset_object))

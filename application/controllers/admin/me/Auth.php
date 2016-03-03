@@ -70,6 +70,12 @@ class Auth extends MY_Controller
             return $this->respond('me/login', $params);
         }
         
+        // banned or deleted user
+        if($user->status < 2){
+            $this->form->setError('name', 'User banned or deleted');
+            return $this->respond('me/login', $params);
+        }
+        
         if(!password_verify($login['password'], $user->password)){
             $this->form->setError('password', 'Invalid password');
             return $this->respond('me/login', $params);

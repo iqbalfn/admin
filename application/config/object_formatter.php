@@ -23,5 +23,10 @@ $config['object_formatter'] = array(
     
     'slideshow' => array(
         'image' => 'media'
+    ),
+    
+    'user' => array(
+        'avatar' => 'media',
+        'status' => 'enum'
     )
 );

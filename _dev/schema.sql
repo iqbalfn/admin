@@ -114,9 +114,11 @@ CREATE TABLE `user` (
     `name` VARCHAR(25) NOT NULL UNIQUE,
     `fullname` VARCHAR(50),
     `password` VARCHAR(125),
+    `email` VARCHAR(150),
     `avatar` VARCHAR(100),
     `about` TEXT,
     `website` VARCHAR(125),
+    `status` TINYINT DEFAULT 2,
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

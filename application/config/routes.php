@@ -88,6 +88,10 @@ $route['admin/setting/slideshow']                = 'admin/setting/slideshow/obje
 $route['admin/setting/slideshow/(:num)']         = 'admin/setting/slideshow/object/edit/$1';
 $route['admin/setting/slideshow/(:num)/remove']  = 'admin/setting/slideshow/object/remove/$1';
 
+$route['admin/user']                = 'admin/user/object/index';
+$route['admin/user/(:num)']         = 'admin/user/object/edit/$1';
+$route['admin/user/(:num)/remove']  = 'admin/user/object/remove/$1';
+
 $route['upload']                            = 'media/upload';
 $route['media/(:any)/(:any)/(:any)/(:any)'] = 'media/resize/$1/$2/$3/$4';
 
