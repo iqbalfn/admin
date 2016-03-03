@@ -7,6 +7,7 @@
 .thumbnail {
   display: block;
   padding: @thumbnail-padding;
+  position: relative;
   margin-bottom: @line-height-computed;
   line-height: @line-height-base;
   background-color: @thumbnail-bg;
@@ -33,4 +34,10 @@
     padding: @thumbnail-caption-padding;
     color: @thumbnail-caption-color;
   }
+}
+
+.thumbnail-closer{
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }

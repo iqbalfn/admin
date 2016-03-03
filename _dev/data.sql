@@ -1,9 +1,13 @@
 TRUNCATE `site_params`;
 INSERT INTO `site_params` ( `name`, `value` ) VALUES
+    ( 'code_google_analytics', '' ),
+    ( 'code_verification_alexa', '' ),
+    ( 'code_verification_google', '' ),
     ( 'media_host', ''),
     ( 'theme_host', ''),
-    ( 'site_description', 'The standart site description that will appear on meta tag of site front page' ),
-    ( 'site_keywords', 'list of, site keywords, that will, appear on meta, tag of site, front page' ),
+    ( 'site_frontpage_description', 'The standart site description that will appear on meta tag of site front page' ),
+    ( 'site_frontpage_keywords', 'list of, site keywords, that will, appear on meta, tag of site, front page' ),
+    ( 'site_frontpage_title', 'The most awesome admin system' ),
     ( 'site_name', 'Admin' ),
     ( 'site_x_social_facebook', '' ),
     ( 'site_x_social_gplus', '' ),
@@ -17,7 +21,13 @@ INSERT INTO `site_enum` ( `group`, `value`, `label` ) VALUES
     ( 'post.status', 1, 'Draft' ),
     ( 'post.status', 2, 'Editor' ),
     ( 'post.status', 3, 'Schedule' ),
-    ( 'post.status', 4, 'Published' );
+    ( 'post.status', 4, 'Published' ),
+    
+    ( 'page.seo_schema', 'AboutPage', 'AboutPage' ),
+    ( 'page.seo_schema', 'CheckoutPage', 'CheckoutPage' ),
+    ( 'page.seo_schema', 'ContactPage ', 'ContactPage ' ),
+    ( 'page.seo_schema', 'QAPage', 'QAPage' ),
+    ( 'page.seo_schema', 'SearchResultsPage', 'SearchResultsPage' );
 
 TRUNCATE `user`;
 INSERT INTO `user` ( `name`, `fullname`, `password` ) VALUES
@@ -26,6 +36,11 @@ INSERT INTO `user` ( `name`, `fullname`, `password` ) VALUES
 TRUNCATE `user_perms`;
 INSERT INTO `user_perms` ( `user`, `perms` ) VALUES
     ( 1, 'read-admin_page' ),
+    
+    ( 1, 'delete-banner' ),
+    ( 1, 'create-banner' ),
+    ( 1, 'read-banner' ),
+    ( 1, 'update-banner' ),
     
     ( 1, 'delete-gallery' ),
     ( 1, 'create-gallery' ),
@@ -60,4 +75,9 @@ INSERT INTO `user_perms` ( `user`, `perms` ) VALUES
     ( 1, 'create-slide_show' ),
     ( 1, 'delete-slide_show' ),
     ( 1, 'read-slide_show' ),
-    ( 1, 'update-slide_show' );
+    ( 1, 'update-slide_show' ),
+    
+    ( 1, 'create-user' ),
+    ( 1, 'delete-user' ),
+    ( 1, 'read-user' ),
+    ( 1, 'update-user' );

@@ -54,6 +54,11 @@ class SiteMenu
                 )
             ),
             array(
+                'label' => 'Banner',
+                'perms' => 'read-banner',
+                'target'=> '/admin/banner'
+            ),
+            array(
                 'label' => 'Gallery',
                 'perms' => 'read-gallery',
                 'target'=> '/admin/gallery'

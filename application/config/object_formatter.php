@@ -2,6 +2,11 @@
 
 $config['object_formatter'] = array(
     
+    'banner' => array(
+        'media' => 'media',
+        'expired' => 'date'
+    ),
+    
     'gallery' => array(
         'cover' => 'media'
     ),
@@ -11,10 +16,12 @@ $config['object_formatter'] = array(
     ),
     
     'page' => array(
-        'page' => 'join(/page/|$slug)'
+        'page' => 'join(/page/|$slug)',
+        'seo_schema' => 'enum',
+        'seo_description' => 'text'
     ),
     
     'slideshow' => array(
         'image' => 'media'
-    ),
+    )
 );

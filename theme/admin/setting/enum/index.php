@@ -48,9 +48,9 @@
                                     <div class="list-group">
                                         <?php foreach($opts as $opt): ?>
                                             <?php if(ci()->can_i('update-site_enum')): ?>
-                                                <a href="<?= base_url('/admin/setting/enum/'.$opt->id) ?>" class="list-group-item">[ <?= $opt->value ?> ] <?= $opt->label ?></a>
+                                                <a href="<?= base_url('/admin/setting/enum/'.$opt->id) ?>" class="list-group-item"><?= $opt->label ?></a>
                                             <?php else: ?>
-                                                <div class="list-group-item">[ <?= $opt->value ?> ] <?= $opt->label ?></div>
+                                                <div class="list-group-item"><?= $opt->label ?></div>
                                             <?php endif; ?>
                                         <?php endforeach; ?>
                                     </div>

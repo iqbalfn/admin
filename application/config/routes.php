@@ -52,6 +52,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 $route['admin'] = 'admin/home/object/index';
 
+$route['admin/banner']                = 'admin/banner/object/index';
+$route['admin/banner/(:num)']         = 'admin/banner/object/edit/$1';
+$route['admin/banner/(:num)/remove']  = 'admin/banner/object/remove/$1';
+
 $route['admin/gallery']                = 'admin/gallery/object/index';
 $route['admin/gallery/(:num)']         = 'admin/gallery/object/edit/$1';
 $route['admin/gallery/(:num)/remove']  = 'admin/gallery/object/remove/$1';

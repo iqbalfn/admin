@@ -5,7 +5,7 @@ if(!defined('BASEPATH'))
 
 class objDate implements JsonSerializable
 {
-    private $time;
+    public $time;
     public $value;
     
     function __construct($date){

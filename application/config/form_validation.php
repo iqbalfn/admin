@@ -2,6 +2,46 @@
 
 $config = array(
     
+    '/admin/banner' => array(
+        
+        'name' => array(
+            'field' => 'name',
+            'label' => 'Name',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'media' => array(
+            'field' => 'media',
+            'label' => 'Media',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'file',
+                'file_type' => 'jpg|jpeg|png|bmp|gif|mov|mp4|mpeg|mkv'
+            )
+        ),
+        
+        'link' => array(
+            'field' => 'link',
+            'label' => 'Link',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'url'
+            )
+        ),
+        
+        'expired' => array(
+            'field' => 'expired',
+            'label' => 'Expired',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'datetime'
+            )
+        )
+    ),
+    
     '/admin/gallery' => array(
         
         'cover' => array(
@@ -186,6 +226,42 @@ $config = array(
             'rules' => '',
             'input' => array(
                 'type' => 'tinymce'
+            )
+        ),
+        
+        'seo_schema' => array(
+            'field' => 'seo_schema',
+            'label' => 'Schema',
+            'rules' => '',
+            'input' => array(
+                'type' => 'enum'
+            )
+        ),
+        
+        'seo_title' => array(
+            'field' => 'seo_title',
+            'label' => 'Meta Title',
+            'rules' => '',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'seo_description' => array(
+            'field' => 'seo_description',
+            'label' => 'Meta Description',
+            'rules' => '',
+            'input' => array(
+                'type' => 'textarea'
+            )
+        ),
+        
+        'seo_keywords' => array(
+            'field' => 'seo_keywords',
+            'label' => 'Meta Keywords',
+            'rules' => '',
+            'input' => array(
+                'type' => 'textarea'
             )
         )
     ),

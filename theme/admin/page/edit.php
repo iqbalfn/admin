@@ -14,7 +14,7 @@
                 </div>
                 
                 <form class="row" method="post">
-                    <div class="col-md-12">
+                    <div class="col-md-9">
                         <div class="row">
                             <div class="col-md-6">
                                 <?= $this->form->field('title') ?>
@@ -43,6 +43,12 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-md-3">
+                        <?= $this->form->field('seo_schema', 'page.seo_schema') ?>
+                        <?= $this->form->field('seo_title') ?>
+                        <?= $this->form->field('seo_description') ?>
+                        <?= $this->form->field('seo_keywords') ?>
                     </div>
                 </form>
             </div>

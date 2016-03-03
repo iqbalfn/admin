@@ -4733,6 +4733,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 .thumbnail {
   display: block;
   padding: 4px;
+  position: relative;
   margin-bottom: 20px;
   line-height: 1.42857143;
   background-color: #fff;
@@ -4755,6 +4756,11 @@ a.thumbnail.active {
 .thumbnail .caption {
   padding: 9px;
   color: #333333;
+}
+.thumbnail-closer {
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
 .alert {
   padding: 15px;
@@ -4973,6 +4979,12 @@ a.thumbnail.active {
 .list-group {
   margin-bottom: 20px;
   padding-left: 0;
+  position: relative;
+}
+.list-group-closer {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 .list-group-item {
   position: relative;

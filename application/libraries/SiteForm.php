@@ -703,6 +703,9 @@ class SiteForm
         $this->input_options    = $options;
         $this->input_type       = $this->input['type'];
         
+        if($options && is_string($options))
+            $this->input_options = $this->CI->enum->item($options);
+        
         $this->input_value = '';
         if($this->object && property_exists($this->object, $this->input_name))
             $this->input_value = $this->object->{$this->input_name};
@@ -760,6 +763,7 @@ class SiteForm
             'tinymce'   => '_inputTextArea',
             
             'select'    => '_inputSelect',
+            'enum'      => '_inputSelect',
             
             'boolean'   => '_inputBoolean',
             

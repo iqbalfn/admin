@@ -18,9 +18,13 @@
                 
                 <div class="row">
                     <?php $can_see_album_media = ci()->can_i('read-gallery_media'); ?>
+                    <?php $can_edit_album = ci()->can_i('update-gallery'); ?>
                     <?php foreach($albums as $album): ?>
                     <div class="col-md-3">
                         <div class="thumbnail">
+                            <?php if($can_edit_album): ?>
+                            <a href="<?= base_url('/admin/gallery/' . $album->id) ?>" class="btn btn-default btn-xs thumbnail-closer"><i class="glyphicon glyphicon-pencil"></i></a>
+                            <?php endif; ?>
                             <?php if($can_see_album_media): ?>
                             <a href="<?= base_url('/admin/gallery/' . $album->id .'/media' ) ?>">
                                 <img src="<?= $album->cover->_253x142 ?>" alt="<?= $album->name ?>" class="img-responsive">
@@ -30,9 +34,6 @@
                             <?php endif; ?>
                             
                             <h4><?= $album->name ?></h4>
-                            <div class="text-right">
-                                <a href="<?= base_url('/admin/gallery/' . $album->id) ?>" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-pencil"></i></a>
-                            </div>
                         </div>
                     </div>
                     <?php endforeach; ?>

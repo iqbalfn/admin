@@ -1,7 +1,18 @@
+DROP TABLE IF EXISTS `banner`;
+CREATE TABLE `banner` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `user` BIGINT NOT NULL,
+    `name` VARCHAR(50),
+    `media` VARCHAR(150),
+    `link` VARCHAR(150),
+    `expired` DATETIME,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 DROP TABLE IF EXISTS `gallery`;
 CREATE TABLE `gallery` (
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `user` BIGINT,
+    `user` BIGINT NOT NULL,
     `slug` VARCHAR(50),
     `name` VARCHAR(50),
     `cover` VARCHAR(150),
@@ -12,7 +23,7 @@ CREATE TABLE `gallery` (
 DROP TABLE IF EXISTS `gallery_media`;
 CREATE TABLE `gallery_media` (
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `user` BIGINT,
+    `user` BIGINT NOT NULL,
     `gallery` BIGINT,
     `media` VARCHAR(150),
     `title` VARCHAR(150),
@@ -38,6 +49,12 @@ CREATE TABLE `page` (
     `title` VARCHAR(150),
     `slug` VARCHAR(150),
     `content` TEXT,
+    
+    `seo_schema` VARCHAR(25),
+    `seo_title` VARCHAR(160),
+    `seo_description` TEXT,
+    `seo_keywords` TEXT,
+    
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
