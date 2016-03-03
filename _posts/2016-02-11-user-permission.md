@@ -5,6 +5,20 @@ title: User Permission
 
 List of user permission known so far and each description of the perms.
 
+Banner
+------
+
+All permission user need to be able to do something with the galleries.
+
+1. `create-banner`  
+Create new banner.
+2. `delete-banner`  
+Remove banner.
+3. `read-banner`  
+See all banner.
+4. `update-banner`  
+Update banner.
+
 Front Page
 ----------
 
