@@ -34,13 +34,32 @@
                                         <?= $this->form->field('status', 'user.status') ?>
                                     </div>
                                 </div>
+                                <?php if(ci()->can_i('update-user-permission')): ?>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <fieldset>
                                             <legend><?= _l('Permissions') ?></legend>
+                                            
+                                            <?php $permissions = group_per_column($permissions, 3); ?>
+                                            <?php foreach($permissions as $index => $perms): ?>
+                                            <div class="row">
+                                                <?php foreach($perms as $group => $perm): ?>
+                                                <div class="col-md-4">
+                                                    <h4><?= $group ?></h4>
+                                                    <?php foreach($perm as $per): ?>
+                                                    <div class="checkbox">
+                                                        <input type="checkbox" id="perm-<?= $per->name ?>" name="perms[<?= $per->name ?>]"<?= ($per->checked?' checked="checked"':'')?>>
+                                                        <label for="perm-<?= $per->name ?>" title="<?= $per->description ?>"><?= $per->label ?></label>
+                                                    </div>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                            <?php endforeach; ?>
                                         </fieldset>
                                     </div>
                                 </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                         

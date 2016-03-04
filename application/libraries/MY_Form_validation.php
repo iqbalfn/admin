@@ -19,4 +19,36 @@ class MY_Form_validation extends CI_Form_validation
         $abs = dirname(BASEPATH) . '/' . ltrim($str, '/');
         return is_file($abs);
     }
+    
+    /**
+     * Make sure the value is unique or the value is belong to me.
+     * @rule 'is_unique[table.field,url-segment-index]
+     */
+    public function is_unique($str, $field){
+        if(!strstr($field, ','))
+            return parent::is_unique($str);
+        
+        $ci =&get_instance();
+        
+        $rule = explode(',', $field);
+        $uri_segment = $rule[1];
+        $table = explode('.', $rule[0]);
+        $field = $table[1];
+        $table = $table[0];
+        
+        $row = $ci->db->where($field, $str)->get($table);
+        if(!$row->num_rows())
+            return true;
+        
+        $row = $row->row();
+        
+        if($uri_segment == 0){
+            if($row->id == $ci->user->id)
+                return true;
+            return false;
+        }
+        if($row->id == $ci->uri->segment($uri_segment))
+            return true;
+        return false;
+    }
 }

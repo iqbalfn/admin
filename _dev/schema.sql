@@ -47,7 +47,7 @@ DROP TABLE IF EXISTS `page`;
 CREATE TABLE `page` (
     `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `title` VARCHAR(150),
-    `slug` VARCHAR(150),
+    `slug` VARCHAR(150) NOT NULL UNIQUE,
     `content` TEXT,
     
     `seo_schema` VARCHAR(25),
@@ -55,6 +55,16 @@ CREATE TABLE `page` (
     `seo_description` TEXT,
     `seo_keywords` TEXT,
     
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS `perms`;
+CREATE TABLE `perms` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `group` VARCHAR(25),
+    `name` VARCHAR(50),
+    `label` VARCHAR(50),
+    `description` TEXT,
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -72,7 +82,7 @@ CREATE TABLE `site_menu` (
 DROP TABLE IF EXISTS `site_params`;
 CREATE TABLE `site_params` (
     `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name` VARCHAR(50),
+    `name` VARCHAR(50) NOT NULL UNIQUE,
     `value` TEXT,
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -114,7 +124,7 @@ CREATE TABLE `user` (
     `name` VARCHAR(25) NOT NULL UNIQUE,
     `fullname` VARCHAR(50),
     `password` VARCHAR(125),
-    `email` VARCHAR(150),
+    `email` VARCHAR(150) NOT NULL UNIQUE,
     `avatar` VARCHAR(100),
     `about` TEXT,
     `website` VARCHAR(125),

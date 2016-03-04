@@ -55,12 +55,28 @@
                                 <div class="list-group">
                                     <a href="<?= base_url('admin/user/' . $user->id) ?>" class="list-group-item">
                                         <h4 class="list-group-item-heading"><?= $user->fullname ?></h4>
-                                        <p class="list-group-item-text"><?= $user->name ?><?= ( $user->email ? ' ( ' . $user->email . ' ) ' : '' ) ?></p>
+                                        <div class="list-group-item-text">
+                                            <div class="text-ellipsis"><?= $user->name ?></div>
+                                            <div class="text-ellipsis"><?= $user->email ?></div>
+                                        </div>
                                     </a>
                                 </div>
                             </div>
                             <?php endforeach; ?>
                         </div>
+                        
+                        <?php if($pagination): ?>
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                <ul class="pagination">
+                                <?php foreach($pagination as $label => $link): ?>
+                                    <?php $active = $link == '#'; ?>
+                                    <li<?= ($active?' class="disabled"':'') ?>><a<?= (!$active?' href="' . $link . '"':'') ?>><?= $label ?></a></li>
+                                <?php endforeach; ?>
+                                </ul>
+                            </div>
+                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

@@ -39,4 +39,19 @@ class User_model extends MY_Model
         
         return $this->getByCond($cond, $rpp, $page, $order);
     }
+    
+    /**
+     * Find total result by condition.
+     * @param array cond The condition.
+     */
+    public function findByNameTotal($cond, $query){
+        if($query){
+            $this->db->group_start();
+            $this->db->like('name', $query);
+            $this->db->or_like('fullname', $query);
+            $this->db->group_end();
+        }
+        
+        return $this->countByCond($cond);
+    }
 }

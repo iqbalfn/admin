@@ -28,6 +28,26 @@ function group_by_prop($list, $prop='parent'){
 }
 
 /**
+ * Group items per columns
+ * @param array list List of object to group
+ * @param integer column Total column / total item per group
+ */
+function group_per_column($list, $column=3){
+    $result = array();
+    
+    $group = 0;
+    foreach($list as $index => $item){
+        if(!array_key_exists($group, $result))
+            $result[$group] = array();
+        $result[$group][$index] = $item;
+        if(count($result[$group]) >= $column)
+            $group++;
+    }
+    
+    return $result;
+}
+
+/**
  * Set list object property as array key.
  * @param array list The indexed key based array
  * @param string key The property of subobject to set as parent key
