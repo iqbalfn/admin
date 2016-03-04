@@ -142,4 +142,6 @@ Delete some user.
 3. `read-user`  
 See all system user.
 4. `update-user`  
-Update system user setting.
+Update user profile/account.
+5. `update-user-permission`  
+Update user permission.
