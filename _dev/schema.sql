@@ -58,16 +58,80 @@ CREATE TABLE `page` (
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-DROP TABLE IF EXISTS `perms`;
-CREATE TABLE `perms` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `group` VARCHAR(25),
-    `name` VARCHAR(50),
-    `label` VARCHAR(50),
-    `description` TEXT,
+-- POST --
+DROP TABLE IF EXISTS `post`;
+CREATE TABLE `post` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `user` BIGINT NOT NULL,
+    `title` VARCHAR(150),
+    `slug` VARCHAR(150),
+    `cover` VARCHAR(150),
+    `cover_label` VARCHAR(200),
+    `embed` TEXT,
+    `gallery` BIGINT,
+    `slideshow` BIGINT,
+    `content` TEXT,
+    `location` VARCHAR(200),
+    `status` TINYINT DEFAULT 1,
+    `featured` BOOLEAN DEFAULT FALSE,
+    `editor_pick` BOOLEAN DEFAULT FALSE,
+    `sources` TEXT,
+    
+    `seo_title` VARCHAR(150),
+    `seo_schema` VARCHAR(25),
+    `seo_description` TEXT,
+    `seo_keywords` TEXT,
+    
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+DROP TABLE IF EXISTS `post_category`;
+CREATE TABLE `post_category` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(25),
+    `slug` VARCHAR(25),
+    `parent` INTEGER DEFAULT 0,
+    
+    `seo_title` VARCHAR(150),
+    `seo_description` TEXT,
+    `seo_keywords` TEXT,
+    
+    `posts` INTEGER DEFAULT 0,
+    
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS `post_category_chain`;
+CREATE TABLE `post_category_chain` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `post_category` INTEGER NOT NULL,
+    `post` BIGINT NOT NULL,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS `post_tag`;
+CREATE TABLE `post_tag` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(25),
+    
+    `seo_title` VARCHAR(150),
+    `seo_description` TEXT,
+    `seo_keywords` TEXT,
+    
+    `posts` INTEGER DEFAULT 0,
+    
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS `post_tag_chain`;
+CREATE TABLE `post_tag_chain` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `post_tag` INTEGER NOT NULL,
+    `post` BIGINT NOT NULL,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- SITE SYSTEM --
 DROP TABLE IF EXISTS `site_menu`;
 CREATE TABLE `site_menu` (
     `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -105,6 +169,7 @@ CREATE TABLE `site_enum` (
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- OTHERWISE --
 DROP TABLE IF EXISTS `slideshow`;
 CREATE TABLE `slideshow` (
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -118,6 +183,8 @@ CREATE TABLE `slideshow` (
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+
+-- SYSTEM USER --
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -145,5 +212,15 @@ CREATE TABLE `user_session` (
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user` BIGINT NOT NULL,
     `hash` VARCHAR(150) NOT NULL UNIQUE,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS `perms`;
+CREATE TABLE `perms` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `group` VARCHAR(25),
+    `name` VARCHAR(50),
+    `label` VARCHAR(50),
+    `description` TEXT,
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
