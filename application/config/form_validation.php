@@ -270,7 +270,7 @@ $config = array(
             'label' => 'Meta Keywords',
             'rules' => '',
             'input' => array(
-                'type' => 'textarea'
+                'type' => 'tag'
             )
         )
     ),

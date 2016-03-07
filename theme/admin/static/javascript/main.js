@@ -24,6 +24,8 @@ $(function(){
     $('.btn-uploader').fileUploader();
     $('.slugify').slugify();
     
+    $('.tokenfield').tokenfield();
+    
     // tinymce
     if($('.tinymce').get(0)){
         var options = {

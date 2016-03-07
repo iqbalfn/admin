@@ -26,6 +26,7 @@ module.exports = function(grunt) {
                     'javascript/file-uploader.js',
                     'javascript/form-control-image.js',
                     'javascript/slugify.js',
+                    'javascript/bootstrap-tokenfield.js',
                     'javascript/main.js'
                 ],
                 dest: 'js/portal.js'

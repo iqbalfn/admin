@@ -230,12 +230,17 @@ class SiteForm
         if($this->input_type == 'color')
             $input['attrs']['type'] = 'text';
         
+        // input type tag should use `text` instead and additional attribute
+        // `data-provide`
+        if($this->input_type == 'tag'){
+            $input['attrs']['type'] = 'text';
+            $input['attrs']['class'][] = 'tokenfield';
+        }
+        
         if($this->input_label_show)
             $input['attrs']['aria-labelledby'] = $this->input_id . '-label';
         else
             $input['attrs']['aria-label'] = $this->input_label;
-        
-        // implement form rules by CI rules
         
         $input_group = false;
         $with_prefix = array_key_value_or('prefix', $this->input);
