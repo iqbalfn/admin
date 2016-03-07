@@ -112,6 +112,8 @@ The form field input type, they can be one of:
     1. multiple
 1. Radio
     1. parent
+1. Tag
+    1. tag
 
 $prefix_label
 -------------
