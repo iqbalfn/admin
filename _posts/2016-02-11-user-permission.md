@@ -74,6 +74,62 @@ See all page.
 4. `update-page`  
 Update page.
 
+Post
+----
+
+All permission user need to be able to do something with the post.
+
+1. `create-post`  
+Create new post.
+2. `delete-post`  
+Remove post.
+3. `read-post`  
+See all post.
+4. `update-post`  
+Update post.
+
+Post Category
+-------------
+
+All permission user need to be able to do something with the post category.
+
+1. `create-post_category`  
+Create new post category.
+2. `delete-post_category`  
+Remove post category.
+3. `read-post_category`  
+See all post categories.
+4. `update-post_category`  
+Update post category.
+
+Post Tag
+--------
+
+All permission user need to be able to do something with the post tag.
+
+1. `create-post_tag`  
+Create new post tag.
+2. `delete-post_tag`  
+Remove post tag.
+3. `read-post_tag`  
+See all post tag.
+4. `update-post_tag`  
+Update post tag.
+
+Post Selector
+-------------
+
+All permission user need to be able to do something with the post selection.
+
+1. `create-post_selector`  
+Create new post selector.
+2. `delete-post_selector`  
+Remove post selector.
+3. `read-post_selector`  
+See all post selector.
+4. `update-post_selector`  
+Update post selector.
+
 Site Enum
 -----------
 
