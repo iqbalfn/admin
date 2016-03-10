@@ -72,6 +72,14 @@ $route['admin/page']                = 'admin/page/object/index';
 $route['admin/page/(:num)']         = 'admin/page/object/edit/$1';
 $route['admin/page/(:num)/remove']  = 'admin/page/object/remove/$1';
 
+$route['admin/post/category']                = 'admin/post/category/index';
+$route['admin/post/category/(:num)']         = 'admin/post/category/edit/$1';
+$route['admin/post/category/(:num)/remove']  = 'admin/post/category/remove/$1';
+
+$route['admin/post/tag']                = 'admin/post/tag/index';
+$route['admin/post/tag/(:num)']         = 'admin/post/tag/edit/$1';
+$route['admin/post/tag/(:num)/remove']  = 'admin/post/tag/remove/$1';
+
 $route['admin/setting/enum']                = 'admin/setting/enum/object/index';
 $route['admin/setting/enum/(:num)']         = 'admin/setting/enum/object/edit/$1';
 $route['admin/setting/enum/(:num)/remove']  = 'admin/setting/enum/object/remove/$1';

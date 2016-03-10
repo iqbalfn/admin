@@ -8,15 +8,35 @@ $config['object_formatter'] = array(
     ),
     
     'gallery' => array(
-        'cover' => 'media'
+        'cover' => 'media',
+        'page' => 'join(/gallery/|$slug)',
+        'seo_schema' => 'enum',
+        'seo_description' => 'text'
     ),
     
     'gallery_media' => array(
-        'media' => 'media'
+        'media' => 'media',
+        'page' => 'join(/gallery/|$gallery.slug|/|$id)',
+        'seo_schema' => 'enum',
+        'seo_description' => 'text'
     ),
     
     'page' => array(
         'page' => 'join(/page/|$slug)',
+        'seo_schema' => 'enum',
+        'seo_description' => 'text'
+    ),
+    
+    'post_category' => array(
+        'page' => 'join(/post/category/|$slug)',
+        'description' => 'text',
+        'seo_schema' => 'enum',
+        'seo_description' => 'text'
+    ),
+    
+    'post_tag' => array(
+        'page' => 'join(/post/tag/|$slug)',
+        'description' => 'text',
         'seo_schema' => 'enum',
         'seo_description' => 'text'
     ),

@@ -54,6 +54,28 @@ class SiteMenu
                 )
             ),
             array(
+                'label' => 'Post',
+                'perms' => 'read-post',
+                'target'=> '/admin/post',
+                'submenu' => array(
+                    array(
+                        'label' => 'Category',
+                        'perms' => 'read-post_category',
+                        'target'=> '/admin/post/category'
+                    ),
+                    array(
+                        'label' => 'Tag',
+                        'perms' => 'read-post_tag',
+                        'target'=> '/admin/post/tag'
+                    ),
+                    array(
+                        'label' => 'Selector',
+                        'perms' => 'read-post_selector',
+                        'target'=> '/admin/post/selector'
+                    )
+                )
+            ),
+            array(
                 'label' => 'Banner',
                 'perms' => 'read-banner',
                 'target'=> '/admin/banner'

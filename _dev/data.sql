@@ -19,6 +19,22 @@ INSERT INTO `perms` ( `group`, `name`, `label`, `description` ) VALUES
     ( 'Page',            'delete-page',            'Delete Page',             'Allow user to delete exists page' ),
     ( 'Page',            'read-page',              'Read Page',               'Allow user to see all exists page' ),
     ( 'Page',            'update-page',            'Edit Page',               'Allow user to update exists page' ),
+    ( 'Post',            'create-post',            'Create Post',             'Allow user to create new post' ),
+    ( 'Post',            'delete-post',            'Delete Post',             'Allow user to delete exists post' ),
+    ( 'Post',            'read-post',              'Read Post',               'Allow user to see all exists post' ),
+    ( 'Post',            'update-post',            'Edit Post',               'Allow user to update exists post' ),
+    ( 'Post Cateogry',   'create-post_category',   'Create Post Category',    'Allow user to create new post category' ),
+    ( 'Post Cateogry',   'delete-post_category',   'Delete Post Category',    'Allow user to delete exists post category' ),
+    ( 'Post Cateogry',   'read-post_category',     'Read Post Category',      'Allow user to see all exists post category' ),
+    ( 'Post Cateogry',   'update-post_category',   'Edit Post Category',      'Allow user to update exists post category' ),
+    ( 'Post Tag',        'create-post_tag',        'Create Post Tag',         'Allow user to create new post category' ),
+    ( 'Post Tag',        'delete-post_tag',        'Delete Post Tag',         'Allow user to delete exists post category' ),
+    ( 'Post Tag',        'read-post_tag',          'Read Post Tag',           'Allow user to see all exists post category' ),
+    ( 'Post Tag',        'update-post_tag',        'Edit Post Tag',           'Allow user to update exists post category' ),
+    ( 'Post Selector',   'create-post_selector',   'Create Post Selection',   'Allow user to create new post selection' ),
+    ( 'Post Selector',   'delete-post_selector',   'Delete Post Selection',   'Allow user to delete exists post selection' ),
+    ( 'Post Selector',   'read-post_selector',     'Read Post Selection',     'Allow user to see all exists post selection' ),
+    ( 'Post Selector',   'update-post_selector',   'Edit Post Selection',     'Allow user to update exists post selection' ),
     ( 'Site Enum',       'create-site_enum',       'Create Site Enum',        'Allow user to create new site enum' ),
     ( 'Site Enum',       'delete-site_enum',       'Delete Site Enum',        'Allow user to delete exists site enum' ),
     ( 'Site Enum',       'read-site_enum',         'Read Site Enum',          'Allow user to see all exists site enum' ),
@@ -60,11 +76,24 @@ INSERT INTO `site_params` ( `name`, `value` ) VALUES
 
 TRUNCATE `site_enum`;
 INSERT INTO `site_enum` ( `group`, `value`, `label` ) VALUES
+    ( 'gallery.seo_schema', 'CollectionPage', 'CollectionPage' ),
+    ( 'gallery.seo_schema', 'ImageGallery', 'ImageGallery' ),
+    ( 'gallery.seo_schema', 'VideoGallery', 'VideoGallery' ),
+    
+    ( 'gallery_media.seo_schema', 'MediaObject', 'MediaObject' ),
+    ( 'gallery_media.seo_schema', 'AudioObject', 'AudioObject' ),
+    ( 'gallery_media.seo_schema', 'ImageObject', 'ImageObject' ),
+    ( 'gallery_media.seo_schema', 'MusicVideoObject', 'MusicVideoObject' ),
+    ( 'gallery_media.seo_schema', 'VideoObject', 'VideoObject' ),
+    
     ( 'post.status', 0, 'Deleted' ),
     ( 'post.status', 1, 'Draft' ),
     ( 'post.status', 2, 'Editor' ),
     ( 'post.status', 3, 'Schedule' ),
     ( 'post.status', 4, 'Published' ),
+    
+    ( 'post_category.seo_schema', 'CollectionPage', 'CollectionPage' ),
+    ( 'post_tag.seo_schema', 'CollectionPage', 'CollectionPage' ),
     
     ( 'page.seo_schema', 'AboutPage', 'AboutPage' ),
     ( 'page.seo_schema', 'CheckoutPage', 'CheckoutPage' ),
@@ -84,48 +113,82 @@ INSERT INTO `user` ( `name`, `fullname`, `password`, `email` ) VALUES
 
 TRUNCATE `user_perms`;
 INSERT INTO `user_perms` ( `user`, `perms` ) VALUES
+    -- FRONT PAGE
     ( 1, 'read-admin_page' ),
     
+    -- BANNER
     ( 1, 'delete-banner' ),
     ( 1, 'create-banner' ),
     ( 1, 'read-banner' ),
     ( 1, 'update-banner' ),
     
+    -- GALLERY
     ( 1, 'delete-gallery' ),
     ( 1, 'create-gallery' ),
     ( 1, 'read-gallery' ),
     ( 1, 'update-gallery' ),
     
+    -- GALLERY MEDIA
     ( 1, 'delete-gallery_media' ),
     ( 1, 'create-gallery_media' ),
     ( 1, 'read-gallery_media' ),
     ( 1, 'update-gallery_media' ),
     
+    -- PAGE/STATIC PAGE
     ( 1, 'create-page' ),
     ( 1, 'delete-page' ),
     ( 1, 'read-page' ),
     ( 1, 'update-page' ),
     
+    -- POST
+    ( 1, 'create-post' ),
+    ( 1, 'delete-post' ),
+    ( 1, 'read-post' ),
+    ( 1, 'update-post' ),
+    
+    -- POST CATEGORY
+    ( 1, 'create-post_category' ),
+    ( 1, 'delete-post_category' ),
+    ( 1, 'read-post_category' ),
+    ( 1, 'update-post_category' ),
+    
+    -- POST TAG
+    ( 1, 'create-post_tag' ),
+    ( 1, 'delete-post_tag' ),
+    ( 1, 'read-post_tag' ),
+    ( 1, 'update-post_tag' ),
+    
+    -- POST SELECTION
+    ( 1, 'create-post_selector' ),
+    ( 1, 'delete-post_selector' ),
+    ( 1, 'read-post_selector' ),
+    ( 1, 'update-post_selector' ),
+    
+    -- SITE PARAMS
     ( 1, 'create-site_param' ),
     ( 1, 'delete-site_param' ),
     ( 1, 'read-site_param' ),
     ( 1, 'update-site_param' ),
     
+    -- SITE MENU
     ( 1, 'delete-site_menu' ),
     ( 1, 'create-site_menu' ),
     ( 1, 'read-site_menu' ),
     ( 1, 'update-site_menu' ),
     
+    -- SITE ENUM
     ( 1, 'create-site_enum' ),
     ( 1, 'delete-site_enum' ),
     ( 1, 'read-site_enum' ),
     ( 1, 'update-site_enum' ),
     
+    -- SLIDE SHOW
     ( 1, 'create-slide_show' ),
     ( 1, 'delete-slide_show' ),
     ( 1, 'read-slide_show' ),
     ( 1, 'update-slide_show' ),
     
+    -- USER
     ( 1, 'create-user' ),
     ( 1, 'delete-user' ),
     ( 1, 'read-user' ),

@@ -74,7 +74,7 @@ class Object extends MY_Controller
        $rpp = true;
        $page= false;
 
-       $result = $this->SParams->getByCond($cond, $rpp, $page, ['name']);
+       $result = $this->SParams->getByCond($cond, $rpp, $page, ['name'=>'ASC']);
        if($result)
            $params['params'] = $result;
 

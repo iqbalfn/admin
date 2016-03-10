@@ -17,6 +17,12 @@ CREATE TABLE `gallery` (
     `name` VARCHAR(50),
     `cover` VARCHAR(150),
     `description` TEXT,
+    
+    `seo_schema` VARCHAR(25),
+    `seo_title` VARCHAR(160),
+    `seo_description` TEXT,
+    `seo_keywords` TEXT,
+    
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -28,6 +34,12 @@ CREATE TABLE `gallery_media` (
     `media` VARCHAR(150),
     `title` VARCHAR(150),
     `description` TEXT,
+    
+    `seo_schema` VARCHAR(25),
+    `seo_title` VARCHAR(160),
+    `seo_description` TEXT,
+    `seo_keywords` TEXT,
+    
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -89,9 +101,12 @@ DROP TABLE IF EXISTS `post_category`;
 CREATE TABLE `post_category` (
     `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(25),
-    `slug` VARCHAR(25),
+    `slug` VARCHAR(25) NOT NULL UNIQUE,
     `parent` INTEGER DEFAULT 0,
+    `user` BIGINT NOT NULL,
+    `description` TEXT,
     
+    `seo_schema` VARCHAR(25),
     `seo_title` VARCHAR(150),
     `seo_description` TEXT,
     `seo_keywords` TEXT,
@@ -113,7 +128,11 @@ DROP TABLE IF EXISTS `post_tag`;
 CREATE TABLE `post_tag` (
     `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(25),
+    `slug` VARCHAR(25) NOT NULL UNIQUE,
+    `user` BIGINT NOT NULL,
+    `description` TEXT,
     
+    `seo_schema` VARCHAR(25),
     `seo_title` VARCHAR(150),
     `seo_description` TEXT,
     `seo_keywords` TEXT,
