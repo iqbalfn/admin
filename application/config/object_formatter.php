@@ -27,6 +27,23 @@ $config['object_formatter'] = array(
         'seo_description' => 'text'
     ),
     
+    'post' => array(
+        'category' => '@chain[post_category]',
+        'tag' => '@chain[post_tag]',
+        'gallery' => '@parent[gallery]',
+        'slideshow' => '@parent[slideshow.group]',
+        'user' => '@parent[user]',
+        'page' => 'join(/post/read/|$slug)',
+        'content' => 'text',
+        'cover' => 'media',
+        'status' => 'enum',
+        'featured' => 'boolean',
+        'editor_pick' => 'boolean',
+        'seo_schema' => 'enum',
+        'seo_description' => 'text',
+        'created' => 'date'
+    ),
+    
     'post_category' => array(
         'page' => 'join(/post/category/|$slug)',
         'description' => 'text',

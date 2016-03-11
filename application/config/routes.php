@@ -72,6 +72,10 @@ $route['admin/page']                = 'admin/page/object/index';
 $route['admin/page/(:num)']         = 'admin/page/object/edit/$1';
 $route['admin/page/(:num)/remove']  = 'admin/page/object/remove/$1';
 
+$route['admin/post']                = 'admin/post/object/index';
+$route['admin/post/(:num)']         = 'admin/post/object/edit/$1';
+$route['admin/post/(:num)/remove']  = 'admin/post/object/remove/$1';
+
 $route['admin/post/category']                = 'admin/post/category/index';
 $route['admin/post/category/(:num)']         = 'admin/post/category/edit/$1';
 $route['admin/post/category/(:num)/remove']  = 'admin/post/category/remove/$1';
