@@ -81,7 +81,6 @@ CREATE TABLE `post` (
     `cover_label` VARCHAR(200),
     `embed` TEXT,
     `gallery` BIGINT,
-    `slideshow` BIGINT,
     `content` TEXT,
     `location` VARCHAR(200),
     `status` TINYINT DEFAULT 1,

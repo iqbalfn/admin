@@ -18,13 +18,20 @@
                 
                 <div class="row">
                     <div class="col-md-3">
-                        <div class="list-group">
-                            <?php foreach($albums as $alb): ?>
-                            <a href="<?= base_url('/admin/gallery/' . $alb->id . '/media') ?>" class="list-group-item<?= ( $alb->id == $album->id ? ' active' : '' ) ?>">
-                                <?= $alb->name ?>
-                            </a>
-                            <?php endforeach; ?>
-                        </div>
+                        <fieldset>
+                            <legend><?= _l('Other Albums') ?></legend>
+                            
+                            <div class="list-group">
+                                <?php foreach($albums as $alb): ?>
+                                <a href="<?= base_url('/admin/gallery/' . $alb->id . '/media') ?>" class="list-group-item<?= ( $alb->id == $album->id ? ' active' : '' ) ?>">
+                                    <?= $alb->name ?>
+                                </a>
+                                <?php endforeach; ?>
+                            </div>
+                            <div class="list-group">
+                                <a href="<?= base_url('/admin/gallery') ?>" class="list-group-item"><?= _l('See All') ?></a>
+                            </div>
+                        </fieldset>
                     </div>
                     <div class="col-md-9">
                         <?php $can_see_album_media = ci()->can_i('update-gallery_media'); ?>

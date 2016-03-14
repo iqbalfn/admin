@@ -59,15 +59,10 @@ class SiteForm
         // get from ci form validation rule.
         $rules = explode('|', $this->field['rules']);
         $html5_required_rules = array(
-            'required',
-            'valid_url',
-            'valid_email',
-            'numeric',
-            'integer',
-            'decimal'
+            'required'
         );
         foreach($rules as $rule){
-            if(in_array($rule, $html5_required_rules))
+            if($rule == 'required')
                 $attrs['required'] = 'required';
             elseif($rule == 'alpha')
                 $attrs['pattern'] = '^[a-zA-Z]+$';

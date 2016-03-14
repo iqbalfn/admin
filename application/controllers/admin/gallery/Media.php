@@ -70,7 +70,7 @@ class Media extends MY_Controller
         if(!$this->can_i('read-gallery_media'))
             return $this->show_404();
         
-        $albums = $this->Gallery->getByCond([], true);
+        $albums = $this->Gallery->getByCond([], 7);
         if(!$albums)
             return $this->show_404();
         

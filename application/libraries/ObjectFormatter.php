@@ -92,12 +92,19 @@ class ObjectFormatter
                     $table = $cond['table'];
                     
                     foreach($objects as $obj){
+                        $value = NULL;
                         if(in_array($type, array('chain', 'member')))
-                            $table_ids[] = $obj->id;
+                            $value = $obj->id;
                         elseif($type == 'parent')
-                            $table_ids[] = $obj->$field;
+                            $value = $obj->$field;
+                        
+                        if($value)
+                            $table_ids[] = $value;
                     }
                     $table_ids = array_unique($table_ids);
+                    
+                    if(!$table_ids)
+                        continue;
                     
                     if($type == 'parent'){
                         $dbrows = $this->CI->db

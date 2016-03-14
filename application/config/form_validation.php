@@ -347,6 +347,174 @@ $config = array(
         )
     ),
     
+    '/admin/post' => array(
+        'title' => array(
+            'field' => 'title',
+            'label' => 'Title',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'slug' => array(
+            'field' => 'slug',
+            'label' => 'Slug',
+            'rules' => 'required|is_unique[post.slug,3]',
+            'input' => array(
+                'type' => 'text',
+                'attrs' => array(
+                    'class' => 'slugify',
+                    'data-source' => '#field-title'
+                )
+            )
+        ),
+        
+        'embed' => array(
+            'field' => 'embed',
+            'label' => 'Embed Script',
+            'rules' => '',
+            'input' => array(
+                'type' => 'textarea'
+            )
+        ),
+        
+        'category' => array(
+            'field' => 'category',
+            'label' => 'Category',
+            'rules' => '',
+            'input' => array(
+                'type' => 'multiple'
+            )
+        ),
+        
+        'tag' => array(
+            'field' => 'tag',
+            'label' => 'Tag',
+            'rules' => '',
+            'input' => array(
+                'type' => 'multiple'
+            )
+        ),
+        
+        'gallery' => array(
+            'field' => 'gallery',
+            'label' => 'Gallery',
+            'rules' => '',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'location' => array(
+            'field' => 'location',
+            'label' => 'Location',
+            'rules' => '',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'status' => array(
+            'field' => 'status',
+            'label' => 'Status',
+            'rules' => '',
+            'input' => array(
+                'type' => 'select'
+            )
+        ),
+        
+        'sources' => array(
+            'field' => 'sources',
+            'label' => 'Source',
+            'rules' => 'valid_url',
+            'input' => array(
+                'type' => 'url'
+            )
+        ),
+        
+        'featured' => array(
+            'field' => 'featured',
+            'label' => 'Featured',
+            'rules' => '',
+            'input' => array(
+                'type' => 'boolean'
+            )
+        ),
+        
+        'editor_pick' => array(
+            'field' => 'editor_pick',
+            'label' => 'Editor Pick',
+            'rules' => '',
+            'input' => array(
+                'type' => 'boolean'
+            )
+        ),
+        
+        'cover' => array(
+            'field' => 'cover',
+            'label' => 'Cover',
+            'rules' => 'required|media',
+            'input' => array(
+                'type' => 'image'
+            )
+        ),
+        
+        'cover_label' => array(
+            'field' => 'cover_label',
+            'label' => 'Cover Label',
+            'rules' => '',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'content' => array(
+            'field' => 'content',
+            'label' => 'Content',
+            'rules' => '',
+            'input' => array(
+                'type' => 'tinymce'
+            )
+        ),
+        
+        'seo_schema' => array(
+            'field' => 'seo_schema',
+            'label' => 'Schema',
+            'rules' => '',
+            'input' => array(
+                'type' => 'select'
+            )
+        ),
+        
+        'seo_title' => array(
+            'field' => 'seo_title',
+            'label' => 'Meta Title',
+            'rules' => '',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'seo_description' => array(
+            'field' => 'seo_description',
+            'label' => 'Meta Description',
+            'rules' => '',
+            'input' => array(
+                'type' => 'textarea'
+            )
+        ),
+        
+        'seo_keywords' => array(
+            'field' => 'seo_keywords',
+            'label' => 'Meta Keywords',
+            'rules' => '',
+            'input' => array(
+                'type' => 'tag'
+            )
+        )
+    ),
+    
     '/admin/post/tag' => array(
         'slug' => array(
             'field' => 'slug',
