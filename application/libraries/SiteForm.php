@@ -618,6 +618,53 @@ class SiteForm
         $preset_attrs = array(
             'class'         => 'select-box'
         );
+        
+        $input['attrs'] = $this->_genAttribute($preset_attrs);
+        
+        if($this->input_type == 'select-multiple'){
+            $input['attrs']['multiple'] = 'multiple';
+            $input['attrs']['name'] = $this->input_name . '[]';
+        }
+        
+        if($this->input_label_show)
+            $input['attrs']['aria-labelledby'] = $this->input_id . '-label';
+        else
+            $input['attrs']['aria-label'] = $this->input_label;
+        
+        if($this->input_options){
+            foreach($this->input_options as $val => $label){
+                $option = array(
+                    'tag' => 'option',
+                    'attrs' => array(
+                        'value' => $val
+                    ),
+                    'children' => $label
+                );
+                
+                if($this->input_value == $val && $this->input_type == 'select')
+                    $option['attrs']['selected'] = 'selected';
+                elseif($this->input_type == 'select-multiple' && in_array($val, $this->input_value))
+                    $option['attrs']['selected'] = 'selected';
+                
+                $input['children'][] = $option;
+            }
+        }
+        
+        return $input;
+    }
+    
+    /**
+     * input object ( object filterer )
+     */
+    private function _inputObject(){
+        $input = array(
+            'tag' => 'select',
+            'children' => array()
+        );
+        
+        $preset_attrs = array(
+            'class'         => 'object-filter'
+        );
         $input['attrs'] = $this->_genAttribute($preset_attrs);
         
         if($this->input_label_show)
@@ -759,15 +806,18 @@ class SiteForm
         
         // form input generator
         $methods = array(
-            'textarea'  => '_inputTextArea',
-            'tinymce'   => '_inputTextArea',
+            'textarea'          => '_inputTextArea',
+            'tinymce'           => '_inputTextArea',
             
-            'select'    => '_inputSelect',
+            'select-multiple'   => '_inputSelect',
+            'select'            => '_inputSelect',
             
-            'boolean'   => '_inputBoolean',
+            'object'            => '_inputObject',
             
-            'multiple'  => '_inputMultiple',
-            'parent'    => '_inputParent'
+            'boolean'           => '_inputBoolean',
+            
+            'multiple'          => '_inputMultiple',
+            'parent'            => '_inputParent'
         );
         
         $method = array_key_value_or($this->input_type, $methods, '_inputGeneral');

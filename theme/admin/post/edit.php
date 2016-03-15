@@ -38,6 +38,17 @@
                                 <?= $this->form->field('location') ?>
                                 
                                 <?= (ci()->can_i('read-post_category') ? $this->form->field('category', $categories) : '')?>
+                            </div>
+                            <div class="col-md-4">
+                                <?= $this->form->field('sources') ?>
+                                
+                                <?php if(ci()->can_i('read-gallery')): ?>
+                                <?= $this->form->field('gallery', $galleries) ?>
+                                <?php endif; ?>
+                                
+                                <?= $this->form->field('status', $statuses) ?>
+                                
+                                <?= (ci()->can_i('read-post_tag') ? $this->form->field('tag', $tags) : '') ?>
                                 
                                 <div class="row">
                                     <?php if(ci()->can_i('create-post_featured')): ?>
@@ -51,18 +62,6 @@
                                     </div>
                                     <?php endif; ?>
                                 </div>
-                                
-                            </div>
-                            <div class="col-md-4">
-                                <?= $this->form->field('sources') ?>
-                                
-                                <?php if(ci()->can_i('read-gallery')): ?>
-                                <?= $this->form->field('gallery') ?>
-                                <?php endif; ?>
-                                
-                                <?= $this->form->field('status', $statuses) ?>
-                                
-                                <?= (ci()->can_i('read-post_tag') ? $this->form->field('tag', $tags) : '') ?>
                             </div>
                         </div>
                         

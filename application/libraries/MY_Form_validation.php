@@ -7,6 +7,24 @@ class MY_Form_validation extends CI_Form_validation
 {
     
     /**
+     * Make sure the value is exists on table
+     * @rules "in_table[table.field]
+     */
+    public function in_table($str, $rule){
+        sscanf($rule, '%[^.].%[^.]', $table, $field);
+        if(!isset($this->CI->db))
+            return FALSE;
+        if(!$str)
+            return TRUE;
+        
+        $row = $this->CI->db->get_where($table, array($field=>$str));
+        
+        if($row->num_rows())
+            return TRUE;    
+        return FALSE;
+    }
+    
+    /**
      * Make sure the media file exists.
      * @rule 'media'
      * TODO Should we download the media?

@@ -20,11 +20,53 @@ $(function(){
     $('.month-picker').datetimepicker({format: 'MM'});
     $('.time-picker').datetimepicker({format: 'HH:mm:ss'});
     $('.textarea-dynamic').autosize();
-    $('.select-box').selectpicker();
     $('.btn-uploader').fileUploader();
     $('.slugify').slugify();
     
     $('.tokenfield').tokenfield();
+    
+    $('.select-box').selectpicker();
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent))
+        $('.select-box').selectpicker('mobile');
+    
+    $('.object-filter')
+        .selectpicker({
+            liveSearch: true
+        })
+        .ajaxSelectPicker({
+            ajax: {
+                url: '/admin/object-filter',
+                data: function(){
+                    var el = this.plugin.$element;
+                    var params = {
+                            q: '{{{q}}}',
+                            table: el.data('table')
+                        };
+                    return params;
+                },
+                method: 'get'
+            },
+            preprocessData: function(data){
+                if(data.error)
+                    return [];
+                
+                var el = this.plugin.$element;
+                var lbl = el.data('label');
+                var vlu = el.data('value');
+                
+                data = data.data;
+                var result = [];
+                for(var i=0; i<data.length; i++){
+                    result.push({
+                        value: data[i][vlu],
+                        text: data[i][lbl],
+                        disabled: false
+                    });
+                }
+                
+                return result;
+            }
+        });
     
     // tinymce
     if($('.tinymce').get(0)){
@@ -32,8 +74,7 @@ $(function(){
                 // main options
                 selector: '.tinymce',
                 menubar: false,
-                statusbar: false,
-                plugins: 'link table image media fullscreen pagebreak contextmenu autoresize paste',
+                plugins: 'link table image media fullscreen pagebreak contextmenu autoresize paste wordcount',
                 toolbar: 'undo redo | styleselect | bold italic link | bullist numlist | table image media | pagebreak | fullscreen',
                 content_css: '/theme/admin/static/css/tinymce-content.css',
                 

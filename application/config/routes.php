@@ -68,6 +68,8 @@ $route['admin/me/login']    = 'admin/me/auth/login';
 $route['admin/me/logout']   = 'admin/me/auth/logout';
 $route['admin/me/setting']  = 'admin/me/setting/index';
 
+$route['admin/object-filter'] = 'admin/object-filter/object/index';
+
 $route['admin/page']                = 'admin/page/object/index';
 $route['admin/page/(:num)']         = 'admin/page/object/edit/$1';
 $route['admin/page/(:num)/remove']  = 'admin/page/object/remove/$1';

@@ -393,16 +393,21 @@ $config = array(
             'label' => 'Tag',
             'rules' => '',
             'input' => array(
-                'type' => 'multiple'
+                'type' => 'select-multiple'
             )
         ),
         
         'gallery' => array(
             'field' => 'gallery',
             'label' => 'Gallery',
-            'rules' => '',
+            'rules' => 'in_table[gallery.id]',
             'input' => array(
-                'type' => 'text'
+                'type' => 'object',
+                'attrs' => array(
+                    'data-table' => 'gallery',
+                    'data-label' => 'name',
+                    'data-value' => 'id'
+                )
             )
         ),
         

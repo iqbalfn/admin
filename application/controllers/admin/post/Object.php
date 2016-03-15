@@ -25,13 +25,12 @@ class Object extends MY_Controller
 
         $this->load->library('SiteForm', '', 'form');
 
-        $params = [];
-        
         $this->load->model('Postcategory_model', 'PCategory');
         $this->load->model('Postcategorychain_model', 'PCChain');
         $this->load->model('Posttag_model', 'PTag');
         $this->load->model('Posttagchain_model', 'PTChain');
-
+        $this->load->model('Gallery_model', 'Gallery');
+        
         if($id){
             $object = $this->Post->get($id);
             if(!$object)
@@ -41,7 +40,8 @@ class Object extends MY_Controller
             $object_categories = $this->PCChain->getBy('post', $id, true);
             $object->category = $object_categories ? prop_values($object_categories, 'post_category') : array();
             $object_tags = $this->PTChain->getBy('post', $id, true);
-            $object->tag = $object_tags ? prop_values($object_tags, 'post_tag') : $object_tags;
+            $object->tag = $object_tags ? prop_values($object_tags, 'post_tag') : array();
+            
         }else{
             $object = (object)array('status' => 1);
             if($this->can_i('read-post_category'))
@@ -70,13 +70,26 @@ class Object extends MY_Controller
         
         if($this->can_i('read-post_tag')){
             $all_tags = array();
+            $params['tags'] = array();
             
             $tags = $this->PTag->getByCond([], true, false, ['name'=>'ASC']);
             if($tags){
-                $all_tags = prop_as_key($tags, 'id');
-                $tags = array($tags);
+                $all_tags = prop_as_key($tags, 'id', 'name');
+                $params['tags'] = $all_tags;
             }
-            $params['tags'] = $tags ? $tags : array();
+        }
+        
+        if($this->can_i('read-gallery')){
+            $params['galleries'] = array();
+            if(property_exists($object, 'gallery') && $object->gallery){
+                $gallery = $this->Gallery->get($object->gallery);
+                if($gallery)
+                    $params['galleries'] = array( $object->gallery => $gallery->name );
+            }else{
+                $galleries = $this->Gallery->getByCond([], 10);
+                if($galleries)
+                    $params['galleries'] = prop_as_key($galleries, 'id', 'name');
+            }
         }
         
         $statuses = $this->enum->item('post.status');
