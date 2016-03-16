@@ -50,6 +50,10 @@ $config['object_formatter'] = array(
         'seo_description' => 'text'
     ),
     
+    'post_selection' => array(
+        'post' => '@parent[post]'
+    ),
+    
     'post_tag' => array(
         'page' => 'join(/post/tag/|$slug)',
         'description' => 'text',

@@ -149,6 +149,15 @@ CREATE TABLE `post_tag_chain` (
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+DROP TABLE IF EXISTS `post_selection`;
+CREATE TABLE `post_selection` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `group` VARCHAR(50),
+    `post` BIGINT NOT NULL,
+    `index` TINYINT,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- SITE SYSTEM --
 DROP TABLE IF EXISTS `site_menu`;
 CREATE TABLE `site_menu` (

@@ -520,6 +520,43 @@ $config = array(
         )
     ),
     
+    '/admin/post/selector' => array(
+        'post' => array(
+            'field' => 'post',
+            'label' => 'Post',
+            'rules' => 'required|in_table[post.id]',
+            'input' => array(
+                'type' => 'object',
+                'attrs' => array(
+                    'data-table' => 'post',
+                    'data-label' => 'title',
+                    'data-value' => 'id'
+                )
+            )
+        ),
+        
+        'group' => array(
+            'field' => 'group',
+            'label' => 'Group',
+            'rules' => 'required|strtolower',
+            'input' => array(
+                'type' => 'text',
+                'attrs' => array(
+                    'readonly' => 'readonly'
+                )
+            )
+        ),
+        
+        'index' => array(
+            'field' => 'index',
+            'label' => 'Index',
+            'rules' => 'is_natural_no_zero',
+            'input' => array(
+                'type' => 'number'
+            )
+        )
+    ),
+    
     '/admin/post/tag' => array(
         'slug' => array(
             'field' => 'slug',

@@ -21,8 +21,9 @@ class Object extends MY_Controller
         $table = $this->input->get('table');
         
         $filterable_table = array(
-            'gallery' => array('field' => 'name',  'perms' => 'read-gallery'),
-            'post'    => array('field' => 'title', 'perms' => 'read-post')
+            'gallery' => array('field' => 'name',       'perms' => 'read-gallery'),
+            'post'    => array('field' => 'title',      'perms' => 'read-post'),
+            'user'    => array('field' => 'fullname',   'perms' => 'read-user')
         );
         
         if(!array_key_exists($table, $filterable_table))
