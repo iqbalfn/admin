@@ -19,7 +19,7 @@ class Auth extends MY_Controller
             $this->load->model('Userperms_model', 'UPerms');
             $cond = array(
                 'user' => $this->user->id,
-                'perms' => 'read_admin-page'
+                'perms' => 'read-admin_page'
             );
             $allowed = $this->UPerms->getByCond($cond, 1);
             $next = $allowed ? '/admin' : '/';

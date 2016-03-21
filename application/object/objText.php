@@ -15,7 +15,7 @@ class objText implements JsonSerializable
     
     public function chars($len=20){
         $ctx = $this->clean();
-        return substr($ctx, 0, $len);
+        return trim(substr($ctx, 0, $len));
     }
     
     public function clean(){
@@ -24,7 +24,7 @@ class objText implements JsonSerializable
         
         $ctx = preg_replace('!<[^>]+>!', ' ', $this->value);
         $ctx = preg_replace('! +!', ' ', $ctx);
-        $ctx = htmlspecialchars($ctx);
+        $ctx = trim(htmlspecialchars($ctx));
         
         $this->clean = $ctx;
         

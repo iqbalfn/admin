@@ -44,7 +44,7 @@ class MY_Form_validation extends CI_Form_validation
      */
     public function is_unique($str, $field){
         if(!strstr($field, ','))
-            return parent::is_unique($str);
+            return parent::is_unique($str, $field);
         
         $ci =&get_instance();
         

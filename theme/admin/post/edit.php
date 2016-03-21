@@ -34,7 +34,7 @@
                                 <?= $this->form->field('cover_label') ?>
                             </div>
                             <div class="col-md-4">
-                                <?= $this->form->field('slug') ?>
+                                <?= $this->form->field('slug', null, (!$slug_editable ? ['readonly'=>'readonly'] : [])) ?>
                                 <?= $this->form->field('location') ?>
                                 
                                 <?= (ci()->can_i('read-post_category') ? $this->form->field('category', $categories) : '')?>

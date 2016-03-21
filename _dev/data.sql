@@ -28,6 +28,7 @@ INSERT INTO `perms` ( `group`, `name`, `label`, `description` ) VALUES
     ( 'Post Other',         'delete-post_other_user',   'Delete Other Reporter Post',   'Allow user to remove other reporter posts' ),
     ( 'Post Other',         'read-post_other_user',     'Read Other Reporter Post',     'Allow user to see other reporter posts' ),
     ( 'Post Other',         'create-post_published',    'Publish Post',                 'Allow user to publish the post' ),
+    ( 'Post Other',         'update-post_slug',         'Edit Post Slug',               'Allow user to update the post slug' ),
     ( 'Post Cateogry',      'create-post_category',     'Create Post Category',         'Allow user to create new post category' ),
     ( 'Post Cateogry',      'delete-post_category',     'Delete Post Category',         'Allow user to delete exists post category' ),
     ( 'Post Cateogry',      'read-post_category',       'Read Post Category',           'Allow user to see all exists post category' ),
@@ -163,6 +164,7 @@ INSERT INTO `user_perms` ( `user`, `perms` ) VALUES
     ( 1, 'create-post_published' ),
     ( 1, 'delete-post_other_user' ),
     ( 1, 'read-post_other_user' ),
+    ( 1, 'update-post_slug' ),
     
     -- POST CATEGORY
     ( 1, 'create-post_category' ),

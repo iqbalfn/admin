@@ -31,6 +31,10 @@ class Object extends MY_Controller
         $this->load->model('Posttagchain_model', 'PTChain');
         $this->load->model('Gallery_model', 'Gallery');
         
+        $params = array(
+            'slug_editable' => true
+        );
+        
         if($id){
             $object = $this->Post->get($id);
             if(!$object)
@@ -42,6 +46,8 @@ class Object extends MY_Controller
             $object_tags = $this->PTChain->getBy('post', $id, true);
             $object->tag = $object_tags ? prop_values($object_tags, 'post_tag') : array();
             
+            if(!$this->can_i('update-post_slug'))
+                $params['slug_editable'] = false;
         }else{
             $object = (object)array('status' => 1);
             if($this->can_i('read-post_category'))
@@ -105,10 +111,14 @@ class Object extends MY_Controller
         
         // make sure user not publish it if user not allowed to publish it
         if(array_key_exists('status', $new_object)
-        && $new_object['status']
+        && $new_object['status'] == 4
         && !$this->can_i('create-post_published')){
             unset($new_object['status']);
         }
+        
+        // make sure user not change the slug if he's not allowed
+        if($id && array_key_exists('slug', $new_object) && !$this->can_i('update-post_slug'))
+            unset($new_object['slug']);
         
         // save category chain
         $to_insert_category = array();

@@ -203,6 +203,12 @@ class ObjectFormatter
                         case 'media':
                             $object->$field = new objMedia($object->$field);
                             break;
+                        case 'media-list':
+                            $medias = explode(',', $object->$field);
+                            foreach($medias as &$media)
+                                $media = new objMedia($media);
+                            $object->$field = $medias;
+                            break;
                         case 'string':
                             $object->$field = (string)$object->$field;
                             break;

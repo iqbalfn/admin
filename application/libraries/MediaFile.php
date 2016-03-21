@@ -28,7 +28,7 @@ class MediaFile
         $exts = explode('.', $name);
         $ext  = end($exts);
         
-        $local_file_name = md5(time());
+        $local_file_name = md5(time() . '-' . uniqid());
         $local_file      = $local_file_name . '.' . $ext;
         $local_media     = '/media/';
         $local_path_abs  = dirname(BASEPATH);
@@ -140,6 +140,7 @@ class MediaFile
         $config['file_ext_tolower'] = true;
         
         $this->CI->load->library('upload', $config);
+        $this->CI->upload->initialize($config);
         
         if(!$this->CI->upload->do_upload($name))
             return $this->CI->upload->display_errors('','');

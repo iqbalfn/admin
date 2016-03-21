@@ -52,7 +52,7 @@ class SiteTheme
      * @param boolean version Add versioning on production system.
      * @return string absolute path to theme static file.
      */
-    public function static($file){
+    public function asset($file){
         if(!is_dev())
             $file = preg_replace('!\.([a-z]+)$!','.min.$1', $file);
         

@@ -21,6 +21,7 @@ class SiteForm
     private $input_options;
     private $input_type;
     private $input_value;
+    private $input_attrs;
     
     function __construct(){
         $this->CI =&get_instance();
@@ -54,6 +55,12 @@ class SiteForm
                         $attrs[$name] = $value;
                 }
             }
+        }
+        
+        // get it from view provide
+        if($this->input_attrs){
+            foreach($this->input_attrs as $name => $value)
+                $attrs[$name] = $value;
         }
         
         // get from ci form validation rule.
@@ -631,6 +638,8 @@ class SiteForm
         else
             $input['attrs']['aria-label'] = $this->input_label;
         
+        $value = set_value($this->input_name, $this->input_value);
+        
         if($this->input_options){
             foreach($this->input_options as $val => $label){
                 $option = array(
@@ -641,9 +650,9 @@ class SiteForm
                     'children' => $label
                 );
                 
-                if($this->input_value == $val && $this->input_type == 'select')
+                if($value == $val && $this->input_type == 'select')
                     $option['attrs']['selected'] = 'selected';
-                elseif($this->input_type == 'select-multiple' && in_array($val, $this->input_value))
+                elseif($this->input_type == 'select-multiple' && in_array($val, $value))
                     $option['attrs']['selected'] = 'selected';
                 
                 $input['children'][] = $option;
@@ -734,9 +743,10 @@ class SiteForm
      * Create field element.
      * @param string name The field name.
      * @param array options List of value-label pair of the options.
+     * @param array attrs name-value pair of additional attributes.
      * @return string html tag of the input form
      */
-    public function field($name, $options=array()){
+    public function field($name, $options=array(), $attrs=array()){
         if(!array_key_exists($name, $this->form))
             return '';
         
@@ -749,6 +759,7 @@ class SiteForm
         $this->input_name       = $name;
         $this->input_options    = $options;
         $this->input_type       = $this->input['type'];
+        $this->input_attrs      = $attrs;
         
         if($options && is_string($options))
             $this->input_options = $this->CI->enum->item($options);
