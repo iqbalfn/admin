@@ -10,6 +10,8 @@ $config['object_formatter'] = array(
     'gallery' => array(
         'cover' => 'media',
         'page' => 'join(/gallery/|$slug)',
+        'description' => 'text',
+        'created' => 'date',
         'seo_schema' => 'enum',
         'seo_description' => 'text'
     ),
@@ -23,6 +25,8 @@ $config['object_formatter'] = array(
     
     'page' => array(
         'page' => 'join(/page/|$slug)',
+        'content' => 'text',
+        'created' => 'date',
         'seo_schema' => 'enum',
         'seo_description' => 'text'
     ),

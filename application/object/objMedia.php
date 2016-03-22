@@ -39,6 +39,6 @@ class objMedia implements JsonSerializable
     }
     
     function jsonSerialize(){
-        return $this->value;
+        return $this->absURL();
     }
 }

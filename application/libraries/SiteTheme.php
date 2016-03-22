@@ -24,6 +24,15 @@ class SiteTheme
     }
     
     /**
+     * Check if theme file exiss
+     * @param string name The theme file name.
+     */
+    public function exists($name){
+        $abs_path = dirname(BASEPATH) . '/theme/' . $this->current($name) . '.php';
+        return is_file($abs_path);
+    }
+    
+    /**
      * Load the theme file based on current active theme.
      * @param string name The view name.
      * @param array params List of var-value pair of data to send to view.

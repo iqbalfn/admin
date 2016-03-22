@@ -113,6 +113,10 @@ $route['admin/user/(:num)/remove']  = 'admin/user/object/remove/$1';
 $route['upload']                            = 'media/upload';
 $route['media/(:any)/(:any)/(:any)/(:any)'] = 'media/resize/$1/$2/$3/$4';
 
+$route['gallery/(:any)'] = 'gallery/single/$1';
+
+$route['page/(:any)'] = 'page/single/$1';
+
 $route['default_controller']    = 'home';
 $route['404_override']          = 'my_controller/show_404';
 $route['translate_uri_dashes']  = FALSE;

@@ -65,20 +65,54 @@ INSERT INTO `perms` ( `group`, `name`, `label`, `description` ) VALUES
 
 TRUNCATE `site_params`;
 INSERT INTO `site_params` ( `name`, `value` ) VALUES
+    ( 'code_application_facebook', '' ),
     ( 'code_google_analytics', '' ),
     ( 'code_verification_alexa', '' ),
+    ( 'code_verification_bing', '' ),
+    ( 'code_verification_pinterest', '' ),
     ( 'code_verification_google', '' ),
+    ( 'code_verification_yandex', '' ),
+    
     ( 'media_host', ''),
-    ( 'theme_host', ''),
+    
+    ( 'organization_email', '' ),
+    ( 'organization_contact_customer_support', '' ),
+    ( 'organization_contact_technical_support', '' ),
+    ( 'organization_contact_billing_support', '' ),
+    ( 'organization_contact_bill_payment', '' ),
+    ( 'organization_contact_sales', '' ),
+    ( 'organization_contact_reservations', '' ),
+    ( 'organization_contact_credit_card_support', '' ),
+    ( 'organization_contact_emergency', '' ),
+    ( 'organization_contact_baggage_tracking', '' ),
+    ( 'organization_contact_roadside_assistance', '' ),
+    ( 'organization_contact_package_tracking', '' ),
+    
+    ( 'organization_contact_available_language', '' ),
+    ( 'organization_contact_area_served', '' ),
+    ( 'organization_contact_opt_tollfree', '' ),
+    ( 'organization_contact_opt_his', '' ),
+    
     ( 'site_frontpage_description', 'The standart site description that will appear on meta tag of site front page' ),
     ( 'site_frontpage_keywords', 'list of, site keywords, that will, appear on meta, tag of site, front page' ),
     ( 'site_frontpage_title', 'The most awesome admin system' ),
     ( 'site_name', 'Admin' ),
+    
     ( 'site_x_social_facebook', '' ),
     ( 'site_x_social_gplus', '' ),
     ( 'site_x_social_instagram', '' ),
+    ( 'site_x_social_linkedin', '' ),
+    ( 'site_x_social_myspace', '' ),
+    ( 'site_x_social_pinterest', '' ),
+    ( 'site_x_social_soundcloud', '' ),
+    ( 'site_x_social_tumblr', '' ),
     ( 'site_x_social_twitter', '' ),
-    ( 'site_theme', 'default' );
+    ( 'site_x_social_youtube', '' ),
+    
+    ( 'site_theme', 'default' ),
+    ( 'site_theme_responsive', '1' ),
+    
+    ( 'theme_host', '');
 
 TRUNCATE `site_enum`;
 INSERT INTO `site_enum` ( `group`, `value`, `label` ) VALUES
@@ -108,6 +142,7 @@ INSERT INTO `site_enum` ( `group`, `value`, `label` ) VALUES
     ( 'post_category.seo_schema', 'CollectionPage', 'CollectionPage' ),
     ( 'post_tag.seo_schema', 'CollectionPage', 'CollectionPage' ),
     
+    ( 'page.seo_schema', 'WebPage', 'WebPage' ),
     ( 'page.seo_schema', 'AboutPage', 'AboutPage' ),
     ( 'page.seo_schema', 'CheckoutPage', 'CheckoutPage' ),
     ( 'page.seo_schema', 'ContactPage ', 'ContactPage ' ),

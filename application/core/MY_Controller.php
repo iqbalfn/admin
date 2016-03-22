@@ -19,6 +19,7 @@ class MY_Controller extends CI_Controller
         $this->load->library('SiteTheme', '', 'theme');
         $this->load->library('SiteMenu', '', 'menu');
         $this->load->library('SiteForm', '', 'form');
+        $this->load->library('SiteMeta', '', 'meta');
 
         $cookie_name = config_item('sess_cookie_name');
         $hash = $this->input->cookie($cookie_name);
