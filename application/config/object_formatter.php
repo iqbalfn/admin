@@ -44,7 +44,8 @@ $config['object_formatter'] = array(
         'editor_pick' => 'boolean',
         'seo_schema' => 'enum',
         'seo_description' => 'text',
-        'created' => 'date'
+        'created' => 'date',
+        'published' => 'date'
     ),
     
     'post_category' => array(

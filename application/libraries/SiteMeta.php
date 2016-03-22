@@ -440,6 +440,129 @@ class SiteMeta
         echo $tx;
     }
     
+    public function post_single($post){
+        $meta_title = $post->seo_title;
+        if(!$meta_title)
+            $meta_title = $post->title;
+        
+        $meta_description = $post->seo_description;
+        if(!$meta_description)
+            $meta_description = $post->content->chars(160);
+        
+        $meta_keywords = $post->seo_keywords;
+        $meta_image = $post->cover;
+        $meta_name  = $this->CI->setting->item('site_name');
+        $meta_url   = base_url($post->page);
+        
+        $tx = '<meta name="description" content="' . $meta_description . '">';
+        $tx.= '<meta name="keywords" content="' . $meta_keywords . '">';
+        
+        $tx.= '<meta name="twitter:card" content="summary_large_image">';
+        $tx.= '<meta name="twitter:description" content="' . $meta_description . '">';
+        $tx.= '<meta name="twitter:image:src" content="' . $meta_image . '">';
+        $tx.= '<meta name="twitter:title" content="' . $meta_title  .'">';
+        $tx.= '<meta name="twitter:url" content="' . $meta_url . '">';
+        
+        $tx.= '<meta property="og:description" content="' . $meta_description . '">';
+        $tx.= '<meta property="og:image" content="' . $meta_image . '">';
+        $tx.= '<meta property="og:site_name" content="' . $meta_name . '">';
+        $tx.= '<meta property="og:title" content="' . $meta_title . '">';
+        $tx.= '<meta property="og:type" content="article">';
+        $tx.= '<meta property="og:url" content="' . $meta_url . '">';
+        $tx.= '<meta property="article:published_time" content="' . $post->published->format('c') . '">';
+        if(property_exists($post, 'category')){
+            foreach($post->category as $cat){
+                $tx.= '<meta property="article:section" content="' . $cat->name . '">';
+                break;
+            }
+        }
+        if(property_exists($post, 'tag')){
+            foreach($post->tag as $tag)
+                $tx.= '<meta property="article:tag" content="' . $tag->name . '">';
+        }
+        
+        $tx = $this->_general($meta_title, $tx);
+        
+        if(!$post->seo_schema->value)
+            $post->seo_schema = 'Article';
+        
+        // fuck get image sizes
+        $image_file = dirname(BASEPATH) . $meta_image->value;
+        if(is_file($image_file)){
+            list($img_width, $img_height) = getimagesize($image_file);
+            
+            $data = array(
+                '@context'      => 'http://schema.org',
+                '@type'         => $post->seo_schema,
+                'name'          => $meta_title,
+                'description'   => $meta_description,
+                'author'        => array(
+                    '@type'         => 'Person',
+                    'name'          => $post->user->fullname,
+                    'url'           => base_url($post->user->page)
+                ),
+                'image'         => array(
+                    '@type'         => 'ImageObject',
+                    'url'           => $meta_image,
+                    'height'        => $img_height,
+                    'width'         => $img_width
+                ),
+                'headline'      => $meta_title,
+                'url'           => $meta_url,
+                'keywords'      => $meta_keywords,
+                'mainEntityOfPage' => array(
+                    '@type'         => 'WebPage',
+                    '@id'           => $meta_url
+                ),
+                'publisher'     => array(
+                    '@type'         => 'Organization',
+                    'name'          => $meta_name,
+                    'logo'          => array(
+                        '@type'         => 'ImageObject',
+                        'url'           => $this->CI->theme->asset('/static/image/logo/logo-200x60.png'),
+                        'width'         => 200,
+                        'height'        => 60
+                    )
+                ),
+                'datePublished' => $post->published->format('c'),
+                'dateModified'  => $post->published->format('c'),
+                'dateCreated'   => $post->created->format('c')
+            );
+            
+            $tx.= '<script type="application/ld+json">';
+            $tx.= json_encode($data, JSON_UNESCAPED_SLASHES);
+            $tx.= '</script>';
+        }
+        
+        $data = array(
+            '@context'  => 'http://schema.org',
+            '@type'     => 'BreadcrumbList',
+            'itemListElement' => array(
+                array(
+                    '@type' => 'ListItem',
+                    'position' => 1,
+                    'item' => array(
+                        '@id' => base_url(),
+                        'name' => $meta_name
+                    )
+                ),
+                array(
+                    '@type' => 'ListItem',
+                    'position' => 2,
+                    'item' => array(
+                        '@id' => base_url('/post'),
+                        'name' => _l('Post')
+                    )
+                )
+            )
+        );
+        $tx.= '<script type="application/ld+json">';
+        $tx.= json_encode($data, JSON_UNESCAPED_SLASHES);
+        $tx.= '</script>';
+        
+        echo $tx;
+    }
+    
     public function post_tag_single($tag){
         $meta_title = $tag->seo_title;
         if(!$meta_title)

@@ -110,10 +110,14 @@ class Object extends MY_Controller
             return $this->redirect('/admin/post');
         
         // make sure user not publish it if user not allowed to publish it
-        if(array_key_exists('status', $new_object)
-        && $new_object['status'] == 4
-        && !$this->can_i('create-post_published')){
-            unset($new_object['status']);
+        // or set the published property if it's published
+        if(array_key_exists('status', $new_object)){
+            if($new_object['status'] == 4){
+                if($this->can_i('create-post_published'))
+                    $new_object['published'] = date('Y-m-d H:i:s');
+                else
+                    unset($new_object['status']);
+            }
         }
         
         // make sure user not change the slug if he's not allowed

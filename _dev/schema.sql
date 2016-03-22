@@ -93,6 +93,7 @@ CREATE TABLE `post` (
     `seo_description` TEXT,
     `seo_keywords` TEXT,
     
+    `published` DATETIME,
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
