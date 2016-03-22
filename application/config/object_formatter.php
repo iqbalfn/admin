@@ -50,6 +50,7 @@ $config['object_formatter'] = array(
     'post_category' => array(
         'page' => 'join(/post/category/|$slug)',
         'description' => 'text',
+        'created' => 'date',
         'seo_schema' => 'enum',
         'seo_description' => 'text'
     ),
@@ -61,6 +62,7 @@ $config['object_formatter'] = array(
     'post_tag' => array(
         'page' => 'join(/post/tag/|$slug)',
         'description' => 'text',
+        'created' => 'date',
         'seo_schema' => 'enum',
         'seo_description' => 'text'
     ),
@@ -71,6 +73,8 @@ $config['object_formatter'] = array(
     
     'user' => array(
         'avatar' => 'media',
-        'status' => 'enum'
+        'about' => 'text',
+        'status' => 'enum',
+        'page' => 'join(/user/|$name)'
     )
 );

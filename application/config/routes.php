@@ -117,6 +117,12 @@ $route['gallery/(:any)'] = 'gallery/single/$1';
 
 $route['page/(:any)'] = 'page/single/$1';
 
+$route['post/category/(:any)'] = 'post/category/$1';
+$route['post/read/(:any)'] = 'post/single/$1';
+$route['post/tag/(:any)'] = 'post/tag/$1';
+
+$route['user/(:any)'] = 'user/single/$1';
+
 $route['default_controller']    = 'home';
 $route['404_override']          = 'my_controller/show_404';
 $route['translate_uri_dashes']  = FALSE;
