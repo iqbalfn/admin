@@ -10,7 +10,7 @@ class SiteMeta
         
     }
     
-    private function _general($title=null, $metas=null){
+    private function _general($title=null, $metas=array(), $schemes=array()){
         $tx = '<meta charset="utf-8">';
         $tx.= '<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">';
         if($this->CI->setting->item('site_theme_responsive'))
@@ -41,8 +41,40 @@ class SiteMeta
         if($facebook_code)
             $tx.= '<meta content="' . $facebook_code . '" property="fb:app_id">';
         
-        if($metas)
-            $tx.= $metas;
+        $tx.= '<meta property="og:site_name" content="' . $this->CI->setting->item('site_name') . '">';
+        
+        // additional metas
+        $prop_or_name = array(
+            'keywords' => 'name',
+            'description' => 'name',
+            'twitter:card' => 'name',
+            'twitter:description' => 'name',
+            'twitter:image:src' => 'name',
+            'twitter:title' => 'name',
+            'twitter:url' => 'name',
+            'og:description' => 'property',
+            'og:image' => 'property',
+            'og:title' => 'property',
+            'og:type' => 'property',
+            'og:url' => 'property',
+            'article:published_time' => 'property',
+            'article:section' => 'property',
+            'article:tag' => 'property',
+            'profile:username' => 'property',
+            'profile:first_name' => 'property',
+            'profile:last_name' => 'property'
+        );
+        foreach($metas as $name => $mets){
+            $prop = 'name';
+            if(array_key_exists($name, $prop_or_name))
+                $prop = $prop_or_name[$name];
+            if(is_array($mets)){
+                foreach($mets as $met)
+                    $tx.= '<meta ' . $prop . '="' . $name . '" content="' . $met . '">';
+            }else{
+                $tx.= '<meta ' . $prop . '="' . $name . '" content="' . $mets . '">';
+            }
+        }
         
         $tx.= '<link href="' . $this->CI->theme->asset('/static/image/logo/shortcut-icon.png') . '" rel="shortcut icon">';
         $tx.= '<link href="' . $this->CI->theme->asset('/static/image/logo/apple-touch-icon.png') . '" rel="apple-touch-icon">';
@@ -74,8 +106,36 @@ class SiteMeta
         $tx.= '<script type="application/ld+json">';
         $tx.= json_encode($data, JSON_UNESCAPED_SLASHES);
         $tx.= '</script>';
+        foreach($schemes as $scheme){
+            $tx.= '<script type="application/ld+json">';
+            $tx.= json_encode($scheme, JSON_UNESCAPED_SLASHES);
+            $tx.= '</script>';
+        }
         
         return $tx;
+    }
+    
+    private function _schemaBreadcrumb($links){
+        $data = array(
+            '@context'  => 'http://schema.org',
+            '@type'     => 'BreadcrumbList',
+            'itemListElement' => array()
+        );
+        
+        $index = 1;
+        foreach($links as $id => $name){
+            $data['itemListElement'][] = array(
+                '@type' => 'ListItem',
+                    'position' => $index,
+                    'item' => array(
+                        '@id' => $id,
+                        'name' => $name
+                    )
+            );
+            $index++;
+        }
+        
+        return $data;
     }
     
     public function gallery_single($gallery){
@@ -89,29 +149,26 @@ class SiteMeta
         
         $meta_keywords = $gallery->seo_keywords;
         $meta_image = $gallery->cover;
-        $meta_name  = $this->CI->setting->item('site_name');
         $meta_url   = base_url($gallery->page);
         
-        $tx = '<meta name="description" content="' . $meta_description . '">';
-        $tx.= '<meta name="keywords" content="' . $meta_keywords . '">';
+        $metas = array(
+            "description"           => $meta_description,
+            "keywords"              => $meta_keywords,
+            "twitter:card"          => "summary_large_image",
+            "twitter:description"   => $meta_description,
+            "twitter:image:src"     => $meta_image,
+            "twitter:title"         => $meta_title,
+            "twitter:url"           => $meta_url,
+            "og:description"        => $meta_description,
+            "og:image"              => $meta_image,
+            "og:title"              => $meta_title,
+            "og:type"               => "website",
+            "og:url"                => $meta_url
+        );
         
-        $tx.= '<meta name="twitter:card" content="summary_large_image">';
-        $tx.= '<meta name="twitter:description" content="' . $meta_description . '">';
-        $tx.= '<meta name="twitter:image:src" content="' . $meta_image . '">';
-        $tx.= '<meta name="twitter:title" content="' . $meta_title  .'">';
-        $tx.= '<meta name="twitter:url" content="' . $meta_url . '">';
-        
-        $tx.= '<meta property="og:description" content="' . $meta_description . '">';
-        $tx.= '<meta property="og:image" content="' . $meta_image . '">';
-        $tx.= '<meta property="og:site_name" content="' . $meta_name . '">';
-        $tx.= '<meta property="og:title" content="' . $meta_title . '">';
-        $tx.= '<meta property="og:type" content="website">';
-        $tx.= '<meta property="og:url" content="' . $meta_url . '">';
-        
-        $tx = $this->_general($meta_title, $tx);
-        
+        $schemas = array();
         if($gallery->seo_schema->value){
-            $data = array(
+            $schemas[] = array(
                 '@context'      => 'http://schema.org',
                 '@type'         => $gallery->seo_schema,
                 'name'          => $meta_title,
@@ -122,39 +179,14 @@ class SiteMeta
                 'datePublished' => $gallery->created->format('c'),
                 'dateCreated'   => $gallery->created->format('c')
             );
-            
-            $tx.= '<script type="application/ld+json">';
-            $tx.= json_encode($data, JSON_UNESCAPED_SLASHES);
-            $tx.= '</script>';
         }
         
-        $data = array(
-            '@context'  => 'http://schema.org',
-            '@type'     => 'BreadcrumbList',
-            'itemListElement' => array(
-                array(
-                    '@type' => 'ListItem',
-                    'position' => 1,
-                    'item' => array(
-                        '@id' => base_url(),
-                        'name' => $this->CI->setting->item('site_name')
-                    )
-                ),
-                array(
-                    '@type' => 'ListItem',
-                    'position' => 2,
-                    'item' => array(
-                        '@id' => base_url('/gallery'),
-                        'name' => _l('Gallery')
-                    )
-                )
-            )
-        );
-        $tx.= '<script type="application/ld+json">';
-        $tx.= json_encode($data, JSON_UNESCAPED_SLASHES);
-        $tx.= '</script>';
+        $schemas[] = $this->_schemaBreadcrumb([
+            base_url() => $this->CI->setting->item('site_name'),
+            base_url('/gallery') => _l('Gallery')
+        ]);
         
-        echo $tx;
+        echo $this->_general($meta_title, $metas, $schemas);
     }
     
     public function home($title=null){
@@ -164,25 +196,24 @@ class SiteMeta
         $meta_description = $this->CI->setting->item('site_frontpage_description');
         $meta_name  = $this->CI->setting->item('site_name');
         $meta_image = $this->CI->theme->asset('/static/image/logo/logo.png');
+        $meta_keywords = $this->CI->setting->item('site_frontpage_keywords');
         
-        $tx = '<meta name="description" content="' . $meta_description . '">';
-        $tx.= '<meta name="keywords" content="' . $this->CI->setting->item('site_frontpage_keywords') . '">';
+        $metas = array(
+            "description"           => $meta_description,
+            "keywords"              => $meta_keywords,
+            "twitter:card"          => "summary_large_image",
+            "twitter:description"   => $meta_description,
+            "twitter:image:src"     => $meta_image,
+            "twitter:title"         => $meta_name,
+            "twitter:url"           => base_url(),
+            "og:description"        => $meta_description,
+            "og:image"              => $meta_image,
+            "og:title"              => $meta_name,
+            "og:type"               => "website",
+            "og:url"                => base_url()
+        );
         
-        $tx.= '<meta name="twitter:card" content="summary_large_image">';
-        $tx.= '<meta name="twitter:description" content="' . $meta_description . '">';
-        $tx.= '<meta name="twitter:image:src" content="' . $meta_image . '">';
-        $tx.= '<meta name="twitter:title" content="' . $meta_name  .'">';
-        $tx.= '<meta name="twitter:url" content="' . base_url() . '">';
-        
-        $tx.= '<meta property="og:description" content="' . $meta_description . '">';
-        $tx.= '<meta property="og:image" content="' . $meta_image . '">';
-        $tx.= '<meta property="og:site_name" content="' . $meta_name . '">';
-        $tx.= '<meta property="og:title" content="' . $title . '">';
-        $tx.= '<meta property="og:type" content="website">';
-        $tx.= '<meta property="og:url" content="' . base_url() . '">';
-        
-        
-        $tx = $this->_general($title, $tx);
+        $schemas = array();
         
         $data = array(
             '@context'      => 'http://schema.org',
@@ -271,11 +302,9 @@ class SiteMeta
         if($contacts)
             $data['contactPoint'] == $contacts;
         
-        $tx.= '<script type="application/ld+json">';
-        $tx.= json_encode($data, JSON_UNESCAPED_SLASHES);
-        $tx.= '</script>';
+        $schemas[] = $data;
         
-        echo $tx;
+        echo $this->_general($title, $metas, $schemas);
     }
     
     public function page_single($page){
@@ -290,27 +319,27 @@ class SiteMeta
         $meta_keywords = $page->seo_keywords;
         $meta_image = $this->CI->theme->asset('/static/image/logo/logo.png');
         $meta_name  = $this->CI->setting->item('site_name');
+        $meta_url   = base_url($page->page);
         
-        $tx = '<meta name="description" content="' . $meta_description . '">';
-        $tx.= '<meta name="keywords" content="' . $meta_keywords . '">';
+        $metas = array(
+            "description"           => $meta_description,
+            "keywords"              => $meta_keywords,
+            "twitter:card"          => "summary_large_image",
+            "twitter:description"   => $meta_description,
+            "twitter:image:src"     => $meta_image,
+            "twitter:title"         => $meta_title,
+            "twitter:url"           => $meta_url,
+            "og:description"        => $meta_description,
+            "og:image"              => $meta_image,
+            "og:title"              => $meta_title,
+            "og:type"               => "website",
+            "og:url"                => $meta_url
+        );
         
-        $tx.= '<meta name="twitter:card" content="summary_large_image">';
-        $tx.= '<meta name="twitter:description" content="' . $meta_description . '">';
-        $tx.= '<meta name="twitter:image:src" content="' . $meta_image . '">';
-        $tx.= '<meta name="twitter:title" content="' . $meta_title  .'">';
-        $tx.= '<meta name="twitter:url" content="' . base_url($page->page) . '">';
-        
-        $tx.= '<meta property="og:description" content="' . $meta_description . '">';
-        $tx.= '<meta property="og:image" content="' . $meta_image . '">';
-        $tx.= '<meta property="og:site_name" content="' . $meta_name . '">';
-        $tx.= '<meta property="og:title" content="' . $meta_title . '">';
-        $tx.= '<meta property="og:type" content="website">';
-        $tx.= '<meta property="og:url" content="' . base_url($page->page) . '">';
-        
-        $tx = $this->_general($meta_title, $tx);
+        $schemas = array();
         
         if($page->seo_schema->value){
-            $data = array(
+            $schemas[] = array(
                 '@context'      => 'http://schema.org',
                 '@type'         => $page->seo_schema,
                 'name'          => $meta_title,
@@ -318,39 +347,14 @@ class SiteMeta
                 'url'           => base_url($page->page),
                 'dateCreated'   => $page->created->format('c')
             );
-            
-            $tx.= '<script type="application/ld+json">';
-            $tx.= json_encode($data, JSON_UNESCAPED_SLASHES);
-            $tx.= '</script>';
         }
         
-        $data = array(
-            '@context'  => 'http://schema.org',
-            '@type'     => 'BreadcrumbList',
-            'itemListElement' => array(
-                array(
-                    '@type' => 'ListItem',
-                    'position' => 1,
-                    'item' => array(
-                        '@id' => base_url(),
-                        'name' => $meta_name
-                    )
-                ),
-                array(
-                    '@type' => 'ListItem',
-                    'position' => 2,
-                    'item' => array(
-                        '@id' => base_url('/page'),
-                        'name' => _l('Page')
-                    )
-                )
-            )
-        );
-        $tx.= '<script type="application/ld+json">';
-        $tx.= json_encode($data, JSON_UNESCAPED_SLASHES);
-        $tx.= '</script>';
+        $schemas[] = $this->_schemaBreadcrumb([
+            base_url() => $meta_name,
+            base_url('/page') => _l('Page')
+        ]);
         
-        echo $tx;
+        echo $this->_general($meta_title, $metas, $schemas);
     }
     
     public function post_category_single($category){
@@ -367,26 +371,25 @@ class SiteMeta
         $meta_name  = $this->CI->setting->item('site_name');
         $meta_url   = base_url($category->page);
         
-        $tx = '<meta name="description" content="' . $meta_description . '">';
-        $tx.= '<meta name="keywords" content="' . $meta_keywords . '">';
+        $metas = array(
+            "description"           => $meta_description,
+            "keywords"              => $meta_keywords,
+            "twitter:card"          => "summary_large_image",
+            "twitter:description"   => $meta_description,
+            "twitter:image:src"     => $meta_image,
+            "twitter:title"         => $meta_title,
+            "twitter:url"           => $meta_url,
+            "og:description"        => $meta_description,
+            "og:image"              => $meta_image,
+            "og:title"              => $meta_title,
+            "og:type"               => "website",
+            "og:url"                => $meta_url
+        );
         
-        $tx.= '<meta name="twitter:card" content="summary_large_image">';
-        $tx.= '<meta name="twitter:description" content="' . $meta_description . '">';
-        $tx.= '<meta name="twitter:image:src" content="' . $meta_image . '">';
-        $tx.= '<meta name="twitter:title" content="' . $meta_title  .'">';
-        $tx.= '<meta name="twitter:url" content="' . $meta_url . '">';
-        
-        $tx.= '<meta property="og:description" content="' . $meta_description . '">';
-        $tx.= '<meta property="og:image" content="' . $meta_image . '">';
-        $tx.= '<meta property="og:site_name" content="' . $meta_name . '">';
-        $tx.= '<meta property="og:title" content="' . $meta_title . '">';
-        $tx.= '<meta property="og:type" content="website">';
-        $tx.= '<meta property="og:url" content="' . $meta_url . '">';
-        
-        $tx = $this->_general($meta_title, $tx);
+        $schemas = array();
         
         if($category->seo_schema->value){
-            $data = array(
+            $schemas[] = array(
                 '@context'      => 'http://schema.org',
                 '@type'         => $category->seo_schema,
                 'name'          => $meta_title,
@@ -397,47 +400,15 @@ class SiteMeta
                 'datePublished' => $category->created->format('c'),
                 'dateCreated'   => $category->created->format('c')
             );
-            
-            $tx.= '<script type="application/ld+json">';
-            $tx.= json_encode($data, JSON_UNESCAPED_SLASHES);
-            $tx.= '</script>';
         }
         
-        $data = array(
-            '@context'  => 'http://schema.org',
-            '@type'     => 'BreadcrumbList',
-            'itemListElement' => array(
-                array(
-                    '@type' => 'ListItem',
-                    'position' => 1,
-                    'item' => array(
-                        '@id' => base_url(),
-                        'name' => $meta_name
-                    )
-                ),
-                array(
-                    '@type' => 'ListItem',
-                    'position' => 2,
-                    'item' => array(
-                        '@id' => base_url('/post'),
-                        'name' => _l('Post')
-                    )
-                ),
-                array(
-                    '@type' => 'ListItem',
-                    'position' => 3,
-                    'item' => array(
-                        '@id' => base_url('/post/category'),
-                        'name' => _l('Category')
-                    )
-                )
-            )
-        );
-        $tx.= '<script type="application/ld+json">';
-        $tx.= json_encode($data, JSON_UNESCAPED_SLASHES);
-        $tx.= '</script>';
+        $schemas[] = $this->_schemaBreadcrumb([
+            base_url() => $meta_name,
+            base_url('/post') => _l('Post'),
+            base_url('/post/category') => _l('Category')
+        ]);
         
-        echo $tx;
+        echo $this->_general($meta_title, $metas, $schemas);
     }
     
     public function post_single($post){
@@ -453,35 +424,40 @@ class SiteMeta
         $meta_image = $post->cover;
         $meta_name  = $this->CI->setting->item('site_name');
         $meta_url   = base_url($post->page);
+        $schemas    = array();
+        $schema_bread = [
+            base_url() => $meta_name,
+            base_url('/post') => _l('Post')
+        ];
         
-        $tx = '<meta name="description" content="' . $meta_description . '">';
-        $tx.= '<meta name="keywords" content="' . $meta_keywords . '">';
+        $metas = array(
+            "description"           => $meta_description,
+            "keywords"              => $meta_keywords,
+            "twitter:card"          => "summary_large_image",
+            "twitter:description"   => $meta_description,
+            "twitter:image:src"     => $meta_image,
+            "twitter:title"         => $meta_title,
+            "twitter:url"           => $meta_url,
+            "og:description"        => $meta_description,
+            "og:image"              => $meta_image,
+            "og:title"              => $meta_title,
+            "og:type"               => "article",
+            "og:url"                => $meta_url,
+            "article:published_time"=> $post->published->format('c')
+        );
         
-        $tx.= '<meta name="twitter:card" content="summary_large_image">';
-        $tx.= '<meta name="twitter:description" content="' . $meta_description . '">';
-        $tx.= '<meta name="twitter:image:src" content="' . $meta_image . '">';
-        $tx.= '<meta name="twitter:title" content="' . $meta_title  .'">';
-        $tx.= '<meta name="twitter:url" content="' . $meta_url . '">';
-        
-        $tx.= '<meta property="og:description" content="' . $meta_description . '">';
-        $tx.= '<meta property="og:image" content="' . $meta_image . '">';
-        $tx.= '<meta property="og:site_name" content="' . $meta_name . '">';
-        $tx.= '<meta property="og:title" content="' . $meta_title . '">';
-        $tx.= '<meta property="og:type" content="article">';
-        $tx.= '<meta property="og:url" content="' . $meta_url . '">';
-        $tx.= '<meta property="article:published_time" content="' . $post->published->format('c') . '">';
         if(property_exists($post, 'category')){
             foreach($post->category as $cat){
-                $tx.= '<meta property="article:section" content="' . $cat->name . '">';
+                $metas["article:section"] = $cat->name;
+                $schema_bread[base_url($cat->page)] = $cat->name;
                 break;
             }
         }
         if(property_exists($post, 'tag')){
+            $metas['article:tag'] = array();
             foreach($post->tag as $tag)
-                $tx.= '<meta property="article:tag" content="' . $tag->name . '">';
+                $metas['article:tag'][] = $tag->name;
         }
-        
-        $tx = $this->_general($meta_title, $tx);
         
         if(!$post->seo_schema->value)
             $post->seo_schema = 'Article';
@@ -491,7 +467,7 @@ class SiteMeta
         if(is_file($image_file)){
             list($img_width, $img_height) = getimagesize($image_file);
             
-            $data = array(
+            $schemas[] = array(
                 '@context'      => 'http://schema.org',
                 '@type'         => $post->seo_schema,
                 'name'          => $meta_title,
@@ -528,39 +504,11 @@ class SiteMeta
                 'dateModified'  => $post->published->format('c'),
                 'dateCreated'   => $post->created->format('c')
             );
-            
-            $tx.= '<script type="application/ld+json">';
-            $tx.= json_encode($data, JSON_UNESCAPED_SLASHES);
-            $tx.= '</script>';
         }
         
-        $data = array(
-            '@context'  => 'http://schema.org',
-            '@type'     => 'BreadcrumbList',
-            'itemListElement' => array(
-                array(
-                    '@type' => 'ListItem',
-                    'position' => 1,
-                    'item' => array(
-                        '@id' => base_url(),
-                        'name' => $meta_name
-                    )
-                ),
-                array(
-                    '@type' => 'ListItem',
-                    'position' => 2,
-                    'item' => array(
-                        '@id' => base_url('/post'),
-                        'name' => _l('Post')
-                    )
-                )
-            )
-        );
-        $tx.= '<script type="application/ld+json">';
-        $tx.= json_encode($data, JSON_UNESCAPED_SLASHES);
-        $tx.= '</script>';
+        $schemas[] = $this->_schemaBreadcrumb($schema_bread);
         
-        echo $tx;
+        echo $this->_general($meta_title, $metas, $schemas);
     }
     
     public function post_tag_single($tag){
@@ -570,33 +518,30 @@ class SiteMeta
         
         $meta_description = $tag->seo_description;
         if(!$meta_description)
-            $meta_description = $tag->content->chars(160);
+            $meta_description = $tag->description->chars(160);
         
         $meta_keywords = $tag->seo_keywords;
         $meta_image = $this->CI->theme->asset('/static/image/logo/logo.png');
         $meta_name  = $this->CI->setting->item('site_name');
         $meta_url   = base_url($tag->page);
         
-        $tx = '<meta name="description" content="' . $meta_description . '">';
-        $tx.= '<meta name="keywords" content="' . $meta_keywords . '">';
-        
-        $tx.= '<meta name="twitter:card" content="summary_large_image">';
-        $tx.= '<meta name="twitter:description" content="' . $meta_description . '">';
-        $tx.= '<meta name="twitter:image:src" content="' . $meta_image . '">';
-        $tx.= '<meta name="twitter:title" content="' . $meta_title  .'">';
-        $tx.= '<meta name="twitter:url" content="' . $meta_url . '">';
-        
-        $tx.= '<meta property="og:description" content="' . $meta_description . '">';
-        $tx.= '<meta property="og:image" content="' . $meta_image . '">';
-        $tx.= '<meta property="og:site_name" content="' . $meta_name . '">';
-        $tx.= '<meta property="og:title" content="' . $meta_title . '">';
-        $tx.= '<meta property="og:type" content="website">';
-        $tx.= '<meta property="og:url" content="' . $meta_url . '">';
-        
-        $tx = $this->_general($meta_title, $tx);
+        $metas = array(
+            "description"           => $meta_description,
+            "keywords"              => $meta_keywords,
+            "twitter:card"          => "summary_large_image",
+            "twitter:description"   => $meta_description,
+            "twitter:image:src"     => $meta_image,
+            "twitter:title"         => $meta_title,
+            "twitter:url"           => $meta_url,
+            "og:description"        => $meta_description,
+            "og:image"              => $meta_image,
+            "og:title"              => $meta_title,
+            "og:type"               => "website",
+            "og:url"                => $meta_url
+        );
         
         if($tag->seo_schema->value){
-            $data = array(
+            $schemas[] = array(
                 '@context'      => 'http://schema.org',
                 '@type'         => $tag->seo_schema,
                 'name'          => $meta_title,
@@ -607,47 +552,15 @@ class SiteMeta
                 'datePublished' => $tag->created->format('c'),
                 'dateCreated'   => $tag->created->format('c')
             );
-            
-            $tx.= '<script type="application/ld+json">';
-            $tx.= json_encode($data, JSON_UNESCAPED_SLASHES);
-            $tx.= '</script>';
         }
         
-        $data = array(
-            '@context'  => 'http://schema.org',
-            '@type'     => 'BreadcrumbList',
-            'itemListElement' => array(
-                array(
-                    '@type' => 'ListItem',
-                    'position' => 1,
-                    'item' => array(
-                        '@id' => base_url(),
-                        'name' => $meta_name
-                    )
-                ),
-                array(
-                    '@type' => 'ListItem',
-                    'position' => 2,
-                    'item' => array(
-                        '@id' => base_url('/post'),
-                        'name' => _l('Post')
-                    )
-                ),
-                array(
-                    '@type' => 'ListItem',
-                    'position' => 3,
-                    'item' => array(
-                        '@id' => base_url('/post/tag'),
-                        'name' => _l('Tag')
-                    )
-                )
-            )
-        );
-        $tx.= '<script type="application/ld+json">';
-        $tx.= json_encode($data, JSON_UNESCAPED_SLASHES);
-        $tx.= '</script>';
+        $schemas[] = $this->_schemaBreadcrumb([
+            base_url() => $meta_name,
+            base_url('/post') => _l('Post'),
+            base_url('/post/tag') => _l('Tag')
+        ]);
         
-        echo $tx;
+        echo $this->_general($meta_title, $metas, $schemas);
     }
     
     public function user_single($user){
@@ -659,31 +572,30 @@ class SiteMeta
         $meta_name  = $this->CI->setting->item('site_name');
         $meta_url   = base_url($user->page);
         
-        $tx = '<meta name="description" content="' . $meta_description . '">';
-        $tx.= '<meta name="keywords" content="' . $meta_keywords . '">';
+        $metas = array(
+            "description"           => $meta_description,
+            "keywords"              => $meta_keywords,
+            "twitter:card"          => "summary_large_image",
+            "twitter:description"   => $meta_description,
+            "twitter:image:src"     => $meta_image,
+            "twitter:title"         => $meta_title,
+            "twitter:url"           => $meta_url,
+            "og:description"        => $meta_description,
+            "og:image"              => $meta_image,
+            "og:title"              => $meta_title,
+            "og:type"               => "profile",
+            "og:url"                => $meta_url,
+            "profile:username"      => $user->name,
+            
+        );
         
-        $tx.= '<meta name="twitter:card" content="summary_large_image">';
-        $tx.= '<meta name="twitter:description" content="' . $meta_description . '">';
-        $tx.= '<meta name="twitter:image:src" content="' . $meta_image . '">';
-        $tx.= '<meta name="twitter:title" content="' . $meta_title  .'">';
-        $tx.= '<meta name="twitter:url" content="' . $meta_url . '">';
-        
-        $tx.= '<meta property="og:description" content="' . $meta_description . '">';
-        $tx.= '<meta property="og:image" content="' . $meta_image . '">';
-        $tx.= '<meta property="og:site_name" content="' . $meta_name . '">';
-        $tx.= '<meta property="og:title" content="' . $meta_title . '">';
-        $tx.= '<meta property="og:type" content="profile">';
-        $tx.= '<meta property="og:url" content="' . $meta_url . '">';
-        $tx.= '<meta property="profile:username" content="' . $user->name . '">';
         $fname = explode(' ', $user->fullname);
         if($fname[0])
-            $tx.= '<meta property="profile:first_name" content="' . $fname[0] . '">';
+            $metas["profile:first_name"] = $fname[0];
         if(array_key_exists(1, $fname) && $fname[1])
-            $tx.= '<meta property="profile:last_name" content="' . $fname[1] . '">';
-        
-        $tx = $this->_general($meta_title, $tx);
-        
-        $data = array(
+            $metas["profile:last_name"] = $fname[1];
+            
+        $schemas[] = array(
             '@context'      => 'http://schema.org',
             '@type'         => 'Person',
             'email'         => $user->email,
@@ -692,37 +604,12 @@ class SiteMeta
             'url'           => $meta_url
         );
         
-        $tx.= '<script type="application/ld+json">';
-        $tx.= json_encode($data, JSON_UNESCAPED_SLASHES);
-        $tx.= '</script>';
-        
         // schema breadcrumb
-        $data = array(
-            '@context'  => 'http://schema.org',
-            '@type'     => 'BreadcrumbList',
-            'itemListElement' => array(
-                array(
-                    '@type' => 'ListItem',
-                    'position' => 1,
-                    'item' => array(
-                        '@id' => base_url(),
-                        'name' => $meta_name
-                    )
-                ),
-                array(
-                    '@type' => 'ListItem',
-                    'position' => 2,
-                    'item' => array(
-                        '@id' => base_url('/user'),
-                        'name' => _l('User')
-                    )
-                )
-            )
-        );
-        $tx.= '<script type="application/ld+json">';
-        $tx.= json_encode($data, JSON_UNESCAPED_SLASHES);
-        $tx.= '</script>';
+        $schemas[] = $this->_schemaBreadcrumb([
+            base_url() => $meta_name,
+            base_url('/user') => _l('User')
+        ]);
         
-        echo $tx;
+        echo $this->_general($meta_title, $metas, $schemas);
     }
 }
