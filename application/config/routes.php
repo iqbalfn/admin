@@ -123,6 +123,8 @@ $route['post/tag/(:any)'] = 'post/tag/$1';
 
 $route['user/(:any)'] = 'user/single/$1';
 
+$route['sitemap.xml'] = 'robot/sitemap';
+
 $route['default_controller']    = 'home';
 $route['404_override']          = 'my_controller/show_404';
 $route['translate_uri_dashes']  = FALSE;

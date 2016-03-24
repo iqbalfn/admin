@@ -179,6 +179,7 @@ class MY_Model extends CI_Model
     /**
      * Get total rows by conditions
      * @param array cond The conditions.
+     * @param string field The field to calculate as key.
      * @return array field-total pair of the result
      */
     public function countGroupedByCond($cond, $field){

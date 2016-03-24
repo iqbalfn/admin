@@ -339,24 +339,42 @@ class Object extends MY_Controller
         
         $this->Post->remove($id);
         
-        $cats = $this->PCChain->getBy('post', $id);
-        if($cats){
-            foreach($cats as $cat){
+        // remove post category chain and dec total posts of the category
+        $cats_chain = $this->PCChain->getBy('post', $id, true);
+        if($cats_chain){
+            $cats_chain_id = array();
+            $cats_id = prop_values($cats_chain, 'post_category');
+            $cats = $this->PCategory->get($cats_id, true);
+            $cats = prop_as_key($cats, 'id');
+            foreach($cats_chain as $cat_chain){
+                $cats_chain_id[] = $cat_chain->id;
+                if(!array_key_exists($cat_chain->post_category, $cats))
+                    continue;
+                $cat = $cats[$cat_chain->post_category];
                 $this->PCategory->dec($cat->id, 'posts');
                 $this->output->delete_cache('/post/category/' . $cat->slug);
             }
             
-            $this->PCChain->removeBy('post', $id);
+            $this->PCChain->remove($cats_chain_id);
         }
         
-        $tags = $this->PTChain->getBy('post', $id);
-        if($tags){
-            foreach($tags as $tag){
+        // remove post tag chain and dec total posts of the tag
+        $tags_chain = $this->PTChain->getBy('post', $id, true);
+        if($tags_chain){
+            $tags_chain_id = array();
+            $tags_id = prop_values($tags_chain, 'post_tag');
+            $tags = $this->PTag->get($tags_id, true);
+            $tags = prop_as_key($tags, 'id');
+            foreach($tags_chain as $tag_chain){
+                $tags_chain_id[] = $tag_chain->id;
+                if(!array_key_exists($tag_chain->post_tag, $tags))
+                    continue;
+                $tag = $tags[$tag_chain->post_tag];
                 $this->PTag->dec($tag->id, 'posts');
                 $this->output->delete_cache('/post/tag/' . $tag->slug);
             }
             
-            $this->PTChain->removeBy('post', $id);
+            $this->PTChain->remove($tags_chain_id);
         }
         
         $this->output->delete_cache('/');

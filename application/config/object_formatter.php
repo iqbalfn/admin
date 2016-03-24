@@ -76,6 +76,7 @@ $config['object_formatter'] = array(
         'avatar' => 'media',
         'about' => 'text',
         'status' => 'enum',
+        'created' => 'date',
         'page' => 'join(/user/|$name)'
     )
 );
