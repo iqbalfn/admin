@@ -237,7 +237,7 @@ class MediaFile
         $config['image_library']    = 'gd2';
         $config['source_image']     = $original;
         $config['new_image']        = $target;
-        $config['quality']          = '75%';
+        $config['quality']          = '90%';
         $config['maintain_ratio']   = TRUE;
         $config['width']            = $resize_width;
         $config['height']           = $resize_height;
@@ -252,8 +252,8 @@ class MediaFile
         $config['source_image']     = $target;
         $config['create_thumb']     = FALSE;
         $config['maintain_ratio']   = FALSE;
-        $config['x_axis']           = $tar_width  > $width  ? ceil( $tar_width  / 2 - ( $width  / 2 ) ) : 0;
-        $config['y_axis']           = $tar_height > $height ? ceil( $tar_height / 2 - ( $height / 2 ) ) : 0;
+        $config['x_axis']           = $tar_width  < $resize_width  ? ceil( $resize_width / 2 - ( $tar_width / 2 ) ) : 0;
+        $config['y_axis']           = $tar_height < $resize_height ? ceil( $resize_height / 2 - ( $tar_height / 2 ) ) : 0;
         $config['width']            = $tar_width;
         $config['height']           = $tar_height;
         
