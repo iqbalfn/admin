@@ -123,7 +123,9 @@ $route['post/tag/(:any)'] = 'post/tag/$1';
 
 $route['user/(:any)'] = 'user/single/$1';
 
+$route['feed.xml'] = 'robot/feed';
 $route['sitemap.xml'] = 'robot/sitemap';
+$route['sitemap-news.xml'] = 'robot/sitemapNews';
 
 $route['default_controller']    = 'home';
 $route['404_override']          = 'my_controller/show_404';

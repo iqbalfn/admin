@@ -112,6 +112,8 @@ INSERT INTO `site_params` ( `name`, `value` ) VALUES
     ( 'site_theme', 'default' ),
     ( 'site_theme_responsive', '1' ),
     
+    ( 'sitemap_news', '1'),
+    
     ( 'theme_host', '');
 
 TRUNCATE `site_enum`;

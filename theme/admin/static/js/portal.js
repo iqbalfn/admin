@@ -12991,9 +12991,11 @@ $(function(){
                 autoresize_bottom_margin: 0,
                 
                 // paste configuration
-                paste_as_text: true,
-                paste_word_valid_elements: 'b,strong,i,em,h1,h2,h3,a,li,ul',
+                paste_word_valid_elements: 'b,i,em,h1,h2,h3,a,li,ul,ol',
                 paste_retain_style_properties: '',
+                paste_preprocess: function(plugin, args){
+                    // TODO clean user pasted content
+                },
                 
                 // pagebreak plugins
                 pagebreak_separator: '<!-- PAGE BREAK -->',
@@ -13002,7 +13004,7 @@ $(function(){
                 convert_fonts_to_spans: true,
                 element_format: 'html',
                 fix_list_elements: true,
-                invalid_styles: {'*': 'color font-size font-family'},
+                invalid_styles: {'*': 'color font-size font-family align summary'},
                 schema: 'html5',
                 browser_spellcheck: true,
                 
