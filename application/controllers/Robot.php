@@ -11,19 +11,12 @@ class Robot extends MY_Controller
         $pages = array();
         $last_update = 0;
         
-        $two_days_ago = new DateTime();
-        $two_days_ago->sub(new DateInterval('P2D'));
-        $two_days_ago = $two_days_ago->format('Y-m-d');
-        
         $this->load->model('Gallery_model', 'Gallery');
         $this->load->model('Post_model', 'Post');
         $this->load->library('ObjectFormatter', '', 'formatter');
         
         // GALLERIES
-        $cond = array(
-            'created' => (object)['>', $two_days_ago]
-        );
-        $galleries = $this->Gallery->getByCond($cond, true);
+        $galleries = $this->Gallery->getByCond([], 25);
         if($galleries){
             $galleries = $this->formatter->gallery($galleries, false, false);
             foreach($galleries as $gallery){
@@ -40,10 +33,9 @@ class Robot extends MY_Controller
         
         // POSTS
         $cond = array(
-            'published' => (object)['>', $two_days_ago],
             'status'    => 4
         );
-        $posts = $this->Post->getByCond($cond, true);
+        $posts = $this->Post->getByCond($cond, 100);
         if($posts){
             $posts = $this->formatter->post($posts, false, ['category']);
             foreach($posts as $post){

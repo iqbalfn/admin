@@ -147,6 +147,12 @@ class SiteMeta
         if(!$meta_description)
             $meta_description = $gallery->description->chars(160);
         
+        $page = $this->CI->input->get('page');
+        if($page && $page > 2){
+            $meta_title = _l('Page') . ' ' . $page . ' ' . $meta_title;
+            $meta_description = _l('Page') . ' ' . $page . ' ' . $meta_description;
+        }
+        
         $meta_keywords = $gallery->seo_keywords;
         $meta_image = $gallery->cover;
         $meta_url   = base_url($gallery->page);
@@ -189,14 +195,20 @@ class SiteMeta
         echo $this->_general($meta_title, $metas, $schemas);
     }
     
-    public function home($title=null){
-        if(!$title)
-            $title = $this->CI->setting->item('site_frontpage_title');
+    public function home($meta_title=null){
+        if(!$meta_title)
+            $meta_title = $this->CI->setting->item('site_frontpage_title');
         
         $meta_description = $this->CI->setting->item('site_frontpage_description');
         $meta_name  = $this->CI->setting->item('site_name');
         $meta_image = $this->CI->theme->asset('/static/image/logo/logo.png');
         $meta_keywords = $this->CI->setting->item('site_frontpage_keywords');
+        
+        $page = $this->CI->input->get('page');
+        if($page && $page > 2){
+            $meta_title = _l('Page') . ' ' . $page . ' ' . $meta_title;
+            $meta_description = _l('Page') . ' ' . $page . ' ' . $meta_description;
+        }
         
         $metas = array(
             "description"           => $meta_description,
@@ -304,7 +316,7 @@ class SiteMeta
         
         $schemas[] = $data;
         
-        echo $this->_general($title, $metas, $schemas);
+        echo $this->_general($meta_title, $metas, $schemas);
     }
     
     public function page_single($page){
@@ -366,6 +378,12 @@ class SiteMeta
         if(!$meta_description)
             $meta_description = $category->content->chars(160);
         
+        $page = $this->CI->input->get('page');
+        if($page && $page > 2){
+            $meta_title = _l('Page') . ' ' . $page . ' ' . $meta_title;
+            $meta_description = _l('Page') . ' ' . $page . ' ' . $meta_description;
+        }
+        
         $meta_keywords = $category->seo_keywords;
         $meta_image = $this->CI->theme->asset('/static/image/logo/logo.png');
         $meta_name  = $this->CI->setting->item('site_name');
@@ -419,6 +437,12 @@ class SiteMeta
         $meta_description = $post->seo_description;
         if(!$meta_description)
             $meta_description = $post->content->chars(160);
+        
+        $page = $this->CI->input->get('page');
+        if($page && $page > 2){
+            $meta_title = _l('Page') . ' ' . $page . ' ' . $meta_title;
+            $meta_description = _l('Page') . ' ' . $page . ' ' . $meta_description;
+        }
         
         $meta_keywords = $post->seo_keywords;
         $meta_image = $post->cover;
@@ -520,6 +544,12 @@ class SiteMeta
         if(!$meta_description)
             $meta_description = $tag->description->chars(160);
         
+        $page = $this->CI->input->get('page');
+        if($page && $page > 2){
+            $meta_title = _l('Page') . ' ' . $page . ' ' . $meta_title;
+            $meta_description = _l('Page') . ' ' . $page . ' ' . $meta_description;
+        }
+        
         $meta_keywords = $tag->seo_keywords;
         $meta_image = $this->CI->theme->asset('/static/image/logo/logo.png');
         $meta_name  = $this->CI->setting->item('site_name');
@@ -571,6 +601,12 @@ class SiteMeta
         $meta_image = $user->avatar;
         $meta_name  = $this->CI->setting->item('site_name');
         $meta_url   = base_url($user->page);
+        
+        $page = $this->CI->input->get('page');
+        if($page && $page > 2){
+            $meta_title = _l('Page') . ' ' . $page . ' ' . $meta_title;
+            $meta_description = _l('Page') . ' ' . $page . ' ' . $meta_description;
+        }
         
         $metas = array(
             "description"           => $meta_description,

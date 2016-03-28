@@ -77,6 +77,7 @@ $config['object_formatter'] = array(
         'about' => 'text',
         'status' => 'enum',
         'created' => 'date',
+        'password' => 'delete',
         'page' => 'join(/user/|$name)'
     )
 );

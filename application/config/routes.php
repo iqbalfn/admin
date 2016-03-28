@@ -113,15 +113,20 @@ $route['admin/user/(:num)/remove']  = 'admin/user/object/remove/$1';
 $route['upload']                            = 'media/upload';
 $route['media/(:any)/(:any)/(:any)/(:any)'] = 'media/resize/$1/$2/$3/$4';
 
+$route['gallery/feed.xml'] = 'gallery/feed';
 $route['gallery/(:any)'] = 'gallery/single/$1';
 
 $route['page/(:any)'] = 'page/single/$1';
 
+$route['post/feed.xml'] = 'post/feed/index';
+$route['post/category/(:any)/feed.xml'] = 'post/categoryFeed/$1';
 $route['post/category/(:any)'] = 'post/category/$1';
 $route['post/read/(:any)'] = 'post/single/$1';
+$route['post/tag/(:any)/feed.xml'] = 'post/tagFeed/$1';
 $route['post/tag/(:any)'] = 'post/tag/$1';
 
 $route['user/(:any)'] = 'user/single/$1';
+$route['user/(:any)/post/feed.xml'] = 'user/feedPost/$1';
 
 $route['feed.xml'] = 'robot/feed';
 $route['sitemap.xml'] = 'robot/sitemap';
