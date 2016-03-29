@@ -10,6 +10,8 @@
             $active_on_hover = array_key_exists('target', $header_menu);
             if($active_on_hover && $header_submenu)
                 $classes[] = 'dropdown-toggle-on-hover';
+            if($header_menu['active'])
+                $classes[] = 'active';
             
             $tx.= '<li'.($classes?' class="'.implode(' ',$classes).'"':'').'>';
             
@@ -32,7 +34,8 @@
                     if($sub['label'] == '---'){
                         $tx.= '<li class="divider" role="separator"></li>';
                     }else{
-                        $tx.= '<li>';
+                        $cls = $sub['active'] ? ' class="active"' : '';
+                        $tx.= '<li' . $cls . '>';
                         $tx.=   '<a href="' . $sub['target'] . '">';
                         $tx.=       $sub['label'];
                         $tx.=   '</a>';

@@ -54,7 +54,7 @@ class Media extends MY_Controller
         $ext   = 'jpg';
         $name  = null;
         
-        if(preg_match('!(.+)_([0-9]*)x([0-9]*)\.([a-z]+)!', $file, $m)){
+        if(preg_match('!(.+)_([0-9]*)x([0-9]*)\.([a-zA-Z]+)!', $file, $m)){
             $name  = $m[1];
             $width = $m[2];
             $height= $m[3];

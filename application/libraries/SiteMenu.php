@@ -123,6 +123,7 @@ class SiteMenu
         );
         
         $admin_menu = array();
+        $current_uri = '/' . uri_string();
         
         foreach($menus as $menu){
             $menu_label    = $menu['label'];
@@ -131,6 +132,7 @@ class SiteMenu
             $menu_sub      = array_key_value_or('submenu', $menu);
             $menu_sub_show = false;
             $menu_target   = array_key_value_or('target', $menu);
+            $menu_active   = false;
             
             $admin_submenu_items = [];
             
@@ -146,10 +148,18 @@ class SiteMenu
                             $menu_target= '';
                         }
                         
-                        $admin_submenu_item = array('label' => $submenu['label']);
+                        $admin_submenu_item = array(
+                            'label' => $submenu['label'],
+                            'active' => false
+                        );
                         
-                        if(array_key_exists('target', $submenu))
+                        if(array_key_exists('target', $submenu)){
                             $admin_submenu_item['target'] = $submenu['target'];
+                            if($submenu['target'] == $current_uri){
+                                $menu_active = true;
+                                $admin_submenu_item['active'] = true;
+                            }
+                        }
                         
                         $admin_submenu_items[] = $admin_submenu_item;
                     }
@@ -159,9 +169,15 @@ class SiteMenu
             if(!$menu_show)
                 continue;
             
-            $admin_menu_item = array('label' => $menu_label);
-            if($menu_target)
+            $admin_menu_item = array(
+                'label' => $menu_label,
+                'active' => $menu_active
+            );
+            if($menu_target){
                 $admin_menu_item['target'] = $menu_target;
+                if($menu_target == $current_uri)
+                    $admin_menu_item['active'] = true;
+            }
             
             if($menu_sub_show)
                 $admin_menu_item['submenu'] = $admin_submenu_items;
