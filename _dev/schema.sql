@@ -211,6 +211,13 @@ CREATE TABLE `slideshow` (
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+DROP TABLE IF EXISTS `url_redirection`;
+CREATE TABLE `url_redirection` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `source` VARCHAR(250),
+    `target` VARCHAR(250),
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- SYSTEM USER --
 DROP TABLE IF EXISTS `user`;

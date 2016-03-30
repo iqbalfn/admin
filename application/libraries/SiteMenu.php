@@ -117,6 +117,11 @@ class SiteMenu
                         'label' => 'SlideShow',
                         'perms' => 'read-slide_show',
                         'target'=> '/admin/setting/slideshow'
+                    ),
+                    array(
+                        'label' => 'URL Redirection',
+                        'perms' => 'read-url_redirection',
+                        'target'=> '/admin/setting/redirection'
                     )
                 )
             )

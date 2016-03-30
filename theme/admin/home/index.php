@@ -13,6 +13,5 @@
     </div>
     
     <?= $this->theme->file('foot') ?>
-    <?= $this->form->focusInput(); ?>
 </body>
 </html>

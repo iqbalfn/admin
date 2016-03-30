@@ -13,7 +13,7 @@ $(function(){
         var i = $(this).children('i');
         i.removeClass(classToRemove).addClass(classToAdd);
     });
-    
+
     $('.color-picker').colorpicker();
     $('.date-picker').datetimepicker({format: 'YYYY-MM-DD'});
     $('.datetime-picker').datetimepicker({format: 'YYYY-MM-DD HH:mm:ss'});

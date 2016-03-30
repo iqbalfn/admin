@@ -102,6 +102,10 @@ $route['admin/setting/param']               = 'admin/setting/param/object/index'
 $route['admin/setting/param/(:num)']        = 'admin/setting/param/object/edit/$1';
 $route['admin/setting/param/(:num)/remove'] = 'admin/setting/param/object/remove/$1';
 
+$route['admin/setting/redirection']                = 'admin/setting/redirection/object/index';
+$route['admin/setting/redirection/(:num)']         = 'admin/setting/redirection/object/edit/$1';
+$route['admin/setting/redirection/(:num)/remove']  = 'admin/setting/redirection/object/remove/$1';
+
 $route['admin/setting/slideshow']                = 'admin/setting/slideshow/object/index';
 $route['admin/setting/slideshow/(:num)']         = 'admin/setting/slideshow/object/edit/$1';
 $route['admin/setting/slideshow/(:num)/remove']  = 'admin/setting/slideshow/object/remove/$1';

@@ -18,6 +18,7 @@ module.exports = function(grunt) {
 //                     'javascript/scrollspy.js',
 //                     'javascript/tab.js',
 //                     'javascript/affix.js',
+                    'javascript/Chart.js',
                     'javascript/colorpicker-color.js',
                     'javascript/colorpicker.js',
                     'javascript/bootstrap-datetimepicker.js',

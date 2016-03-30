@@ -814,6 +814,26 @@ $config = array(
         )
     ),
     
+    '/admin/setting/redirection' => array(
+    
+        'source' => array(
+            'field' => 'source',
+            'label' => 'URL Source',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'target' => array(
+            'field' => 'target',
+            'label' => 'Redirect To',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'text'
+            )
+        )
+    ),
     
     '/admin/setting/slideshow' => array(
     

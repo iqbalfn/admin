@@ -17,7 +17,8 @@ class Object extends MY_Controller
             return $this->show_404();
         
         $params = array(
-            'title' => _l('Admin')
+            'title' => _l('Admin'),
+            'ranks' => array()
         );
         
         $this->respond('home/index', $params);

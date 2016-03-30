@@ -138,6 +138,12 @@ class MY_Controller extends CI_Controller
      * Print 404 page
      */
     public function show_404(){
+        $this->load->model('Urlredirection_model', 'Redirection');
+        
+        $next = $this->Redirection->getBy('source', uri_string());
+        if($next)
+            return $this->redirect($next->target, 301);
+    
         $this->output->set_status_header('404');
 
         $params = array(

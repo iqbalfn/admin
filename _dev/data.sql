@@ -6,6 +6,7 @@ INSERT INTO `perms` ( `group`, `name`, `label`, `description` ) VALUES
     ( 'Banner',             'update-banner',            'Edit Banner',                  'Allow user to update exists banner' ),
     ( 'Front Page',         'read-admin_page',          'Open Admin Page',              'Allow user to open admin page' ),
     ( 'Front Page',         'create-alexa_rank',        'Create Alexa Rank',            'Allow user to regenerate/create alexa rank' ),
+    ( 'Front Page',         'create-similarweb_rank',   'Create Similarweb Rank',       'Allow user to regenerate/create similarweb rank' ),
     ( 'Front Page',         'read-google_analytics',    'Open Google Analytics',        'Allow user to see google analytics statistic' ),
     ( 'Gallery',            'create-gallery',           'Create Banner',                'Allow user to create new album gallery' ),
     ( 'Gallery',            'delete-gallery',           'Delete Banner',                'Allow user to delete exists album gallery' ),
@@ -57,6 +58,10 @@ INSERT INTO `perms` ( `group`, `name`, `label`, `description` ) VALUES
     ( 'Slideshow',          'delete-slide_show',        'Delete Slideshow',             'Allow user to delete exists slideshow' ),
     ( 'Slideshow',          'read-slide_show',          'Read Slideshow',               'Allow user to see all exists slideshow' ),
     ( 'Slideshow',          'update-slide_show',        'Edit Slideshow',               'Allow user to update exists slideshow' ),
+    ( 'URL Redirection',    'create-url_redirection',   'Create URL Redirection',       'Allow user to create new url redirection' ),
+    ( 'URL Redirection',    'delete-url_redirection',   'Delete URL Redirection',       'Allow user to delete exists url redirection' ),
+    ( 'URL Redirection',    'read-url_redirection',     'Read URL Redirection',         'Allow user to see all exists url redirection' ),
+    ( 'URL Redirection',    'update-url_redirection',   'Edit URL Redirection',         'Allow user to update exists url redirection' ),
     ( 'User Management',    'create-user',              'Create User',                  'Allow user to create new user' ),
     ( 'User Management',    'delete-user',              'Delete User',                  'Allow user to delete exists user' ),
     ( 'User Management',    'read-user',                'Read User',                    'Allow user to see all exists user' ),
@@ -244,6 +249,12 @@ INSERT INTO `user_perms` ( `user`, `perms` ) VALUES
     ( 1, 'delete-slide_show' ),
     ( 1, 'read-slide_show' ),
     ( 1, 'update-slide_show' ),
+    
+    -- URL REDIRECTION
+    ( 1, 'create-url_redirection' ),
+    ( 1, 'delete-url_redirection' ),
+    ( 1, 'read-url_redirection' ),
+    ( 1, 'update-url_redirection' ),
     
     -- USER
     ( 1, 'create-user' ),
