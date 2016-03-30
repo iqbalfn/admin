@@ -39,19 +39,7 @@ class SiteMenu
             array(
                 'label' => 'Home',
                 'perms' => 'read-admin_page',
-                'target'=> '/admin',
-                'submenu' => array(
-                    array(
-                        'label' => 'Generate Alexa Rank',
-                        'perms' => 'create-alexa_rank',
-                        'target'=> '/admin/statistic/alexa'
-                    ),
-                    array(
-                        'label' => 'Google Analytics',
-                        'perms' => 'read-google_analytics',
-                        'target'=> '/admin/statistic/google-analytics'
-                    )
-                )
+                'target'=> '/admin'
             ),
             array(
                 'label' => 'Post',
