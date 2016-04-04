@@ -336,6 +336,7 @@ class Object extends MY_Controller
         $this->load->model('Postcategory_model', 'PCategory');
         $this->load->model('Posttagchain_model', 'PTChain');
         $this->load->model('Posttag_model', 'PTag');
+        $this->load->model('Postselection_model', 'PSelection');
         
         $this->Post->remove($id);
         
@@ -375,6 +376,13 @@ class Object extends MY_Controller
             }
             
             $this->PTChain->remove($tags_chain_id);
+        }
+        
+        // remove post selection
+        $post_selection = $this->PSelection->getBy('post', $post->id, true);
+        if($post_selection){
+            $this->cache->file->delete('post_selection');
+            $this->PSelection->removeBy('post', $post->id);
         }
         
         $this->output->delete_cache('/');
