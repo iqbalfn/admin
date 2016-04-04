@@ -249,6 +249,8 @@
                     report.execute();
                 }(name, gaData[name], viewId);
             }
+            
+            setTimeout(function(viewId){ gaCharts(viewId); }, 60000, viewId);
         }
         
         function gaRealtime(viewId){
@@ -277,9 +279,11 @@
                     for(var i=0; i<res.rows.length; i++){
                         var row = res.rows[i];
                         var keyword = row[2];
-                        if(!keywords[keyword])
-                            keywords[keyword] = 0;
-                        keywords[keyword]++;
+                        if(keyword != '(not set)'){
+                            if(!keywords[keyword])
+                                keywords[keyword] = 0;
+                            keywords[keyword]++;
+                        }
                         
                         if(!pages[row[0]])
                             pages[row[0]] = { title: row[1], total: 0 };
