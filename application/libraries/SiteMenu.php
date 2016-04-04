@@ -115,6 +115,11 @@ class SiteMenu
                         'label' => 'URL Redirection',
                         'perms' => 'read-url_redirection',
                         'target'=> '/admin/setting/redirection'
+                    ),
+                    array(
+                        'label' => 'Clear All Cache',
+                        'perms' => 'delete-cache',
+                        'target'=> '/admin/setting/cache/clear'
                     )
                 )
             )

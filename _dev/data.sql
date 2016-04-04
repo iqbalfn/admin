@@ -52,6 +52,7 @@ INSERT INTO `perms` ( `group`, `name`, `label`, `description` ) VALUES
     ( 'Site Parameters',    'read-site_param',          'Read Site Parameter',          'Allow user to see all exists site parameter' ),
     ( 'Site Parameters',    'update-site_param',        'Edit Site Parameter',          'Allow user to update exists site parameter' ),
     ( 'Site Statistic',     'read-site_statistic',      'Read Site Statistic',          'Allow user to see all site statistic' ),
+    ( 'Site Cache',         'delete-cache',             'Remove All Site Cache',        'Allow user to remove all site cache' ),
     ( 'Slideshow',          'create-slide_show',        'Create Slideshow',             'Allow user to create new slideshow' ),
     ( 'Slideshow',          'delete-slide_show',        'Delete Slideshow',             'Allow user to delete exists slideshow' ),
     ( 'Slideshow',          'read-slide_show',          'Read Slideshow',               'Allow user to see all exists slideshow' ),
@@ -252,6 +253,9 @@ INSERT INTO `user_perms` ( `user`, `perms` ) VALUES
     
     -- SITE STATISTIC
     ( 1, 'read-site_statistic' ),
+    
+    -- SITE CACHE
+    ( 1, 'delete-cache' ),
     
     -- URL REDIRECTION
     ( 1, 'create-url_redirection' ),
