@@ -19,6 +19,7 @@ module.exports = function(grunt) {
 //                     'javascript/tab.js',
 //                     'javascript/affix.js',
                     'javascript/Chart.js',
+                    'javascript/chart-builder.js',
                     'javascript/colorpicker-color.js',
                     'javascript/colorpicker.js',
                     'javascript/bootstrap-datetimepicker.js',

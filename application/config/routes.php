@@ -110,6 +110,7 @@ $route['admin/setting/slideshow']                = 'admin/setting/slideshow/obje
 $route['admin/setting/slideshow/(:num)']         = 'admin/setting/slideshow/object/edit/$1';
 $route['admin/setting/slideshow/(:num)/remove']  = 'admin/setting/slideshow/object/remove/$1';
 
+$route['admin/stat']                  = 'admin/stat/object/index';
 $route['admin/stat/calculate/(:any)'] = 'admin/stat/object/calculate/$1';
 
 $route['admin/user']                = 'admin/user/object/index';

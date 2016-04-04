@@ -51,6 +51,7 @@ INSERT INTO `perms` ( `group`, `name`, `label`, `description` ) VALUES
     ( 'Site Parameters',    'delete-site_param',        'Delete Site Parameter',        'Allow user to delete exists site parameter' ),
     ( 'Site Parameters',    'read-site_param',          'Read Site Parameter',          'Allow user to see all exists site parameter' ),
     ( 'Site Parameters',    'update-site_param',        'Edit Site Parameter',          'Allow user to update exists site parameter' ),
+    ( 'Site Statistic',     'read-site_statistic',      'Read Site Statistic',          'Allow user to see all site statistic' ),
     ( 'Slideshow',          'create-slide_show',        'Create Slideshow',             'Allow user to create new slideshow' ),
     ( 'Slideshow',          'delete-slide_show',        'Delete Slideshow',             'Allow user to delete exists slideshow' ),
     ( 'Slideshow',          'read-slide_show',          'Read Slideshow',               'Allow user to see all exists slideshow' ),
@@ -74,6 +75,8 @@ INSERT INTO `site_params` ( `name`, `value` ) VALUES
     ( 'code_verification_pinterest', '' ),
     ( 'code_verification_google', '' ),
     ( 'code_verification_yandex', '' ),
+    
+    ( 'google_analytics_statistic', 'google-analytics.json' ),
     
     ( 'media_host', ''),
     
@@ -246,6 +249,9 @@ INSERT INTO `user_perms` ( `user`, `perms` ) VALUES
     ( 1, 'delete-slide_show' ),
     ( 1, 'read-slide_show' ),
     ( 1, 'update-slide_show' ),
+    
+    -- SITE STATISTIC
+    ( 1, 'read-site_statistic' ),
     
     -- URL REDIRECTION
     ( 1, 'create-url_redirection' ),

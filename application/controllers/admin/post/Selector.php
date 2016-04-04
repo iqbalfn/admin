@@ -104,10 +104,9 @@ class Selector extends MY_Controller
 
             $result = $this->PSelection->getByCond($cond, $rpp, $page, ['index'=>'ASC']);
             
-            
             if($result){
                 $this->load->library('ObjectFormatter', '', 'formatter');
-                $params['selections'] = $this->formatter->post_selection($result);
+                $params['selections'] = $this->formatter->post_selection($result, false, ['post']);
             }
         }
         

@@ -84,6 +84,11 @@ class SiteMenu
                 'target'=> '/admin/user'
             ),
             array(
+                'label' => 'Stat',
+                'perms' => 'read-site_statistic',
+                'target'=> '/admin/stat'
+            ),
+            array(
                 'label' => 'Setting',
                 'submenu' => array(
                     array(

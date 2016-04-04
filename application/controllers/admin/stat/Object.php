@@ -78,7 +78,7 @@ class Object extends MY_Controller
         
         $ranks = $this->{'_calculate_' . $vendor}();
         if(!$ranks)
-            return $this->redirect('/admin');
+            return $this->redirect('/admin/stat');
         
         $cond = array(
             'vendor' => $vendor,
@@ -93,6 +93,68 @@ class Object extends MY_Controller
             $this->Rank->create($ranks);
         }
         
-        return $this->redirect('/admin');
+        return $this->redirect('/admin/stat');
+    }
+    
+    public function index(){
+        if(!$this->user)
+            return $this->redirect('/admin/me/login');
+        if(!$this->can_i('read-site_statistic'))
+            return $this->show_404();
+        
+        $params = array(
+            'title' => _l('Site Statistic'),
+            'ranks' => array(),
+            'ga_token' => null
+        );
+        
+        // site ranking
+        $this->load->model('Siteranks_model', 'Rank');
+        
+        $ranks_vendor = array('alexa', 'similarweb');
+        foreach($ranks_vendor as $vendor){
+            $ranks = $this->Rank->getBy('vendor', $vendor, 10);
+            if(!$ranks)
+                continue;
+            
+            $data_ranks = array();
+            $max_rank_int = 0;
+            $max_rank_loc = 0;
+            foreach($ranks as $rank){
+                $label = date('d M', strtotime($rank->created));
+                $rank_int = $rank->rank_international;
+                $rank_loc = $rank->rank_local;
+                
+                if($rank_int > $max_rank_int)
+                    $max_rank_int = $rank_int;
+                if($rank_loc > $max_rank_loc)
+                    $max_rank_loc = $rank_loc;
+                
+                array_unshift($data_ranks, array(
+                    'name' => $label,
+                    'data' => array(
+                        [ 'label' => $rank_int, 'value' => $rank_int, 'title' => 'International' ],
+                        [ 'label' => $rank_loc, 'value' => $rank_loc, 'title' => 'Local' ]
+                    )
+                ));
+            }
+            
+            // measure the size of each rank
+            foreach($data_ranks as &$data_rank){
+                $data_rank['data'][0]['value'] = 0 - round(( $data_rank['data'][0]['value'] / $max_rank_int ) * 100);
+                $data_rank['data'][1]['value'] = 0 - round(( $data_rank['data'][1]['value'] / $max_rank_loc ) * 100);
+            }
+            
+            $params['ranks'][$vendor] = $data_ranks;
+        }
+        
+        // google analytics
+        if($this->setting->item('google_analytics_statistic')){
+            $this->load->library('Google', '', 'google');
+            $access_token = $this->google->get_analytics_token();
+            $params['ga_token'] = $access_token;
+        }
+        
+        $this->respond('stat/index', $params);
     }
 }

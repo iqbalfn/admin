@@ -74,6 +74,7 @@ $lang['Settings']                   = 'Settings';
 $lang['Site Enums']                 = 'Site Enums';
 $lang['Site Menus']                 = 'Site Menus';
 $lang['Site Params']                = 'Site Params';
+$lang['Site Statistic']             = 'Site Statistic';
 $lang['Social Account']             = 'Social Account';
 $lang['Social Account URL']         = 'Social Account URL';
 $lang['Tag']                        = 'Tag';

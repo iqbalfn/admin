@@ -22,6 +22,7 @@ $(function(){
     $('.textarea-dynamic').autosize();
     $('.btn-uploader').fileUploader();
     $('.slugify').slugify();
+    $('canvas.chart').chart();
     
     $('.tokenfield').tokenfield();
     
