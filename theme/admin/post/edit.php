@@ -46,9 +46,9 @@
                                 <?= $this->form->field('gallery', $galleries) ?>
                                 <?php endif; ?>
                                 
-                                <?= $this->form->field('status', $statuses) ?>
-                                
                                 <?= (ci()->can_i('read-post_tag') ? $this->form->field('tag', $tags) : '') ?>
+                                
+                                <?= $this->form->field('status', $statuses) ?>
                                 
                                 <div class="row">
                                     <?php if(ci()->can_i('create-post_featured')): ?>
