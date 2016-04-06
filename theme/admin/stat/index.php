@@ -265,6 +265,8 @@
                 
                 var rt = gapi.client.analytics.data.realtime.get(rtOpts);
                 rt.execute(function(res){
+                    if(res.error)
+                        return top.location.reload();
                     
                     if(res.totalsForAllResults)
                         $('#realtime-total').html( (parseInt( res.totalsForAllResults['rt:activeUsers'] )).toLocaleString() );

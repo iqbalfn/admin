@@ -252,6 +252,7 @@ class SiteForm
             'datetime',
             'file',
             'image',
+            'location',
             'month',
             'password',
             'time'
@@ -362,6 +363,48 @@ class SiteForm
             $input['attrs']['type'] = 'text';
         }
         
+        // location
+        if($this->input_type == 'location'){
+            $span = array(
+                'tag' => 'span',
+                'attrs' => array(
+                    'class' => 'input-group-addon'
+                ),
+                'children' => [
+                    array(
+                        'tag' => 'i',
+                        'attrs' => array(
+                            'class' => 'glyphicon glyphicon-map-marker'
+                        )
+                    )
+                ]
+            );
+            
+            $input_group['children'][] = $span;
+            $input['attrs']['type'] = 'text';
+            
+            $location_pickup_id = $this->input_id . '-location-pickup';
+            $input['attrs']['data-location-pickup'] = $location_pickup_id;
+            $input['attrs']['class'][] = 'form-control-location';
+            
+            $location_cont = array(
+                'children' => array(
+                    $input_group
+                )
+            );
+            
+            $location_pickup_div = array(
+                'attrs' => array(
+                    'id' => $location_pickup_id,
+                    'class' => 'form-control-location-pickup'
+                )
+            );
+            
+            $location_cont['children'][] = $location_pickup_div;
+            $input_group = $location_cont;
+        }
+        
+        // file or image
         if(in_array($this->input_type, array('file', 'image'))){
             $span = array(
                 'tag' => 'span',

@@ -138,6 +138,69 @@ class SiteMeta
         return $data;
     }
     
+    public function event_single($event){
+        $meta_title = $event->seo_title;
+        if(!$meta_title)
+            $meta_title = $event->name;
+        
+        $meta_description = $event->seo_description;
+        if(!$meta_description)
+            $meta_description = $event->content->chars(160);
+        
+        $page = $this->CI->input->get('page');
+        if($page && $page > 2){
+            $meta_title = _l('Page') . ' ' . $page . ' ' . $meta_title;
+            $meta_description = _l('Page') . ' ' . $page . ' ' . $meta_description;
+        }
+        
+        $meta_keywords = $event->seo_keywords;
+        $meta_image = $event->cover;
+        $meta_url   = base_url($event->page);
+        
+        $metas = array(
+            "description"           => $meta_description,
+            "keywords"              => $meta_keywords,
+            "twitter:card"          => "summary_large_image",
+            "twitter:description"   => $meta_description,
+            "twitter:image:src"     => $meta_image,
+            "twitter:title"         => $meta_title,
+            "twitter:url"           => $meta_url,
+            "og:description"        => $meta_description,
+            "og:image"              => $meta_image,
+            "og:title"              => $meta_title,
+            "og:type"               => "website",
+            "og:url"                => $meta_url
+        );
+        
+        $schemas = array();
+        
+        if(!$event->seo_schema->value)
+            $event->seo_schema = 'Event';
+        
+        $schemas[] = array(
+            '@context'      => 'http://schema.org',
+            '@type'         => $event->seo_schema,
+            'name'          => $meta_title,
+            'description'   => $meta_description,
+            'location'      => array(
+                '@type'         => 'Place',
+                'name'          => $event->name,
+                'address'       => $event->address
+            ),
+            'image'         => $meta_image,
+            'url'           => $meta_url,
+            'keywords'      => $event->seo_keywords,
+            'startDate'     => $event->date->format('c')
+        );
+        
+        $schemas[] = $this->_schemaBreadcrumb([
+            base_url() => $this->CI->setting->item('site_name'),
+            base_url('/event') => _l('Event')
+        ]);
+        
+        echo $this->_general($meta_title, $metas, $schemas);
+    }
+    
     public function gallery_single($gallery){
         $meta_title = $gallery->seo_title;
         if(!$meta_title)

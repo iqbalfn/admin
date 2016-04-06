@@ -4,6 +4,10 @@ INSERT INTO `perms` ( `group`, `name`, `label`, `description` ) VALUES
     ( 'Banner',             'delete-banner',            'Delete Banner',                'Allow user to delete exists banner' ),
     ( 'Banner',             'read-banner',              'Read Banner',                  'Allow user to see all exists banner' ),
     ( 'Banner',             'update-banner',            'Edit Banner',                  'Allow user to update exists banner' ),
+    ( 'Event',              'create-event',             'Create Event',                 'Allow user to create new event' ),
+    ( 'Event',              'delete-event',             'Delete Event',                 'Allow user to delete exists event' ),
+    ( 'Event',              'read-event',               'Read Event',                   'Allow user to see all exists event' ),
+    ( 'Event',              'update-event',             'Edit Event',                   'Allow user to update exists event' ),
     ( 'Front Page',         'read-admin_page',          'Open Admin Page',              'Allow user to open admin page' ),
     ( 'Gallery',            'create-gallery',           'Create Banner',                'Allow user to create new album gallery' ),
     ( 'Gallery',            'delete-gallery',           'Delete Banner',                'Allow user to delete exists album gallery' ),
@@ -71,6 +75,7 @@ TRUNCATE `site_params`;
 INSERT INTO `site_params` ( `name`, `value` ) VALUES
     ( 'code_application_facebook', '' ),
     ( 'code_google_analytics', '' ),
+    ( 'code_google_map', '' ),
     ( 'code_verification_alexa', '' ),
     ( 'code_verification_bing', '' ),
     ( 'code_verification_pinterest', '' ),
@@ -124,6 +129,8 @@ INSERT INTO `site_params` ( `name`, `value` ) VALUES
 
 TRUNCATE `site_enum`;
 INSERT INTO `site_enum` ( `group`, `value`, `label` ) VALUES
+    ( 'event.seo_schema', 'Event', 'Event' ),
+    
     ( 'gallery.seo_schema', 'CollectionPage', 'CollectionPage' ),
     ( 'gallery.seo_schema', 'ImageGallery', 'ImageGallery' ),
     ( 'gallery.seo_schema', 'VideoGallery', 'VideoGallery' ),
@@ -177,6 +184,12 @@ INSERT INTO `user_perms` ( `user`, `perms` ) VALUES
     ( 1, 'create-banner' ),
     ( 1, 'read-banner' ),
     ( 1, 'update-banner' ),
+    
+    -- EVENT
+    ( 1, 'delete-event' ),
+    ( 1, 'create-event' ),
+    ( 1, 'read-event' ),
+    ( 1, 'update-event' ),
     
     -- GALLERY
     ( 1, 'delete-gallery' ),

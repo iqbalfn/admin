@@ -1,3 +1,22 @@
+DROP TABLE IF EXISTS `event`;
+CREATE TABLE `event` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(150),
+    `slug` VARCHAR(150),
+    `cover` VARCHAR(150),
+    `content` TEXT,
+    `address` TEXT,
+    `location` VARCHAR(250),
+    `date` DATETIME,
+    
+    `seo_schema` VARCHAR(25),
+    `seo_title` VARCHAR(160),
+    `seo_description` TEXT,
+    `seo_keywords` TEXT,
+    
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 DROP TABLE IF EXISTS `banner`;
 CREATE TABLE `banner` (
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,

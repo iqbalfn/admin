@@ -42,6 +42,113 @@ $config = array(
         )
     ),
     
+    '/admin/event' => array(
+        
+        'name' => array(
+            'field' => 'name',
+            'label' => 'Name',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'slug' => array(
+            'field' => 'slug',
+            'label' => 'Slug',
+            'rules' => 'required|is_unique[event.slug,3]',
+            'input' => array(
+                'type' => 'text',
+                'attrs' => array(
+                    'class' => 'slugify',
+                    'data-source' => '#field-name'
+                )
+            )
+        ),
+        
+        'address' => array(
+            'field' => 'address',
+            'label' => 'Address',
+            'rules' => '',
+            'input' => array(
+                'type' => 'textarea'
+            )
+        ),
+        
+        'location' => array(
+            'field' => 'location',
+            'label' => 'Location',
+            'rules' => '',
+            'input' => array(
+                'type' => 'location'
+            )
+        ),
+        
+        'date' => array(
+            'field' => 'date',
+            'label' => 'Date',
+            'rules' => '',
+            'input' => array(
+                'type' => 'datetime'
+            )
+        ),
+        
+        'content' => array(
+            'field' => 'content',
+            'label' => 'Content',
+            'rules' => '',
+            'input' => array(
+                'type' => 'tinymce'
+            )
+        ),
+        
+        'cover' => array(
+            'field' => 'cover',
+            'label' => 'Cover',
+            'rules' => 'required|media',
+            'input' => array(
+                'type' => 'image'
+            )
+        ),
+        
+        'seo_schema' => array(
+            'field' => 'seo_schema',
+            'label' => 'Schema',
+            'rules' => '',
+            'input' => array(
+                'type' => 'select'
+            )
+        ),
+        
+        'seo_title' => array(
+            'field' => 'seo_title',
+            'label' => 'Meta Title',
+            'rules' => '',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'seo_description' => array(
+            'field' => 'seo_description',
+            'label' => 'Meta Description',
+            'rules' => '',
+            'input' => array(
+                'type' => 'textarea'
+            )
+        ),
+        
+        'seo_keywords' => array(
+            'field' => 'seo_keywords',
+            'label' => 'Meta Keywords',
+            'rules' => '',
+            'input' => array(
+                'type' => 'tag'
+            )
+        )
+        
+    ),
+    
     '/admin/gallery' => array(
         
         'cover' => array(

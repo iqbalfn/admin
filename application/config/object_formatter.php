@@ -7,6 +7,17 @@ $config['object_formatter'] = array(
         'expired' => 'date'
     ),
     
+    'event' => array(
+        'cover' => 'media',
+        'page' => 'join(/event/|$slug)',
+        'content' => 'text',
+        'date' => 'date',
+        'created' => 'date',
+        'location' => 'location',
+        'seo_schema' => 'enum',
+        'seo_description' => 'text'
+    ),
+    
     'gallery' => array(
         'cover' => 'media',
         'page' => 'join(/gallery/|$slug)',

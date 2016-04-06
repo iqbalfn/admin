@@ -56,6 +56,10 @@ $route['admin/banner']                = 'admin/banner/object/index';
 $route['admin/banner/(:num)']         = 'admin/banner/object/edit/$1';
 $route['admin/banner/(:num)/remove']  = 'admin/banner/object/remove/$1';
 
+$route['admin/event']                = 'admin/event/object/index';
+$route['admin/event/(:num)']         = 'admin/event/object/edit/$1';
+$route['admin/event/(:num)/remove']  = 'admin/event/object/remove/$1';
+
 $route['admin/gallery']                = 'admin/gallery/object/index';
 $route['admin/gallery/(:num)']         = 'admin/gallery/object/edit/$1';
 $route['admin/gallery/(:num)/remove']  = 'admin/gallery/object/remove/$1';
@@ -121,6 +125,9 @@ $route['admin/user/(:num)/remove']  = 'admin/user/object/remove/$1';
 
 $route['upload']                            = 'media/upload';
 $route['media/(:any)/(:any)/(:any)/(:any)'] = 'media/resize/$1/$2/$3/$4';
+
+$route['event/feed.xml'] = 'event/feed';
+$route['event/(:any)'] = 'event/single/$1';
 
 $route['gallery/feed.xml'] = 'gallery/feed';
 $route['gallery/(:any)'] = 'gallery/single/$1';

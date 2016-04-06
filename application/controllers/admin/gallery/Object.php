@@ -89,6 +89,17 @@ class Object extends MY_Controller
             return $this->redirect('/admin/me/login?next=' . uri_string());
         if(!$this->can_i('delete-gallery'))
             return $this->show_404();
+        
+        // remove gallery property of post if i'm included as gallery property
+        $this->load->model('Post_model', 'Post');
+        $posts = $this->Post->getBy('gallery', $id, true);
+        if($posts){
+            $posts_id = prop_values($posts, 'id');
+            $this->Post->set($posts_id, ['gallery'=>null]);
+            // remove posts cache
+            foreach($posts as $post)
+                $this->output->delete_cache('/post/read/' . $post->slug);
+        }
 
         $this->Gallery->remove($id);
         $this->GMedia->removeBy('gallery', $id);

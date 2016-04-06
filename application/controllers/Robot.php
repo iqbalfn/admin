@@ -13,6 +13,7 @@ class Robot extends MY_Controller
         
         $this->load->model('Gallery_model', 'Gallery');
         $this->load->model('Post_model', 'Post');
+        $this->load->model('Event_model', 'Event');
         $this->load->library('ObjectFormatter', '', 'formatter');
         
         // GALLERIES
@@ -31,11 +32,27 @@ class Robot extends MY_Controller
             }
         }
         
+        // EVENT
+        $events = $this->Event->getByCond([], 25);
+        if($events){
+            $events = $this->formatter->event($events, false, false);
+            foreach($events as $event){
+                $pages[] = (object)array(
+                    'page' => base_url($event->page),
+                    'description' => $event->seo_description->value ? $event->seo_description : $event->content->chars(160),
+                    'title' => $event->name,
+                    'categories' => []
+                );
+                if($event->created->time > $last_update)
+                    $last_update = $event->created->time;
+            }
+        }
+        
         // POSTS
         $cond = array(
             'status'    => 4
         );
-        $posts = $this->Post->getByCond($cond, 100);
+        $posts = $this->Post->getByCond($cond, 30);
         if($posts){
             $posts = $this->formatter->post($posts, false, ['category']);
             foreach($posts as $post){
@@ -80,6 +97,7 @@ class Robot extends MY_Controller
         $two_days_ago->sub(new DateInterval('P2D'));
         $two_days_ago = $two_days_ago->format('Y-m-d');
         
+        $this->load->model('Event_model', 'Event');
         $this->load->model('Gallery_model', 'Gallery');
         $this->load->model('Post_model', 'Post');
         $this->load->model('Postcategory_model', 'PCategory');
@@ -108,6 +126,27 @@ class Robot extends MY_Controller
                 );
                 if($gallery->created->time > $last_update)
                     $last_update = $gallery->created->time;
+            }
+        }
+        
+        // EVENTS
+        $cond = array(
+            'created' => (object)['>', $two_days_ago]
+        );
+        $events = $this->Event->getByCond($cond, true);
+        if($events){
+            $events = $this->formatter->event($events, false, false);
+            foreach($events as $event){
+                $pages[] = (object)array(
+                    'loc' => base_url($event->page),
+                    'lastmod' => $event->created->format('Y-m-d'),
+                    'changefreq' => 'yearly',
+                    'priority' => '0.5',
+                    'image_loc' => $event->cover,
+                    'image_caption' => $event->name
+                );
+                if($event->created->time > $last_update)
+                    $last_update = $event->created->time;
             }
         }
         
@@ -190,7 +229,7 @@ class Robot extends MY_Controller
                 $pages[] = (object)array(
                     'loc' => base_url($category->page),
                     'lastmod' => $category->created->format('Y-m-d'), // TODO POST CATEGORY UDPATED STATUS
-                    'changefreq' => 'weekly',
+                    'changefreq' => 'daily',
                     'priority' => '0.7'
                 );
                 
@@ -213,7 +252,7 @@ class Robot extends MY_Controller
                 $pages[] = (object)array(
                     'loc' => base_url($tag->page),
                     'lastmod' => $tag->created->format('Y-m-d'), // TODO POST TAG UDPATED STATUS
-                    'changefreq' => 'weekly',
+                    'changefreq' => 'daily',
                     'priority' => '0.7'
                 );
                 
