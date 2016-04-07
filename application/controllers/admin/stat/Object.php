@@ -96,24 +96,22 @@ class Object extends MY_Controller
         return $this->redirect('/admin/stat');
     }
     
-    public function index(){
+    public function ranks(){
         if(!$this->user)
             return $this->redirect('/admin/me/login');
-        if(!$this->can_i('read-site_statistic'))
+        if(!$this->can_i('read-site_ranks'))
             return $this->show_404();
         
         $params = array(
-            'title' => _l('Site Statistic'),
-            'ranks' => array(),
-            'ga_token' => null
+            'title' => _l('Site Ranking'),
+            'ranks' => array()
         );
         
-        // site ranking
         $this->load->model('Siteranks_model', 'Rank');
         
         $ranks_vendor = array('alexa', 'similarweb');
         foreach($ranks_vendor as $vendor){
-            $ranks = $this->Rank->getBy('vendor', $vendor, 10);
+            $ranks = $this->Rank->getBy('vendor', $vendor, 30);
             if(!$ranks)
                 continue;
             
@@ -148,6 +146,20 @@ class Object extends MY_Controller
             $params['ranks'][$vendor] = $data_ranks;
         }
         
+        $this->respond('stat/ranks', $params);
+    }
+    
+    public function realtime(){
+        if(!$this->user)
+            return $this->redirect('/admin/me/login');
+        if(!$this->can_i('read-site_realtime'))
+            return $this->show_404();
+        
+        $params = array(
+            'title' => _l('Realtime Statistic'),
+            'ga_token' => null
+        );
+        
         // google analytics
         if($this->setting->item('google_analytics_statistic')){
             $this->load->library('Google', '', 'google');
@@ -155,6 +167,6 @@ class Object extends MY_Controller
             $params['ga_token'] = $access_token;
         }
         
-        $this->respond('stat/index', $params);
+        $this->respond('stat/realtime', $params);
     }
 }

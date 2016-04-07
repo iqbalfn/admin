@@ -90,8 +90,18 @@ class SiteMenu
             ),
             array(
                 'label' => 'Stat',
-                'perms' => 'read-site_statistic',
-                'target'=> '/admin/stat'
+                'submenu' => array(
+                    array(
+                        'label' => 'Site Ranks',
+                        'perms' => 'read-site_ranks',
+                        'target'=> '/admin/stat/ranks'
+                    ),
+                    array(
+                        'label' => 'Realtime Statistic',
+                        'perms' => 'read-site_realtime',
+                        'target'=> '/admin/stat/realtime'
+                    )
+                )
             ),
             array(
                 'label' => 'Setting',
