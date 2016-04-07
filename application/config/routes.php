@@ -118,6 +118,7 @@ $route['admin/setting/cache/clear'] = 'admin/setting/cache/object/clear';
 
 $route['admin/stat/ranks']            = 'admin/stat/object/ranks';
 $route['admin/stat/realtime']         = 'admin/stat/object/realtime';
+$route['admin/stat/visitor']          = 'admin/stat/object/visitor';
 $route['admin/stat/calculate/(:any)'] = 'admin/stat/object/calculate/$1';
 
 $route['admin/user']                = 'admin/user/object/index';

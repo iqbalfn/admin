@@ -100,6 +100,11 @@ class SiteMenu
                         'label' => 'Realtime Statistic',
                         'perms' => 'read-site_realtime',
                         'target'=> '/admin/stat/realtime'
+                    ),
+                    array(
+                        'label' => 'Visitor Statistic',
+                        'perms' => 'read-visitor_statistic',
+                        'target'=> '/admin/stat/visitor'
                     )
                 )
             ),

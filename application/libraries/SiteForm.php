@@ -966,6 +966,10 @@ class SiteForm
                 $value = 0;
             }
             
+            // convert tinymce nbsp chars.
+            if($input['type'] == 'tinymce')
+                $value = str_replace('&nbsp;', ' ', $value);
+            
             if(!array_key_exists($prop, $preset_object))
                 $obj[$prop] = $value;
             elseif($value != $preset_object[$prop])

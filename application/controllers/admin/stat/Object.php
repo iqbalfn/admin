@@ -98,7 +98,7 @@ class Object extends MY_Controller
     
     public function ranks(){
         if(!$this->user)
-            return $this->redirect('/admin/me/login');
+            return $this->redirect('/admin/me/login?next=' . uri_string());
         if(!$this->can_i('read-site_ranks'))
             return $this->show_404();
         
@@ -151,7 +151,7 @@ class Object extends MY_Controller
     
     public function realtime(){
         if(!$this->user)
-            return $this->redirect('/admin/me/login');
+            return $this->redirect('/admin/me/login?next=' . uri_string());
         if(!$this->can_i('read-site_realtime'))
             return $this->show_404();
         
@@ -168,5 +168,26 @@ class Object extends MY_Controller
         }
         
         $this->respond('stat/realtime', $params);
+    }
+    
+    public function visitor(){
+        if(!$this->user)
+            return $this->redirect('/admin/me/login?next=' . uri_string());
+        if(!$this->can_i('read-visitor_statistic'))
+            return $this->show_404();
+        
+        $params = array(
+            'title' => _l('Visitor Statistic'),
+            'ga_token' => null
+        );
+        
+        // google analytics
+        if($this->setting->item('google_analytics_statistic')){
+            $this->load->library('Google', '', 'google');
+            $access_token = $this->google->get_analytics_token();
+            $params['ga_token'] = $access_token;
+        }
+        
+        $this->respond('stat/visitor', $params);
     }
 }
