@@ -13,6 +13,7 @@ class Object extends MY_Controller
         parent::__construct();
 
         $this->load->model('Post_model', 'Post');
+        $this->load->library('ObjectFormatter', '', 'formatter');
     }
 
     function edit($id=null){
@@ -68,7 +69,7 @@ class Object extends MY_Controller
             
             $categories = $this->PCategory->getByCond([], true, false, ['name'=>'ASC']);
             if($categories){
-                $all_categories = prop_as_key($categories, 'id');
+                $all_categories = $this->formatter->post_category($categories, 'id', false);
                 $categories = group_by_prop($categories, 'parent');
             }
             $params['categories'] = $categories ? $categories : array();
@@ -80,8 +81,8 @@ class Object extends MY_Controller
             
             $tags = $this->PTag->getByCond([], true, false, ['name'=>'ASC']);
             if($tags){
-                $all_tags = prop_as_key($tags, 'id', 'name');
-                $params['tags'] = $all_tags;
+                $all_tags = $this->formatter->post_tag($tags, 'id', false);
+                $params['tags'] = prop_as_key($tags, 'id', 'name');
             }
         }
         
@@ -149,7 +150,7 @@ class Object extends MY_Controller
                         
                         $to_insert[] = $cat;
                         $this->PCategory->inc($cat, 'posts');
-                        $this->output->delete_cache('/post/category/' . $category->slug);
+                        $this->output->delete_cache($category->page);
                     }
                 }
                 
@@ -163,7 +164,7 @@ class Object extends MY_Controller
                         
                         $to_delete[] = $cat;
                         $this->PCategory->dec($cat, 'posts');
-                        $this->output->delete_cache('/post/category/' . $category->slug);
+                        $this->output->delete_cache($category->page);
                     }
                 }
                 
@@ -200,7 +201,7 @@ class Object extends MY_Controller
                         
                         $to_insert[] = $cat;
                         $this->PTag->inc($cat, 'posts');
-                        $this->output->delete_cache('/post/tag/' . $tag->slug);
+                        $this->output->delete_cache($tag->page);
                     }
                 }
                 
@@ -214,7 +215,7 @@ class Object extends MY_Controller
                         
                         $to_delete[] = $cat;
                         $this->PTag->dec($cat, 'posts');
-                        $this->output->delete_cache('/post/tag/' . $tag->slug);
+                        $this->output->delete_cache($tag->page);
                     }
                 }
                 
@@ -228,8 +229,10 @@ class Object extends MY_Controller
         
         $this->output->delete_cache('/');
         $this->cache->file->delete('_recent_posts');
-        if($id)
-            $this->output->delete_cache('/post/read/' . $object->slug);
+        if($id){
+            $object = $this->formatter->post($object, false, false);
+            $this->output->delete_cache($object->page);
+        }
         
         if($new_object){
             if(!$id){
@@ -301,10 +304,8 @@ class Object extends MY_Controller
             $page = 1;
 
         $result = $this->Post->findByCond($cond, $rpp, $page);
-        if($result){
-            $this->load->library('ObjectFormatter', '', 'format');
-            $params['posts'] = $this->format->post($result, false, false);
-        }
+        if($result)
+            $params['posts'] = $this->formatter->post($result, false, false);
 
         $total_result = $this->Post->findByCondTotal($cond);
         if($total_result > $rpp){
@@ -346,14 +347,14 @@ class Object extends MY_Controller
             $cats_chain_id = array();
             $cats_id = prop_values($cats_chain, 'post_category');
             $cats = $this->PCategory->get($cats_id, true);
-            $cats = prop_as_key($cats, 'id');
+            $cats = $this->formatter->post_category($cats, 'id', false);
             foreach($cats_chain as $cat_chain){
                 $cats_chain_id[] = $cat_chain->id;
                 if(!array_key_exists($cat_chain->post_category, $cats))
                     continue;
                 $cat = $cats[$cat_chain->post_category];
                 $this->PCategory->dec($cat->id, 'posts');
-                $this->output->delete_cache('/post/category/' . $cat->slug);
+                $this->output->delete_cache($cat->page);
             }
             
             $this->PCChain->remove($cats_chain_id);
@@ -365,14 +366,14 @@ class Object extends MY_Controller
             $tags_chain_id = array();
             $tags_id = prop_values($tags_chain, 'post_tag');
             $tags = $this->PTag->get($tags_id, true);
-            $tags = prop_as_key($tags, 'id');
+            $tags = $this->formatter->post_tag($tags, 'id', false);
             foreach($tags_chain as $tag_chain){
                 $tags_chain_id[] = $tag_chain->id;
                 if(!array_key_exists($tag_chain->post_tag, $tags))
                     continue;
                 $tag = $tags[$tag_chain->post_tag];
                 $this->PTag->dec($tag->id, 'posts');
-                $this->output->delete_cache('/post/tag/' . $tag->slug);
+                $this->output->delete_cache($tag->page);
             }
             
             $this->PTChain->remove($tags_chain_id);
@@ -385,8 +386,10 @@ class Object extends MY_Controller
             $this->PSelection->removeBy('post', $post->id);
         }
         
+        $post = $this->formatter->post($post, false, false);
+        
         $this->output->delete_cache('/');
-        $this->output->delete_cache('/post/read/' . $post->slug);
+        $this->output->delete_cache($post->page);
         $this->cache->file->delete('_recent_posts'); 
         
         $this->redirect('/admin/post');

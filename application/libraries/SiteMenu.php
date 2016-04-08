@@ -140,6 +140,11 @@ class SiteMenu
                         'label' => 'Clear All Cache',
                         'perms' => 'delete-cache',
                         'target'=> '/admin/setting/cache/clear'
+                    ),
+                    array(
+                        'label' => 'Clear All Media Sizes',
+                        'perms' => 'delete-media_sizes',
+                        'target' => '/admin/setting/media/clear'
                     )
                 )
             )

@@ -116,6 +116,9 @@ $route['admin/setting/slideshow/(:num)/remove']  = 'admin/setting/slideshow/obje
 
 $route['admin/setting/cache/clear'] = 'admin/setting/cache/object/clear';
 
+$route['admin/setting/media/clear']   = 'admin/setting/media/object/clear';
+$route['admin/setting/media/execute'] = 'admin/setting/media/object/execute';
+
 $route['admin/stat/ranks']            = 'admin/stat/object/ranks';
 $route['admin/stat/realtime']         = 'admin/stat/object/realtime';
 $route['admin/stat/visitor']          = 'admin/stat/object/visitor';

@@ -59,6 +59,7 @@ INSERT INTO `perms` ( `group`, `name`, `label`, `description` ) VALUES
     ( 'Site Statistic',     'read-site_realtime',       'Read Realtime Statistic',      'Allow user to see all site realtime statistic' ),
     ( 'Site Statistic',     'read-visitor_statistic',   'Read Visitor Statistic',       'Allow user to see all site visitor statistic' ),
     ( 'Site Cache',         'delete-cache',             'Remove All Site Cache',        'Allow user to remove all site cache' ),
+    ( 'Site Media',         'delete-media_sizes',       'Remove All Media Resizes',     'Allow user to remove all resized media' ),
     ( 'Slideshow',          'create-slide_show',        'Create Slideshow',             'Allow user to create new slideshow' ),
     ( 'Slideshow',          'delete-slide_show',        'Delete Slideshow',             'Allow user to delete exists slideshow' ),
     ( 'Slideshow',          'read-slide_show',          'Read Slideshow',               'Allow user to see all exists slideshow' ),
@@ -259,6 +260,9 @@ INSERT INTO `user_perms` ( `user`, `perms` ) VALUES
     ( 1, 'delete-site_enum' ),
     ( 1, 'read-site_enum' ),
     ( 1, 'update-site_enum' ),
+    
+    -- SITE MEDIA
+    ( 1, 'delete-media_sizes' ),
     
     -- SLIDE SHOW
     ( 1, 'create-slide_show' ),

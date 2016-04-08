@@ -13,6 +13,7 @@ class Category extends MY_Controller
         parent::__construct();
 
         $this->load->model('Postcategory_model', 'PCategory');
+        $this->load->library('ObjectFormatter', '', 'format');
     }
 
     function edit($id=null){
@@ -42,7 +43,7 @@ class Category extends MY_Controller
 
         $params['category'] = $object;
         
-        // get most possible parent
+        // get most possible parents
         $parents = $this->PCategory->getByCond([], true, false, ['name'=>'ASC']);
         if(!$parents)
             $parents = array();
@@ -60,6 +61,9 @@ class Category extends MY_Controller
             $new_object['id'] = $this->PCategory->create($new_object);
         }else{
             $this->PCategory->set($id, $new_object);
+            
+            $object = $this->formatter->post_category($object, false, false);    
+            $this->output->delete_cache($object->page);
         }
 
         $this->redirect('/admin/post/category');
@@ -96,8 +100,15 @@ class Category extends MY_Controller
             return $this->redirect('/admin/me/login?next=' . uri_string());
         if(!$this->can_i('delete-post_category'))
             return $this->show_404();
-
+        
+        $category = $this->PCategory->get($id);
+        if(!$category)
+            return $this->show_404();
+        
         $this->load->model('Postcategorychain_model', 'PCChain');
+
+        $category = $this->formatter->post_category($category, false, false);    
+        $this->output->delete_cache($category->page);
         
         $this->PCategory->remove($id);
         $this->PCChain->removeBy('post_category', $id);

@@ -52,9 +52,11 @@ class Object extends MY_Controller
             $new_object['id'] = $this->Event->create($new_object);
         }else{
             $this->Event->set($id, $new_object);
+            
+            $object = $this->formatter->event($object, false, false);
+            $this->output->delete_cache($object->page);
         }
 
-        $this->cache->file->delete('event');
         $this->redirect('/admin/event');
     }
 
@@ -91,7 +93,13 @@ class Object extends MY_Controller
         if(!$this->can_i('delete-event'))
             return $this->show_404();
 
-        $this->cache->file->delete('event');
+        $event = $this->Event->get($id);
+        if(!$event)
+            return $this->show_404();
+        
+        $event = $this->formatter->event($event, false, false);
+        
+        $this->output->delete_cache($event->page);
         $this->Event->remove($id);
         $this->redirect('/admin/event');
     }

@@ -93,7 +93,7 @@ class Object extends MY_Controller
             $this->Rank->create($ranks);
         }
         
-        return $this->redirect('/admin/stat');
+        return $this->redirect('/admin/stat/ranks');
     }
     
     public function ranks(){

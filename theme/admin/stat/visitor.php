@@ -28,18 +28,18 @@
                     <div class="col-md-12">
                         <fieldset id="statistic-hourly-container">
                             <legend><?= _l('Hourly') ?> <sub>(<span class="tt-session" title="<?= _l('Sessions') ?>"></span> / <span class="tt-user" title="<?= _l('Users') ?>"></span> )</sub></legend>
-                            <div>&#160;</div>
                             <canvas width="1140" height="250" id="statistic-hourly"></canvas>
                         </fieldset>
                     </div>
                 </div>
+                
+                <div>&#160;</div>
                 
                 <div class="row">
                     
                     <div class="col-md-6">
                         <fieldset id="statistic-daily-container">
                             <legend><?= _l('Daily') ?> <sub>(<span class="tt-session" title="<?= _l('Sessions') ?>"></span> / <span class="tt-user" title="<?= _l('Users') ?>"></span> )</sub></legend>
-                            <div>&#160;</div>
                             <canvas width="555" height="250" id="statistic-daily"></canvas>
                         </fieldset>
                     </div>
@@ -47,7 +47,6 @@
                     <div class="col-md-6">
                         <fieldset id="statistic-monthly-container">
                             <legend><?= _l('Monthly') ?> <sub>(<span class="tt-session" title="<?= _l('Sessions') ?>"></span> / <span class="tt-user" title="<?= _l('Users') ?>"></span> )</sub></legend>
-                            <div>&#160;</div>
                             <canvas width="555" height="250" id="statistic-monthly"></canvas>
                         </fieldset>
                     </div>

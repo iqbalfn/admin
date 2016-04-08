@@ -13,6 +13,7 @@ class Tag extends MY_Controller
         parent::__construct();
 
         $this->load->model('Posttag_model', 'PTag');
+        $this->load->library('ObjectFormatter', '', 'format');
     }
 
     function edit($id=null){
@@ -53,6 +54,9 @@ class Tag extends MY_Controller
             $new_object['id'] = $this->PTag->create($new_object);
         }else{
             $this->PTag->set($id, $new_object);
+            
+            $object = $this->formatter->post_tag($object, false, false);    
+            $this->output->delete_cache($object->page);
         }
 
         $this->redirect('/admin/post/tag');
@@ -88,8 +92,14 @@ class Tag extends MY_Controller
             return $this->redirect('/admin/me/login?next=' . uri_string());
         if(!$this->can_i('delete-post_tag'))
             return $this->show_404();
+        
+        $tag = $this->PTag->get($id);
+        if(!$tag)
+            return $this->show_404();
 
         $this->load->model('Posttagchain_model', 'PTChain');
+        $tag = $this->formatter->post_tag($tag, false, false);    
+        $this->output->delete_cache($tag->page);
         
         $this->PTag->remove($id);
         $this->PTChain->removeBy('post_tag', $id);

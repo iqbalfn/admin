@@ -200,6 +200,15 @@ class ObjectFormatter
                         case 'integer':
                             $object->$field = (int)$object->$field;
                             break;
+                        case 'location':
+                            $location = explode(',', $object->$field);
+                            if(count($location) == 2){
+                                $object->$field = (object)array(
+                                    'latitude' => $location[0],
+                                    'longitude'=> $location[1]
+                                );
+                            }
+                            break;
                         case 'media':
                             $object->$field = new objMedia($object->$field);
                             break;
