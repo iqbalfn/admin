@@ -375,7 +375,7 @@ tinymce.PluginManager.add('image', function(editor) {
 			},
 			imageListCtrl
 		];
-        
+
 		if (editor.settings.image_description !== false) {
 			generalFormItems.push({name: 'alt', type: 'textbox', label: 'Image description'});
 		}

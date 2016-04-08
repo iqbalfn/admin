@@ -25,25 +25,34 @@ define("tinymce/pasteplugin/Plugin", [
 	PluginManager.add('paste', function(editor) {
 		var self = this, clipboard, settings = editor.settings;
 
+		function isUserInformedAboutPlainText() {
+			return userIsInformed || editor.settings.paste_plaintext_inform === false;
+		}
+
 		function togglePlainTextPaste() {
 			if (clipboard.pasteFormat == "text") {
 				this.active(false);
 				clipboard.pasteFormat = "html";
+				editor.fire('PastePlainTextToggle', {state: false});
 			} else {
 				clipboard.pasteFormat = "text";
 				this.active(true);
 
-				if (!userIsInformed) {
+				if (!isUserInformedAboutPlainText()) {
 					var message = editor.translate('Paste is now in plain text mode. Contents will now ' +
 						'be pasted as plain text until you toggle this option off.');
+
 					editor.notificationManager.open({
 						text: message,
 						type: 'info'
 					});
 
 					userIsInformed = true;
+					editor.fire('PastePlainTextToggle', {state: true});
 				}
 			}
+
+			editor.focus();
 		}
 
 		self.clipboard = clipboard = new Clipboard(editor);

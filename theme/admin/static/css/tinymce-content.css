@@ -40,6 +40,12 @@ figure.image figcaption {
 img{
     max-width: 100%;
 }
+.fb-post{
+    display: block;
+    width: 496px;
+    height: 133px;
+    background: #000 url(fb-post.png) center center no-repeat;
+}
 .fb-video{
     background: #000 url(fb-video.jpg) center center no-repeat;
     width: 500px;

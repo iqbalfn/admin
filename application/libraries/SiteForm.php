@@ -674,6 +674,7 @@ class SiteForm
         if($this->input_type == 'select-multiple'){
             $input['attrs']['multiple'] = 'multiple';
             $input['attrs']['name'] = $this->input_name . '[]';
+            $input['attrs']['data-live-search'] = 'true';
         }
         
         if($this->input_label_show)
