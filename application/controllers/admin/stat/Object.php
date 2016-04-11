@@ -165,6 +165,7 @@ class Object extends MY_Controller
             $this->load->library('Google', '', 'google');
             $access_token = $this->google->get_analytics_token();
             $params['ga_token'] = $access_token;
+            $params['ga_view'] = $this->setting->item('code_google_analytics_view');
         }
         
         $this->respond('stat/realtime', $params);
@@ -178,7 +179,8 @@ class Object extends MY_Controller
         
         $params = array(
             'title' => _l('Visitor Statistic'),
-            'ga_token' => null
+            'ga_token' => null,
+            'ga_view' => null
         );
         
         // google analytics
@@ -186,6 +188,7 @@ class Object extends MY_Controller
             $this->load->library('Google', '', 'google');
             $access_token = $this->google->get_analytics_token();
             $params['ga_token'] = $access_token;
+            $params['ga_view'] = $this->setting->item('code_google_analytics_view');
         }
         
         $this->respond('stat/visitor', $params);

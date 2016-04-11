@@ -23,11 +23,34 @@ class SiteForm
     private $input_value;
     private $input_attrs;
     
+    private $external_components = [];
+    
     function __construct(){
         $this->CI =&get_instance();
         
         $this->CI->load->library('form_validation');
         $this->CI->load->config('form_validation');
+    }
+    
+    /**
+     * Add external component 
+     * @param string url Target URL of the component.
+     * @param string type The component type ( css/js )
+     */
+    private function _addExComponent($url, $type='js'){
+        $comp = false;
+        
+        if($type == 'js')
+            $comp = '<script src="' . $url . '"></script>';
+        elseif($type == 'css')
+            $comp = '<link rel="stylesheet" href="' . $url . '">';
+        
+        if(!$comp)
+            return;
+        
+        if(in_array($comp, $this->external_components))
+            return;
+        $this->external_components[] = $comp;
     }
     
     /**
@@ -365,6 +388,8 @@ class SiteForm
         
         // location
         if($this->input_type == 'location'){
+            $this->_addExComponent('http://maps.google.com/maps/api/js?libraries=places&ampkey=' . $this->CI->setting->item('code_google_map'), 'js');
+            
             $span = array(
                 'tag' => 'span',
                 'attrs' => array(
@@ -784,6 +809,16 @@ class SiteForm
     }
     
     /**
+     * Print all external component 
+     */
+    public function externalComponents(){
+        $tx = '';
+        foreach($this->external_components as $comp)
+            $tx.= $comp;
+        return $tx;
+    }
+    
+    /**
      * Create field element.
      * @param string name The field name.
      * @param array options List of value-label pair of the options.
@@ -899,6 +934,13 @@ class SiteForm
         $tx.= '</script>';
         
         return $tx;
+    }
+    
+    /**
+     * Get all external component
+     */
+    public function getExComponent(){
+        return $this->external_components;
     }
     
     /**

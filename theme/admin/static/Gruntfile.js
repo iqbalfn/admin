@@ -31,7 +31,6 @@ module.exports = function(grunt) {
                     'javascript/slugify.js',
                     'javascript/bootstrap-tokenfield.js',
                     'javascript/locationpicker.jquery.js',
-                    'javascript/google-analytics.js',
                     'javascript/main.js'
                 ],
                 dest: 'js/portal.js'

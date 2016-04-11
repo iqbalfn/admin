@@ -78,6 +78,7 @@ TRUNCATE `site_params`;
 INSERT INTO `site_params` ( `name`, `value` ) VALUES
     ( 'code_application_facebook', '' ),
     ( 'code_google_analytics', '' ),
+    ( 'code_google_analytics_view', '' ),
     ( 'code_google_map', '' ),
     ( 'code_verification_alexa', '' ),
     ( 'code_verification_bing', '' ),

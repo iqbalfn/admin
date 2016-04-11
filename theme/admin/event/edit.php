@@ -66,6 +66,7 @@
     </div>
     
     <?= $this->theme->file('foot') ?>
+    <?= $this->form->externalComponents(); ?>
     <?= $this->form->focusInput(); ?>
 </body>
 </html>
