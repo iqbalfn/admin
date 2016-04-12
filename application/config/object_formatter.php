@@ -67,6 +67,10 @@ $config['object_formatter'] = array(
         'seo_description' => 'text'
     ),
     
+    'post_schedule' => array(
+        'post' => '@parent[post]'
+    ),
+    
     'post_selection' => array(
         'post' => '@parent[post]'
     ),
