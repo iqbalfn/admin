@@ -506,4 +506,11 @@ class MY_Model extends CI_Model
             return false;
         return $result->row()->$field;
     }
+    
+    /**
+     * Truncate table
+     */
+    public function truncate(){
+        return $this->db->truncate($this->table);
+    }
 }

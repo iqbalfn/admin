@@ -146,8 +146,17 @@ CREATE TABLE `post_category_chain` (
 DROP TABLE IF EXISTS `post_schedule`;
 CREATE TABLE `post_schedule` (
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `post` INTEGER NOT NULL,
+    `post` BIGINT NOT NULL,
     `published` DATETIME NOT NULL,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS `post_selection`;
+CREATE TABLE `post_selection` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `group` VARCHAR(50),
+    `post` BIGINT NOT NULL,
+    `index` TINYINT,
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -177,12 +186,13 @@ CREATE TABLE `post_tag_chain` (
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-DROP TABLE IF EXISTS `post_selection`;
-CREATE TABLE `post_selection` (
+DROP TABLE IF EXISTS `post_trending`;
+CREATE TABLE `post_trending` (
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `group` VARCHAR(50),
     `post` BIGINT NOT NULL,
-    `index` TINYINT,
+    `tag` INTEGER,
+    `category` INTEGER,
+    `view` INTEGER DEFAULT 0,
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

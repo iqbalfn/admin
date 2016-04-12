@@ -86,15 +86,17 @@ $route['admin/post/category']                = 'admin/post/category/index';
 $route['admin/post/category/(:num)']         = 'admin/post/category/edit/$1';
 $route['admin/post/category/(:num)/remove']  = 'admin/post/category/remove/$1';
 
-$route['admin/post/tag']                = 'admin/post/tag/index';
-$route['admin/post/tag/(:num)']         = 'admin/post/tag/edit/$1';
-$route['admin/post/tag/(:num)/remove']  = 'admin/post/tag/remove/$1';
+$route['admin/post/publish'] = 'admin/post/publish/index';
 
 $route['admin/post/selector']                = 'admin/post/selector/index';
 $route['admin/post/selector/(:num)']         = 'admin/post/selector/edit/$1';
 $route['admin/post/selector/(:num)/remove']  = 'admin/post/selector/remove/$1';
 
-$route['admin/post/publish'] = 'admin/post/publish/index';
+$route['admin/post/tag']                = 'admin/post/tag/index';
+$route['admin/post/tag/(:num)']         = 'admin/post/tag/edit/$1';
+$route['admin/post/tag/(:num)/remove']  = 'admin/post/tag/remove/$1';
+
+$route['admin/post/trending'] = 'admin/post/trending/index';
 
 $route['admin/setting/enum']                = 'admin/setting/enum/object/index';
 $route['admin/setting/enum/(:num)']         = 'admin/setting/enum/object/edit/$1';
