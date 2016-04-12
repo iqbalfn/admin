@@ -684,8 +684,7 @@ class SiteMeta
             "og:title"              => $meta_title,
             "og:type"               => "profile",
             "og:url"                => $meta_url,
-            "profile:username"      => $user->name,
-            
+            "profile:username"      => $user->name
         );
         
         $fname = explode(' ', $user->fullname);
