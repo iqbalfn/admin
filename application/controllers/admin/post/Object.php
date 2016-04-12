@@ -31,6 +31,9 @@ class Object extends MY_Controller
         $this->load->model('Posttag_model', 'PTag');
         $this->load->model('Posttagchain_model', 'PTChain');
         $this->load->model('Gallery_model', 'Gallery');
+        $this->load->model('Postschedule_model', 'PSchedule');
+        
+        $post_scheduled = false;
         
         $params = array(
             'slug_editable' => true
@@ -100,8 +103,10 @@ class Object extends MY_Controller
         }
         
         $statuses = $this->enum->item('post.status');
-        if(!$this->can_i('create-post_published'))
+        if(!$this->can_i('create-post_published')){
             unset($statuses[4]);
+            unset($statuses[3]);
+        }
         $params['statuses'] = $statuses;
         
         if(!($new_object=$this->form->validate($object)))
@@ -113,11 +118,26 @@ class Object extends MY_Controller
         // make sure user not publish it if user not allowed to publish it
         // or set the published property if it's published
         if(array_key_exists('status', $new_object)){
-            if($new_object['status'] == 4){
-                if($this->can_i('create-post_published'))
-                    $new_object['published'] = date('Y-m-d H:i:s');
-                else
+            if(in_array($new_object['status'], [3,4])){
+                if($this->can_i('create-post_published')){
+                    if($new_object['status'] == 4){
+                        $new_object['published'] = date('Y-m-d H:i:s');
+                    // add the post to post_schedule to be listed on
+                    // publish later post
+                    }else{
+                        $post_scheduled = $new_object['published'];
+                    }
+                }else{
                     unset($new_object['status']);
+                    if(array_key_exists('published', $new_object))
+                        unset($new_object['published']);
+                }
+            }
+        }elseif(array_key_exists('published', $new_object) && $object->status == 3){
+            if($this->can_i('create-post_published')){
+                $post_scheduled = $new_object['published'];
+            }else{
+                unset($new_object['published']);
             }
         }
         
@@ -229,6 +249,7 @@ class Object extends MY_Controller
         
         $this->output->delete_cache('/');
         $this->cache->file->delete('_recent_posts');
+        
         if($id){
             $object = $this->formatter->post($object, false, false);
             $this->output->delete_cache($object->page);
@@ -241,6 +262,15 @@ class Object extends MY_Controller
                 $id = $new_object['id'];
             }else{
                 $this->Post->set($id, $new_object);
+            }
+            
+            if($post_scheduled){
+                $post_scheduled = (object)array(
+                    'post' => $id,
+                    'published' => $post_scheduled
+                );
+                $this->PSchedule->removeBy('post', $post_scheduled->post);
+                $this->PSchedule->create($post_scheduled);
             }
         }
         
@@ -271,7 +301,8 @@ class Object extends MY_Controller
             'categories' => array(),
             'tags' => array(),
             'statuses' => $this->enum->item('post.status'),
-            'pagination' => array()
+            'pagination' => array(),
+            'user' => null
         );
 
         $cond = array();
@@ -285,6 +316,8 @@ class Object extends MY_Controller
         
         if(!$this->can_i('read-post_other_user'))
             $cond['user'] = $this->user->id;
+        elseif(array_key_exists('user', $cond))
+            $params['user'] = $this->User->get($cond['user']);
         
         if($this->can_i('read-post_category')){
             $this->load->model('Postcategory_model', 'PCategory');

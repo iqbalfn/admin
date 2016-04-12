@@ -50,6 +50,10 @@
                                 
                                 <?= $this->form->field('status', $statuses) ?>
                                 
+                                <div id="post-published-schedule-date">
+                                <?= (ci()->can_i('create-post_published') ? $this->form->field('published') : '') ?>
+                                </div>
+                                
                                 <div class="row">
                                     <?php if(ci()->can_i('create-post_featured')): ?>
                                     <div class="col-md-6">
@@ -93,5 +97,11 @@
     
     <?= $this->theme->file('foot') ?>
     <?= $this->form->focusInput(); ?>
+    <script>
+        $('#field-status').change(function(){
+            var val = $(this).val();
+            $('#post-published-schedule-date')[(val==3?'show':'hide')]();
+        }).change();
+    </script>
 </body>
 </html>

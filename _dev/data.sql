@@ -147,7 +147,7 @@ INSERT INTO `site_enum` ( `group`, `value`, `label` ) VALUES
     
     ( 'post.status', 1, 'Draft' ),
     ( 'post.status', 2, 'Editor' ),
---     ( 'post.status', 3, 'Schedule' ),
+    ( 'post.status', 3, 'Schedule' ),
     ( 'post.status', 4, 'Published' ),
     
     ( 'post.seo_schema', 'CreativeWork', 'CreativeWork' ),

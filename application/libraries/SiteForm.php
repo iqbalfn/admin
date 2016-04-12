@@ -187,7 +187,9 @@ class SiteForm
             
         }
         
-        $tx.= '</' . $tag . '>';
+        $self_closing_tag = ['input'];
+        if(!in_array($tag, $self_closing_tag))
+            $tx.= '</' . $tag . '>';
         
         return $tx;
     }

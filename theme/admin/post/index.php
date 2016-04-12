@@ -22,6 +22,16 @@
                             <input type="search" autofocus="autofocus" class="form-control" placeholder="Find posts" name="q" value="<?= $this->input->get('q') ?>">
                         </div>
                         
+                        <?php if(ci()->can_i('read-post_other_user')): ?>
+                        <div class="form-group">
+                            <select name="user" class="object-filter" title="<?= _l('User') ?>" placeholder="<?= _l('User') ?>" data-table="user" data-label="fullname" data-value="id">
+                            <?php if($user): ?>
+                            <option value="<?= $user->id ?>" selected="selected"><?= $user->fullname ?></option>
+                            <?php endif; ?>
+                            </select>
+                        </div>
+                        <?php endif; ?>
+                        
                         <?php if($categories): ?>
                         <div class="form-group">
                             <select class="selectpicker" name="category" title="<?= _l('Category') ?>">

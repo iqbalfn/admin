@@ -536,6 +536,15 @@ $config = array(
             )
         ),
         
+        'published' => array(
+            'field' => 'published',
+            'label' => 'Published Schedule',
+            'rules' => '',
+            'input' => array(
+                'type' => 'datetime'
+            )
+        ),
+        
         'sources' => array(
             'field' => 'sources',
             'label' => 'Source',
