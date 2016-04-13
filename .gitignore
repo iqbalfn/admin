@@ -1,6 +1,5 @@
 media/*
 !media/.gitkeep
-system
 theme/admin/static/node_modules
 application/cache/*
 !application/cache/.htaccess
