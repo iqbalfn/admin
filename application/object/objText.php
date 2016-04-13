@@ -9,7 +9,7 @@ class objText implements JsonSerializable
     private $clean;
     
     function __construct($text){
-        $this->value = $text;
+        $this->value = (string)$text;
         
     }
     

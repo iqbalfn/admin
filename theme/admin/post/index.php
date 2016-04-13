@@ -75,7 +75,24 @@
                                     <h4 class="list-group-item-heading"><?= $post->title ?></h4>
                                     <p class="list-group-item-text"><?= base_url($post->page) ?></p>
                                 </a>
-                                <a class="list-group-closer btn btn-default btn-xs" href="<?= base_url($post->page) ?>"><i class="glyphicon glyphicon-new-window"></i></a>
+                                <div class="list-group-closer">
+                                    <?php if($post->status->value == 1): ?>
+                                    <span class="label label-default">draft</span>
+                                    <?php elseif($post->status->value == 2): ?>
+                                    <span class="label label-warning" title="<?= _l('Editor') ?>">
+                                        <i class="glyphicon glyphicon-edit"></i>
+                                    </span>
+                                    <?php elseif($post->status->value == 3): ?>
+                                    <span class="label label-info">
+                                        <i class="glyphicon glyphicon-time"></i>
+                                        <?= $post->published->format('M d, H:i'); ?>
+                                    </span>
+                                    <?php else: ?>
+                                    <a href="<?= base_url($post->page) ?>" class="btn btn-default btn-xs">
+                                        <i class="glyphicon glyphicon-new-window"></i>
+                                    </a>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                             <?php endforeach; ?>
                         <?php endif; ?>

@@ -344,8 +344,8 @@ class Object extends MY_Controller
         $total_result = $this->Post->findByCondTotal($cond);
         if($total_result > $rpp){
             $pagination_cond = $cond;
-            if($filter_name)
-                $pagination_cond['q'] = $filter_name;
+            if(array_key_exists('q', $cond))
+                $pagination_cond['q'] = $cond['q'];
             
             $this->load->helper('pagination');
             $params['pagination'] = calculate_pagination($total_result, $page, $rpp, $pagination_cond);
