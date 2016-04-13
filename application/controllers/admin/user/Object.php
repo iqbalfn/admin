@@ -161,6 +161,7 @@ class Object extends MY_Controller
         $filter_name = $this->input->get('q');
 
         $result = $this->User->findByName($cond, $filter_name, $rpp, $page, ['fullname'=>'ASC']);
+        unset($cond['id']);
         
         if($result)
             $params['users'] = $result;
