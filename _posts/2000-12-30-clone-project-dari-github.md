@@ -32,3 +32,5 @@ seharusnya melihat struktur folder seperti di bawah:
     media/
     protected/
     theme/
+
+[Instal Database &#187;]({{ site.baseurl }}{% post_url 2000-12-29-instalasi-database %})

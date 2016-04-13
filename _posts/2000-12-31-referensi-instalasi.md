@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Instalasi
+title: Referensi Instalasi
 category: Instalasi
 ---
 
@@ -25,4 +25,5 @@ Sebelum melakukan instalasi, pastikan server sudah terinstal dev~ di bawah:
 
 1. [Clone Project dari Github]({{ site.baseurl }}{% post_url 2000-12-30-clone-project-dari-github %})
 2. [Instal Database]({{ site.baseurl }}{% post_url 2000-12-29-instalasi-database %})
-3. [Configurasi Google Analytics]({{ site.baseurl }}{% post_url 2000-12-28-configurasi-google-analytics %})
+3. [Configurasi Instalasi]({{ site.baseurl }}{% post_url 2000-12-28-configurasi-instalasi %})
+4. [Configurasi Google Analytics]({{ site.baseurl }}{% post_url 2000-12-27-configurasi-google-analytics %})

@@ -1,5 +1,5 @@
 ---
 layout: post
-title: Admin
+title: Referensi Admin
 category: Admin
 ---
