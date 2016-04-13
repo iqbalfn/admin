@@ -44,6 +44,8 @@ class Object extends MY_Controller
             return $this->show_404();
         if($id && !$this->can_i('update-user'))
             return $this->show_404();
+        if($id == 1)
+            return $this->show_404();
 
         $this->load->library('SiteForm', '', 'form');
 
@@ -142,7 +144,7 @@ class Object extends MY_Controller
             'pagination' => array()
         );
 
-        $cond = array();
+        $cond = array('id' => (object)['!=',1]);
 
         $args = ['status'];
         foreach($args as $arg){

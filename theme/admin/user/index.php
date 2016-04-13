@@ -21,7 +21,7 @@
                         <form method="get">
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="search" name="q" placeholder="Find user" class="form-control" autofocus="autofocus">
+                                    <input type="search" name="q" placeholder="Find user" class="form-control" autofocus="autofocus" value="<?= $this->input->get('q') ?>">
                                     <?php if($this->input->get('status')): ?>
                                     <input type="hidden" name="status" value="<?= $this->input->get('status') ?>">
                                     <?php endif; ?>
