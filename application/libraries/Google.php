@@ -40,6 +40,8 @@ class Google
             return $this->ga_analytics;
         
         $client = $this->authenticate();
+        if(!$client)
+            return false;
 
         $access_token_json = json_decode($client->getAccessToken());
         return $access_token_json->access_token;

@@ -256,6 +256,7 @@ class Object extends MY_Controller
         }
         
         if($new_object){
+            $new_object['updated'] = date('Y-m-d H:i:s');
             if(!$id){
                 $new_object['user'] = $this->user->id;
                 $new_object['id'] = $this->Post->create($new_object);

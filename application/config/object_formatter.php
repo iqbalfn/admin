@@ -56,7 +56,8 @@ $config['object_formatter'] = array(
         'seo_schema' => 'enum',
         'seo_description' => 'text',
         'created' => 'date',
-        'published' => 'date'
+        'published' => 'date',
+        'updated' => 'date'
     ),
     
     'post_category' => array(
