@@ -72,7 +72,8 @@ INSERT INTO `perms` ( `group`, `name`, `label`, `description` ) VALUES
     ( 'User Management',    'delete-user',              'Delete User',                  'Allow user to delete exists user' ),
     ( 'User Management',    'read-user',                'Read User',                    'Allow user to see all exists user' ),
     ( 'User Management',    'update-user',              'Edit User',                    'Allow user to update exists user' ),
-    ( 'User Management',    'update-user-permission',   'Edit User Permissions',        'Allow user to update exists user permissions' );
+    ( 'User Management',    'update-user_password',     'Edit User Password',           'Allow user to update exists user password' ),
+    ( 'User Management',    'update-user_permission',   'Edit User Permissions',        'Allow user to update exists user permissions' );
 
 TRUNCATE `site_params`;
 INSERT INTO `site_params` ( `name`, `value` ) VALUES
@@ -290,4 +291,5 @@ INSERT INTO `user_perms` ( `user`, `perms` ) VALUES
     ( 1, 'delete-user' ),
     ( 1, 'read-user' ),
     ( 1, 'update-user' ),
-    ( 1, 'update-user-permission');
+    ( 1, 'update-user_password' ),
+    ( 1, 'update-user_permission');

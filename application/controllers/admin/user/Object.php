@@ -64,7 +64,7 @@ class Object extends MY_Controller
 
         $params['user'] = $object;
         
-        if($this->can_i('update-user-permission')){
+        if($this->can_i('update-user_permission')){
             $permissions = $this->getEditablePermission($object);
             $perms = group_by_prop($permissions, 'group');
             ksort($perms);
@@ -76,7 +76,7 @@ class Object extends MY_Controller
             return $this->respond('user/edit', $params);
 
         // remove user permission and add new one
-        if($this->can_i('update-user-permission')){
+        if($this->can_i('update-user_permission')){
             $posted_perms = $this->input->post('perms');
             if(!$posted_perms)
                 $posted_perms = array();
@@ -114,9 +114,13 @@ class Object extends MY_Controller
         if($new_object === true)
             return $this->redirect('/admin/user');
 
-        if(array_key_exists('password', $new_object))
-            $new_object['password'] = password_hash($new_object['password'], PASSWORD_DEFAULT);
-            
+        if(array_key_exists('password', $new_object)){
+            if($this->can_i('update-user_password') || !$id)
+                $new_object['password'] = password_hash($new_object['password'], PASSWORD_DEFAULT);
+            else
+                unset($new_object['password']);
+        }
+        
         if(!$id){
             $new_object['id'] = $this->User->create($new_object);
         }else{

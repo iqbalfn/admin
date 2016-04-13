@@ -28,13 +28,15 @@
                                         <?= $this->form->field('fullname') ?>
                                         <?= $this->form->field('email') ?>
                                     </div>
-                                    <div class="col-md-6">  
+                                    <div class="col-md-6">
+                                        <?php if(ci()->can_i('update-user_password') || !property_exists($user, 'id')): ?>
                                         <?= $this->form->field('password') ?>
+                                        <?php endif; ?>
                                         <?= $this->form->field('website') ?>
                                         <?= $this->form->field('status', 'user.status') ?>
                                     </div>
                                 </div>
-                                <?php if(ci()->can_i('update-user-permission')): ?>
+                                <?php if(ci()->can_i('update-user_permission')): ?>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <fieldset>
