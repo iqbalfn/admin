@@ -11,10 +11,6 @@ class Home extends MY_Controller
     }
     
     public function index(){
-        $params = array(
-            'title' => $this->setting->item('site_frontpage_title')
-        );
-        
-        $this->respond('home', $params);
+        $this->respond('home');
     }
 }
