@@ -57,6 +57,9 @@ class SiteMeta
             'og:title' => 'property',
             'og:type' => 'property',
             'og:url' => 'property',
+            'article:modified_time' => 'property',
+            'article:publisher' => 'property',
+            'article:section' => 'property',
             'article:published_time' => 'property',
             'article:section' => 'property',
             'article:tag' => 'property',
@@ -530,7 +533,8 @@ class SiteMeta
             "og:title"              => $meta_title,
             "og:type"               => "article",
             "og:url"                => $meta_url,
-            "article:published_time"=> $post->published->format('c')
+            "article:published_time"=> $post->published->format('c'),
+            "article:modified_time" => $post->updated->format('c')
         );
         
         if(property_exists($post, 'category')){
@@ -588,7 +592,7 @@ class SiteMeta
                     )
                 ),
                 'datePublished' => $post->published->format('c'),
-                'dateModified'  => $post->published->format('c'),
+                'dateModified'  => $post->updated->format('c'),
                 'dateCreated'   => $post->created->format('c')
             );
         }
