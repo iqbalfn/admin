@@ -83,12 +83,32 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 bg-info">
+                    <div class="col-md-3">
+                        <div class="row">
+                            <div class="col-md-12 bg-info">
+                                <div>&#160;</div>
+                                <?= $this->form->field('seo_schema', 'post.seo_schema') ?>
+                                <?= $this->form->field('seo_title') ?>
+                                <?= $this->form->field('seo_description') ?>
+                                <?= $this->form->field('seo_keywords') ?>
+                            </div>
+                        </div>
+                        
+                        <?php if($reporter): ?>
                         <div>&#160;</div>
-                        <?= $this->form->field('seo_schema', 'post.seo_schema') ?>
-                        <?= $this->form->field('seo_title') ?>
-                        <?= $this->form->field('seo_description') ?>
-                        <?= $this->form->field('seo_keywords') ?>
+                        <div class="row">
+                            <div class="col-md-12 bg-success">
+                                <div>&#160;</div>
+                                <div class="thumbnail">
+                                    <img src="<?= $reporter->avatar->_253x253 ?>" alt="<?= $reporter->fullname ?>">
+                                    <div class="caption">
+                                        <h4><?= $reporter->fullname ?></h4>
+                                        <p><?= $reporter->about ?></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endif; ?>
                     </div>
                 </form>
             </div>

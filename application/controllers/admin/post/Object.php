@@ -36,7 +36,8 @@ class Object extends MY_Controller
         $post_scheduled = false;
         
         $params = array(
-            'slug_editable' => true
+            'slug_editable' => true,
+            'reporter' => null
         );
         
         if($id){
@@ -52,6 +53,12 @@ class Object extends MY_Controller
             
             if(!$this->can_i('update-post_slug'))
                 $params['slug_editable'] = false;
+            
+            if($object->user != $this->user->id){
+                $reporter = $this->User->get($object->user);
+                if($reporter)
+                    $params['reporter'] = $this->formatter->user($reporter);
+            }
         }else{
             $object = (object)array('status' => 1);
             if($this->can_i('read-post_category'))
