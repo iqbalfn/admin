@@ -47,4 +47,4 @@ yang baru, klik [Enable]. Lakukan hal yang sama pada hasil pencarian `Analytics 
 
 Proses konfigurasi Google Analytics selesai.
 
-[Tema &#187;]({{ site.baseurl }}{% post_url 2001-12-31-referensi-tema %})
+[Configurasi Cronjob]({{ site.baseurl }}{% post_url 2000-12-26-configurasi-cronjob %})

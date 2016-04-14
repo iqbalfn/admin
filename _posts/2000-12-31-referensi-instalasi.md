@@ -27,3 +27,4 @@ Sebelum melakukan instalasi, pastikan server sudah terinstal dev~ di bawah:
 2. [Instal Database]({{ site.baseurl }}{% post_url 2000-12-29-instalasi-database %})
 3. [Configurasi Instalasi]({{ site.baseurl }}{% post_url 2000-12-28-configurasi-instalasi %})
 4. [Configurasi Google Analytics]({{ site.baseurl }}{% post_url 2000-12-27-configurasi-google-analytics %})
+5. [Configurasi Cronjob]({{ site.baseurl }}{% post_url 2000-12-26-configurasi-cronjob %})
