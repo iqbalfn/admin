@@ -176,7 +176,7 @@ class Object extends MY_Controller
                             continue;
                         
                         $to_insert[] = $cat;
-                        $this->PCategory->inc($cat, 'posts');
+                        $this->PCategory->inc($cat, 'posts', 1, true);
                         $this->output->delete_cache($category->page);
                     }
                 }
@@ -190,7 +190,7 @@ class Object extends MY_Controller
                             continue;
                         
                         $to_delete[] = $cat;
-                        $this->PCategory->dec($cat, 'posts');
+                        $this->PCategory->dec($cat, 'posts', 1, true);
                         $this->output->delete_cache($category->page);
                     }
                 }
@@ -227,7 +227,7 @@ class Object extends MY_Controller
                             continue;
                         
                         $to_insert[] = $cat;
-                        $this->PTag->inc($cat, 'posts');
+                        $this->PTag->inc($cat, 'posts', 1, true);
                         $this->output->delete_cache($tag->page);
                     }
                 }
@@ -241,7 +241,7 @@ class Object extends MY_Controller
                             continue;
                         
                         $to_delete[] = $cat;
-                        $this->PTag->dec($cat, 'posts');
+                        $this->PTag->dec($cat, 'posts', 1, true);
                         $this->output->delete_cache($tag->page);
                     }
                 }
@@ -394,7 +394,7 @@ class Object extends MY_Controller
                 if(!array_key_exists($cat_chain->post_category, $cats))
                     continue;
                 $cat = $cats[$cat_chain->post_category];
-                $this->PCategory->dec($cat->id, 'posts');
+                $this->PCategory->dec($cat->id, 'posts', 1, true);
                 $this->output->delete_cache($cat->page);
             }
             
@@ -413,7 +413,7 @@ class Object extends MY_Controller
                 if(!array_key_exists($tag_chain->post_tag, $tags))
                     continue;
                 $tag = $tags[$tag_chain->post_tag];
-                $this->PTag->dec($tag->id, 'posts');
+                $this->PTag->dec($tag->id, 'posts', 1, true);
                 $this->output->delete_cache($tag->page);
             }
             

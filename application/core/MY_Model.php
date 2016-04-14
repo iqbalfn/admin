@@ -218,10 +218,11 @@ class MY_Model extends CI_Model
      * @param integer|array id The row id or list of row id.
      * @param string field The field name to update.
      * @param integer total Total number the field to decrease.
+     * @param boolean update_field Update the `updated` field.
      * @return true on success, false otherwise.
      */
-    public function dec($id, $field, $total=1){
-        return $this->decByCond(['id'=>$id], $field, $total);
+    public function dec($id, $field, $total=1, $update_field=false){
+        return $this->decByCond(['id'=>$id], $field, $total, $update_field);
     }
     
     /**
@@ -230,10 +231,11 @@ class MY_Model extends CI_Model
      * @param mixed|array value The row `$where_field` value or list of `$where_field` values.
      * @param string field The field name to update.
      * @param integer total Total number the field to decrease.
+     * @param boolean update_field Update the `updated` field.
      * @return true on success, false otherwise.
      */
-    public function decBy($where_field, $value, $field, $total=1){
-        return $this->decByCond([$where_field=>$value], $field, $total);
+    public function decBy($where_field, $value, $field, $total=1, $update_field=false){
+        return $this->decByCond([$where_field=>$value], $field, $total, $update_field);
     }
     
     /**
@@ -241,11 +243,14 @@ class MY_Model extends CI_Model
      * @param array cond The conditions.
      * @param string field The field name to update.
      * @param integer total Total number the field to decrease.
+     * @param boolean update_field Update the `updated` field.
      * @return true on success, false otherwise.
      */
-    public function decByCond($cond, $field, $total=1){
+    public function decByCond($cond, $field, $total=1, $update_field=false){
         $this->_implementCondition($cond);
         $this->db->set($field, "$field-$total", false);
+        if($update_field)
+            $this->db->set('updated', date('Y-m-d H:i:s'));
         return $this->db->update($this->table);
     }
     
@@ -303,10 +308,11 @@ class MY_Model extends CI_Model
      * @param integer|array id The row id or list of row id.
      * @param string field The field name to update.
      * @param integer total Total number the field to increase.
+     * @param boolean update_field Update the `updated` field.
      * @return true on success, false otherwise.
      */
-    public function inc($id, $field, $total=1){
-        return $this->incByCond(['id'=>$id], $field, $total);
+    public function inc($id, $field, $total=1, $update_field=false){
+        return $this->incByCond(['id'=>$id], $field, $total, $update_field);
     }
     
     /**
@@ -315,10 +321,11 @@ class MY_Model extends CI_Model
      * @param mixed|array value The row `$where_field` value or list of `$where_field` values.
      * @param string field The field name to update.
      * @param integer total Total number the field to increase.
+     * @param boolean update_field Update the `updated` field.
      * @return true on success, false otherwise.
      */
-    public function incBy($where_field, $value, $field, $total=1){
-        return $this->incByCond([$where_field=>$value], $field, $total);
+    public function incBy($where_field, $value, $field, $total=1, $update_field=false){
+        return $this->incByCond([$where_field=>$value], $field, $total, $update_field);
     }
     
     /**
@@ -326,11 +333,14 @@ class MY_Model extends CI_Model
      * @param array cond The conditions.
      * @param string field The field name to update.
      * @param integer total Total number the field to increase.
+     * @param boolean update_field Update the `updated` field.
      * @return true on success, false otherwise.
      */
-    public function incByCond($cond, $field, $total=1){
+    public function incByCond($cond, $field, $total=1, $update_field=false){
         $this->_implementCondition($cond);
         $this->db->set($field, "$field+$total", false);
+        if($update_field)
+            $this->db->set('updated', date('Y-m-d H:i:s'));
         return $this->db->update($this->table);
     }
     

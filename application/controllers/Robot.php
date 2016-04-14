@@ -228,13 +228,13 @@ class Robot extends MY_Controller
             foreach($post_categories as $category){
                 $pages[] = (object)array(
                     'loc' => base_url($category->page),
-                    'lastmod' => $category->created->format('Y-m-d'), // TODO POST CATEGORY UDPATED STATUS
+                    'lastmod' => $category->updated->format('Y-m-d'),
                     'changefreq' => 'daily',
                     'priority' => '0.7'
                 );
                 
-                if($category->created->time > $last_update)
-                    $last_update = $category->created->time;
+                if($category->updated->time > $last_update)
+                    $last_update = $category->updated->time;
             }
         }
         
@@ -251,13 +251,13 @@ class Robot extends MY_Controller
             foreach($post_tags as $tag){
                 $pages[] = (object)array(
                     'loc' => base_url($tag->page),
-                    'lastmod' => $tag->created->format('Y-m-d'), // TODO POST TAG UDPATED STATUS
+                    'lastmod' => $tag->updated->format('Y-m-d'),
                     'changefreq' => 'daily',
                     'priority' => '0.7'
                 );
                 
-                if($tag->created->time > $last_update)
-                    $last_update = $tag->created->time;
+                if($tag->updated->time > $last_update)
+                    $last_update = $tag->updated->time;
             }
         }
         

@@ -133,6 +133,7 @@ CREATE TABLE `post_category` (
     
     `posts` INTEGER DEFAULT 0,
     
+    `updated` DATETIME,
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -176,6 +177,7 @@ CREATE TABLE `post_tag` (
     
     `posts` INTEGER DEFAULT 0,
     
+    `updated` DATETIME,
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
