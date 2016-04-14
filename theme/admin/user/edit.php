@@ -10,7 +10,21 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="page-header">
-                    <h1><?= $title ?></h1>
+                    <h1>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <?= $title ?>
+                            </div>
+                            <div class="col-md-3">
+                                <?php if(property_exists($user, 'id') && ci()->can_i('update-user_session')): ?>
+                                <form method="post" class="text-right" action="<?= base_url('/admin/me/relogin') ?>">
+                                    <input type="hidden" value="<?= $user->id ?>" name="id">
+                                    <button class="btn btn-success"><?= _l('Login As') ?></button>
+                                </form>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </h1>
                 </div>
                 
                 <form class="row" method="post">

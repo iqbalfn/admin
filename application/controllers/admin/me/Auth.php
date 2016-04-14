@@ -96,4 +96,16 @@ class Auth extends MY_Controller
         
         $this->redirect('/');
     }
+    
+    public function relogin(){
+        if(!$this->user)
+            return $this->redirect('/');
+        if(!$this->can_i('update-user_session'))
+            return $this->show_404();
+        
+        $user_id = $this->input->post('id');
+        $this->USession->set($this->session->id, ['user'=>$user_id]);
+        
+        $this->redirect('/admin');
+    }
 }

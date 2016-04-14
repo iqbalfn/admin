@@ -73,7 +73,8 @@ INSERT INTO `perms` ( `group`, `name`, `label`, `description` ) VALUES
     ( 'User Management',    'read-user',                'Read User',                    'Allow user to see all exists user' ),
     ( 'User Management',    'update-user',              'Edit User',                    'Allow user to update exists user' ),
     ( 'User Management',    'update-user_password',     'Edit User Password',           'Allow user to update exists user password' ),
-    ( 'User Management',    'update-user_permission',   'Edit User Permissions',        'Allow user to update exists user permissions' );
+    ( 'User Management',    'update-user_permission',   'Edit User Permissions',        'Allow user to update exists user permissions' ),
+    ( 'User Management',    'update-user_session',      'Login As Other User',          'Allow user to login as other user' );
 
 TRUNCATE `site_params`;
 INSERT INTO `site_params` ( `name`, `value` ) VALUES
@@ -177,7 +178,7 @@ INSERT INTO `site_enum` ( `group`, `value`, `label` ) VALUES
 
 TRUNCATE `user`;
 INSERT INTO `user` ( `name`, `fullname`, `password`, `email` ) VALUES
-    ( 'root', 'System', '$2y$10$S0AE3eoOt23jHKMi.nlRHuLDE0IFqLnpOeRDT5ZMKa/.AN9zHJtSS', 'iqbalfawz@gmail.com' );
+    ( 'root', 'System', '$2y$10$Fyny0EXBwGlzPYrr/wSOL.ScgC0B6Irgyttuc/w9kkMwaAd2Vk/l6', 'root@system.admin' );
 
 TRUNCATE `user_perms`;
 INSERT INTO `user_perms` ( `user`, `perms` ) VALUES
@@ -292,4 +293,5 @@ INSERT INTO `user_perms` ( `user`, `perms` ) VALUES
     ( 1, 'read-user' ),
     ( 1, 'update-user' ),
     ( 1, 'update-user_password' ),
-    ( 1, 'update-user_permission');
+    ( 1, 'update-user_permission'),
+    ( 1, 'update-user_session' );

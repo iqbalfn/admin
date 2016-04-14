@@ -70,6 +70,7 @@ $route['admin/gallery/(:num)/media/(:num)/remove']  = 'admin/gallery/media/remov
 
 $route['admin/me/login']    = 'admin/me/auth/login';
 $route['admin/me/logout']   = 'admin/me/auth/logout';
+$route['admin/me/relogin']  = 'admin/me/auth/relogin';
 $route['admin/me/setting']  = 'admin/me/setting/index';
 
 $route['admin/object-filter'] = 'admin/object-filter/object/index';
