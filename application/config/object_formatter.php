@@ -45,6 +45,7 @@ $config['object_formatter'] = array(
     'post' => array(
         'category' => '@chain[post_category]',
         'tag' => '@chain[post_tag]',
+        'title' => 'text',
         'gallery' => '@parent[gallery]',
         'user' => '@parent[user]',
         'page' => 'join(/post/read/|$slug)',

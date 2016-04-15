@@ -24,7 +24,7 @@ class objText implements JsonSerializable
         
         $ctx = preg_replace('!<[^>]+>!', ' ', $this->value);
         $ctx = preg_replace('! +!', ' ', $ctx);
-        $ctx = trim(htmlspecialchars($ctx));
+        $ctx = trim(htmlspecialchars($ctx, ENT_QUOTES));
         
         $this->clean = $ctx;
         

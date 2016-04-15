@@ -625,7 +625,7 @@ class CI_Output {
 			log_message('debug', 'Cache file written: '.$cache_path);
 
 			// Send HTTP cache-control headers to browser to match file cache settings.
-			$this->set_cache_header($_SERVER['REQUEST_TIME'], $expire);
+// 			$this->set_cache_header($_SERVER['REQUEST_TIME'], $expire);
 		}
 		else
 		{
@@ -701,7 +701,7 @@ class CI_Output {
 		else
 		{
 			// Or else send the HTTP cache control headers.
-			$this->set_cache_header($last_modified, $expire);
+// 			$this->set_cache_header($last_modified, $expire);
 		}
 
 		// Add headers from cache file.
