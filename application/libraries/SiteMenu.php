@@ -14,15 +14,51 @@ class SiteMenu
             $this->CI->load->model('Sitemenu_model', 'SMenu');
             $site_menus = $this->CI->SMenu->getByCond([], true, false, ['index'=>'ASC']);
             if($site_menus){
-                $site_menus = group_by_prop($site_menus, 'group');
-                foreach($site_menus as &$site_menu)
-                    $site_menu = group_by_prop($site_menu, 'parent');
+                $site_menus_formatted = array();
+                foreach($site_menus as $menu){
+                    if(!array_key_exists($menu->group, $site_menus_formatted))
+                        $site_menus_formatted[$menu->group] = array();
+                    $site_menus_formatted[$menu->group][$menu->id] = $menu;
+                }
+                $site_menus = $site_menus_formatted;
             }
             $this->CI->cache->file->save('site_menu', $site_menus, 604800);
         }
         
         if($site_menus)
             $this->menus = $site_menus;
+    }
+    
+    /**
+     * Mark active menu
+     * @param array menus All the menu.
+     * @return array menus with `active` and `submenu_active` property.
+     */
+    private function _fillActiveProperty($menus){
+        $current_uri = '/' . uri_string();
+        
+        foreach($menus as $id => $menu){
+            if(!property_exists($menu, 'active'))
+                $menu->active = false;
+            if(!property_exists($menu, 'submenu_active'))
+                $menu->submenu_active = false;
+            
+            if($menu->url == $current_uri){
+                $menu->active = true;
+                
+                // set submenu_active for all parent chain
+                $menu_temp = $menu;
+                while(true){
+                    if(!$menu_temp->parent || !array_key_exists($menu_temp->parent, $menus))
+                        break;
+                        
+                    $menus[$menu_temp->parent]->submenu_active = true;
+                    $menu_temp = $menus[$menu_temp->parent];
+                }
+            }
+        }
+        
+        return group_by_prop($menus, 'parent');
     }
     
     /**
@@ -223,7 +259,7 @@ class SiteMenu
      */
     public function item($name){
         if(array_key_exists($name, $this->menus))
-            return $this->menus[$name];
+            return $this->_fillActiveProperty($this->menus[$name]);
         
         if($name == 'admin')
             return $this->_generateAdminMenu();
