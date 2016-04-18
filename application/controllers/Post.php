@@ -47,6 +47,10 @@ class Post extends MY_Controller
         $total_result = $this->Post->findByCondTotal($cond);
         if($total_result > $rpp){
             $pagination_cond = $cond;
+            
+            unset($pagination_cond['category']);
+            unset($pagination_cond['status']);
+            
             $this->load->helper('pagination');
             $params['pagination'] = calculate_pagination($total_result, $page, $rpp, $pagination_cond);
         }
@@ -223,6 +227,8 @@ class Post extends MY_Controller
         $total_result = $this->Post->findByCondTotal($cond);
         if($total_result > $rpp){
             $pagination_cond = $cond;
+            unset($pagination_cond['tag']);
+            unset($pagination_cond['status']);
             $this->load->helper('pagination');
             $params['pagination'] = calculate_pagination($total_result, $page, $rpp, $pagination_cond);
         }

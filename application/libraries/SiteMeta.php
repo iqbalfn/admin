@@ -442,10 +442,10 @@ class SiteMeta
         
         $meta_description = $category->seo_description;
         if(!$meta_description)
-            $meta_description = $category->content->chars(160);
+            $meta_description = $category->description->chars(160);
         
-        $page = $this->CI->input->get('page');
-        if($page && $page > 2){
+        $page = (int)$this->CI->input->get('page');
+        if($page && $page > 1){
             $meta_title = _l('Page') . ' ' . $page . ' ' . $meta_title;
             $meta_description = _l('Page') . ' ' . $page . ' ' . $meta_description;
         }
@@ -608,11 +608,11 @@ class SiteMeta
             $meta_title = $tag->name;
         
         $meta_description = $tag->seo_description;
-        if(!$meta_description)
+        if(!$meta_description->value)
             $meta_description = $tag->description->chars(160);
         
-        $page = $this->CI->input->get('page');
-        if($page && $page > 2){
+        $page = (int)$this->CI->input->get('page');
+        if($page && $page > 1){
             $meta_title = _l('Page') . ' ' . $page . ' ' . $meta_title;
             $meta_description = _l('Page') . ' ' . $page . ' ' . $meta_description;
         }
