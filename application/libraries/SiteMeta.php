@@ -10,7 +10,7 @@ class SiteMeta
         
     }
     
-    private function _general($title=null, $metas=array(), $schemes=array()){
+    private function _general($title=null, $metas=array(), $schemes=array(), $ga=array()){
         $tx = '<meta charset="utf-8">';
         $tx.= '<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">';
         if($this->CI->setting->item('site_theme_responsive'))
@@ -89,8 +89,22 @@ class SiteMeta
         $tx.= '<link href="' . base_url(uri_string()) . '" rel="canonical">';
         
         $ga_code = $this->CI->setting->item('code_google_analytics');
-        if($ga_code)
-            $tx.= '<script>(function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'' . $ga_code . '\', \'auto\'); ga(\'send\', \'pageview\');</script>';
+        if($ga_code){
+            $tx.= '<script>';
+            $tx.=   '(function(i,s,o,g,r,a,m){';
+            $tx.=   'i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){';
+            $tx.=   '(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)';
+            $tx.=   '})(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\');';
+            $tx.=   'ga(\'create\', \'' . $ga_code . '\', \'auto\');';
+            if($ga){
+                $ga_group = array_key_exists('group', $ga) ? $ga['group'] : '';
+                $ga_index = array_key_exists('index', $ga) ? $ga['index'] : $this->CI->setting->item('google_analytics_content_group');
+                if($ga_group)
+                    $tx.= 'ga(\'set\', \'contentGroup' . $ga_index . '\', \'' . $ga_group . '\');';
+            }
+            $tx.=   'ga(\'send\', \'pageview\');';
+            $tx.= '</script>';
+        }
         
         if($title)
             $tx.= '<title>' . $title . ' - ' . $this->CI->setting->item('site_name') . '</title>';
@@ -202,6 +216,30 @@ class SiteMeta
         ]);
         
         echo $this->_general($meta_title, $metas, $schemas);
+    }
+    
+    public function footer(){
+        $tx = '';
+        
+        if($this->CI->setting->item('theme_include_fb_js_api')){
+            $fb_app_id = $this->CI->setting->item('code_application_facebook');
+            $fb_ads_api= $this->CI->setting->item('theme_include_fb_js_api_with_ads');
+            
+            $tx.= '<script>';
+            $tx.=   '(function(d,s,id){';
+            $tx.=       'var js,fjs=d.getElementsByTagName(s)[0];';
+            $tx.=       'if(d.getElementById(id)) return;';
+            $tx.=       'js=d.createElement(s);js.id=id;js.src="';
+            $tx.=       $fb_ads_api
+                        ? '//connect.facebook.net/en_US/sdk/xfbml.ad.js#xfbml=1&version=v2.5&appId='
+                        : '//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=';
+            $tx.=       $fb_app_id;
+            $tx.=       '";fjs.parentNode.insertBefore(js,fjs);';
+            $tx.=   '}(document,\'script\',\'facebook-jssdk\'));';
+            $tx.= '</script>';
+        }
+        
+        return $tx;
     }
     
     public function gallery_single($gallery){
@@ -439,12 +477,12 @@ class SiteMeta
         $meta_title = $category->seo_title;
         if(!$meta_title)
             $meta_title = $category->name;
-        
         $meta_description = $category->seo_description;
-        if(!$meta_description)
+        if(!$meta_description->value)
             $meta_description = $category->description->chars(160);
         
         $page = (int)$this->CI->input->get('page');
+
         if($page && $page > 1){
             $meta_title = _l('Page') . ' ' . $page . ' ' . $meta_title;
             $meta_description = _l('Page') . ' ' . $page . ' ' . $meta_description;
@@ -599,7 +637,12 @@ class SiteMeta
         
         $schemas[] = $this->_schemaBreadcrumb($schema_bread);
         
-        echo $this->_general($meta_title, $metas, $schemas);
+        // google analytics grouping
+        $ga = array();
+        if($post->ga_group)
+            $ga['group'] = $post->ga_group;
+        
+        echo $this->_general($meta_title, $metas, $schemas, $ga);
     }
     
     public function post_tag_single($tag){
@@ -610,7 +653,7 @@ class SiteMeta
         $meta_description = $tag->seo_description;
         if(!$meta_description->value)
             $meta_description = $tag->description->chars(160);
-        
+            
         $page = (int)$this->CI->input->get('page');
         if($page && $page > 1){
             $meta_title = _l('Page') . ' ' . $page . ' ' . $meta_title;
@@ -660,6 +703,30 @@ class SiteMeta
         echo $this->_general($meta_title, $metas, $schemas);
     }
     
+    public function search_single(){
+        $meta_title = _l('Search');
+        
+        $meta_description = '';
+        $meta_keywords = '';
+        $meta_name  = $this->CI->setting->item('site_name');
+        $meta_url   = base_url(uri_string());
+        
+        $metas = array(
+            "description"           => $meta_description,
+            "keywords"              => $meta_keywords
+        );
+        
+        $schemas = [];
+        
+        // schema breadcrumb
+        $schemas[] = $this->_schemaBreadcrumb([
+            base_url() => $meta_name,
+            base_url('/search') => _l('Search')
+        ]);
+        
+        echo $this->_general($meta_title, $metas, $schemas);
+    }
+    
     public function user_single($user){
         $meta_title = $user->fullname;
         
@@ -669,8 +736,8 @@ class SiteMeta
         $meta_name  = $this->CI->setting->item('site_name');
         $meta_url   = base_url($user->page);
         
-        $page = $this->CI->input->get('page');
-        if($page && $page > 2){
+        $page = (int)$this->CI->input->get('page');
+        if($page && $page > 1){
             $meta_title = _l('Page') . ' ' . $page . ' ' . $meta_title;
             $meta_description = _l('Page') . ' ' . $page . ' ' . $meta_description;
         }

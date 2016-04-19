@@ -633,6 +633,15 @@ $config = array(
             'input' => array(
                 'type' => 'tag'
             )
+        ),
+        
+        'ga_group' => array(
+            'field' => 'ga_group',
+            'label' => 'GAnalytics Group',
+            'rules' => '',
+            'input' => array(
+                'type' => 'text'
+            )
         )
     ),
     

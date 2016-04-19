@@ -91,6 +91,7 @@
                                 <?= $this->form->field('seo_title') ?>
                                 <?= $this->form->field('seo_description') ?>
                                 <?= $this->form->field('seo_keywords') ?>
+                                <?= $this->form->field('ga_group') ?>
                             </div>
                         </div>
                         

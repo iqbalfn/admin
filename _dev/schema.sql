@@ -111,6 +111,7 @@ CREATE TABLE `post` (
     `seo_schema` VARCHAR(25),
     `seo_description` TEXT,
     `seo_keywords` TEXT,
+    `ga_group` VARCHAR(50),
     
     `updated` DATETIME,
     `published` DATETIME,

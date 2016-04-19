@@ -36,17 +36,22 @@ class Post_model extends MY_Model
         
         if(array_key_exists('q', $cond))
             $this->db->like('post.title', $cond['q']);
-        if(array_key_exists('status', $cond))
-            $this->db->where('post.status', $cond['status']);
-        if(array_key_exists('user', $cond))
-            $this->db->where('post.user', $cond['user']);
+        if(array_key_exists('status', $cond)){
+            $method = is_array($cond['status']) ? 'where_in' : 'where';
+            $this->db->$method('post.status', $cond['status']);
+        }
+        if(array_key_exists('user', $cond)){
+            $method = is_array($cond['user']) ? 'where_in' : 'where';
+            $this->db->$method('post.user', $cond['user']);
+        }
         
         if(array_key_exists('tag', $cond)){
             $this->load->model('Posttagchain_model', 'PTChain');
             $post_tag = $this->PTChain->table;
             $this->db->join($post_tag, "$post_tag.post = $post.id", 'LEFT');
             
-            $this->db->where("$post_tag.post_tag", $cond['tag']);
+            $method = is_array($cond['tag']) ? 'where_in' : 'where';
+            $this->db->$method("$post_tag.post_tag", $cond['tag']);
         }
         
         if(array_key_exists('category', $cond)){
@@ -54,7 +59,8 @@ class Post_model extends MY_Model
             $post_category = $this->PCChain->table;
             $this->db->join($post_category, "$post_category.post = $post.id", 'LEFT');
             
-            $this->db->where("$post_category.post_category", $cond['category']);
+            $method = is_array($cond['category']) ? 'where_in' : 'where';
+            $this->db->$method("$post_category.post_category", $cond['category']);
         }
         
         return $this->getByCond([], $rpp, $page, $order);
@@ -69,17 +75,24 @@ class Post_model extends MY_Model
         
         if(array_key_exists('q', $cond))
             $this->db->like('post.title', $cond['q']);
-        if(array_key_exists('status', $cond))
-            $this->db->where('post.status', $cond['status']);
-        if(array_key_exists('user', $cond))
-            $this->db->where('post.user', $cond['user']);
+        
+        if(array_key_exists('status', $cond)){
+            $method = is_array($cond['status']) ? 'where_in' : 'where';
+            $this->db->$method('post.status', $cond['status']);
+        }
+        
+        if(array_key_exists('user', $cond)){
+            $method = is_array($cond['user']) ? 'where_in' : 'where';
+            $this->db->$method('post.user', $cond['user']);
+        }
         
         if(array_key_exists('tag', $cond)){
             $this->load->model('Posttagchain_model', 'PTChain');
             $post_tag = $this->PTChain->table;
             $this->db->join($post_tag, "$post_tag.post = $post.id", 'LEFT');
             
-            $this->db->where("$post_tag.post_tag", $cond['tag']);
+            $method = is_array($cond['tag']) ? 'where_in' : 'where';
+            $this->db->$method("$post_tag.post_tag", $cond['tag']);
         }
         
         if(array_key_exists('category', $cond)){
@@ -87,7 +100,8 @@ class Post_model extends MY_Model
             $post_category = $this->PCChain->table;
             $this->db->join($post_category, "$post_category.post = $post.id", 'LEFT');
             
-            $this->db->where("$post_category.post_category", $cond['category']);
+            $method = is_array($cond['category']) ? 'where_in' : 'where';
+            $this->db->$method("$post_category.post_category", $cond['category']);
         }
         
         return $this->countByCond([]);

@@ -81,6 +81,7 @@ INSERT INTO `site_params` ( `name`, `value` ) VALUES
     ( 'code_application_facebook', '' ),
     ( 'code_google_analytics', '' ),
     ( 'code_google_analytics_view', '' ),
+    ( 'google_analytics_content_group', '1' ),
     ( 'code_google_map', '' ),
     ( 'code_verification_alexa', '' ),
     ( 'code_verification_bing', '' ),
@@ -131,7 +132,9 @@ INSERT INTO `site_params` ( `name`, `value` ) VALUES
     
     ( 'sitemap_news', '1'),
     
-    ( 'theme_host', '');
+    ( 'theme_host', ''),
+    ( 'theme_include_fb_js_api', '1'),
+    ( 'theme_include_fb_js_api_with_ads', '0' );
 
 TRUNCATE `site_enum`;
 INSERT INTO `site_enum` ( `group`, `value`, `label` ) VALUES
