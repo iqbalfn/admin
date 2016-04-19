@@ -16,6 +16,64 @@ class ObjectFormatter
             require_once(APPPATH . 'object/' . $obj . '.php');
     }
     
+    private function _makeEmbed($url){
+        $regexs = [
+            '/youtu\.be\/([\w\-.]+)/'                   => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 560, 'height' => 314, 'src' => 'https://www.youtube.com/embed/$1', 'allowFullscreen' => '1' ] ],
+            '/youtube\.com(.+)v=([^&]+)/'               => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 560, 'height' => 314, 'src' => 'https://www.youtube.com/embed/$2', 'allowFullscreen' => '1' ] ],
+            '/youtube.com\/embed\/([a-z0-9\-_]+)/i'     => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 560, 'height' => 314, 'src' => 'https://www.youtube.com/embed/$1', 'allowFullscreen' => '1' ] ],
+            '/vimeo\.com\/([0-9]+)/'                    => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 425, 'height' => 350, 'src' => 'https://player.vimeo.com/video/$1?title=0&amp;byline=0&amp;portrait=0&color=e3a01b', 'allowFullscreen' => '1' ] ],
+            '/vimeo\.com\/(.*)\/([0-9]+)/'              => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 425, 'height' => 350, 'src' => 'https://player.vimeo.com/video/$2?title=0&amp;byline=0&amp;portrait=0&color=e3a01b', 'allowFullscreen' => '1' ] ],
+            '/dailymotion.com\/embed\/video\/([^_]+)/'  => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 480, 'height' => 270, 'src' => 'https://www.dailymotion.com/embed/video/$1', 'allowFullscreen' => '1', 'frameborder' => '0' ] ],
+            '/dailymotion.com\/video\/([^_]+)/'         => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 480, 'height' => 270, 'src' => 'https://www.dailymotion.com/embed/video/$1', 'allowFullscreen' => '1', 'frameborder' => '0' ] ],
+            '/vidio.com\/watch\/([\w\-]+)/'             => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 480, 'height' => 270, 'src' => 'https://www.vidio.com/embed/$1?autoplay=false&amp;player_only=true', 'frameborder' => '0', 'class' => 'vidio-embed', 'scrolling' => 'no' ] ],
+            '/facebook.com/'                            => [ 'tag' => 'div',    'attrs' => [ 'data-href' => $url, 'data-width' => '670', 'data-show-text' => 'false', 'class' => 'fb-video', 'data-allowfullscreen' => 'true' ] ]
+        ];
+        
+        $tx = '';
+        foreach($regexs as $re => $prop){
+            if(preg_match($re, $url, $match)){
+                $tag = $prop['tag'];
+                $attrs = array();
+                
+                foreach($prop['attrs'] as $name => $value){
+                    foreach($match as $index => $val)
+                        $value = str_replace('$' . $index, $val, $value);
+                    $attrs[] = $name . '="' . $value . '"';
+                }
+                
+                $attrs = ' ' . implode(' ', $attrs);
+                $tx = '<' . $tag . $attrs . '></' . $tag . '>';
+                break;
+            }
+        }
+        
+        // they're not any of above solution, let try to make video/audio tag instead
+        if(!$tx){
+            $mime = '';
+            $ext = explode('.', $url);
+            $ext = '.' . end($ext);
+            if($ext == '.mp3')
+                $mime = 'audio/mpeg';
+            elseif($ext == '.wav')
+                $mime = 'audio/wav';
+            elseif($ext == '.mp4')
+                $mime = 'video/mp4';
+            elseif($ext == 'webm')
+                $mime = 'video/webm';
+            elseif($ext == '.ogg')
+                $mime = 'video/ogg';
+            
+            if($mime){
+                if(in_array($ext, ['.mp3', '.wav']))
+                    $tx = '<audio controls><source src="' . $url . '" type="' . $mime . '"></audio>';
+                else 
+                    $tx = '<video width="560" height="314" controls><source src="' . $url . '" type="' . $mime . '"></video>';
+            }
+        }
+        
+        return $tx;
+    }
+    
     /**
      * Start formatting the object.
      * @param string name The format name.
@@ -223,6 +281,10 @@ class ObjectFormatter
                             break;
                         case 'text':
                             $object->$field = new objText($object->$field);
+                            break;
+                        case 'embed':
+                            if(substr($object->$field, 0, 4) == 'http')
+                                $object->$field = $this->_makeEmbed($object->$field);
                             break;
                     }
                 }else{

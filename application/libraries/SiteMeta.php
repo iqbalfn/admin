@@ -643,6 +643,8 @@ class SiteMeta
             $ga['group'] = $post->ga_group;
         
         echo $this->_general($meta_title, $metas, $schemas, $ga);
+        if($this->CI->setting->item('amphtml_support_for_post'))
+            echo '<link rel="amphtml" href="' . base_url($post->amp) . '">';
     }
     
     public function post_tag_single($tag){

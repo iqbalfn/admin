@@ -10,6 +10,35 @@ class Post extends MY_Controller
         
     }
     
+    public function amp($slug=null){
+        if(!$slug || !$this->setting->item('amphtml_support_for_post'))
+            return $this->show_404();
+        
+        $this->load->model('Post_model', 'Post');
+        $this->load->library('ObjectFormatter', '', 'formatter');
+        $this->load->library('Camp/Camp', '', 'camp');
+        
+        $params = [];
+        
+        $post = $this->Post->getBy('slug', $slug);
+        if(!$post || $post->status != 4)
+            return $this->show_404();
+        
+        $post = $this->formatter->post($post, false, true);
+        
+        $amp_options = [];
+        $amp_text = $post->content . '<p>' . $post->embed . '</p>';
+        $amp = $this->camp->convert($amp_text, $amp_options);
+        
+        $post->components  = $amp->components;
+        $post->amp_content = $amp->amp;
+        
+        $params['post'] = $post;
+        
+        $view = 'post/amp';
+        $this->respond($view, $params);
+    }
+    
     public function category($slug=null){
         if(!$slug)
             return $this->show_404();

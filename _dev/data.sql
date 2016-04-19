@@ -134,7 +134,9 @@ INSERT INTO `site_params` ( `name`, `value` ) VALUES
     
     ( 'theme_host', ''),
     ( 'theme_include_fb_js_api', '1'),
-    ( 'theme_include_fb_js_api_with_ads', '0' );
+    ( 'theme_include_fb_js_api_with_ads', '0' ),
+    
+    ( 'amphtml_support_for_post', '1');
 
 TRUNCATE `site_enum`;
 INSERT INTO `site_enum` ( `group`, `value`, `label` ) VALUES
