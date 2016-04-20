@@ -19,9 +19,13 @@ class Object extends MY_Controller
         $this->load->model('Userperms_model', 'UPerms');
         $this->load->model('Perms_model', 'Perms');
         
-        $user_perms = $this->UPerms->getBy('user', $user->id, true);
-        if(!$user_perms)
-            $user_perms = array();
+        $user_perms = array();
+        if(property_exists($user, 'id')){
+            $user_perms = $this->UPerms->getBy('user', $user->id, true);
+            if(!$user_perms)
+                $user_perms = array();
+        }
+        
         $user_perms = prop_values($user_perms, 'perms');
         
         $perms = $this->Perms->getByCond([], true);
@@ -78,6 +82,7 @@ class Object extends MY_Controller
             return $this->respond('user/edit', $params);
 
         // remove user permission and add new one
+        $to_insert = array();
         if($this->can_i('update-user_permission')){
             $posted_perms = $this->input->post('perms');
             if(!$posted_perms)
@@ -95,21 +100,19 @@ class Object extends MY_Controller
             }
             
             if($changed_permissions){
-                $to_remove = array( 'user' => $object->id, 'perms' => []);
-                $to_insert = array();
+                $to_remove = array( 'perms' => []);
                 
                 foreach($changed_permissions as $perm => $value){
                     if(!$value)
                         $to_remove['perms'][] = $perm;
                     else
-                        $to_insert[] = array('user'=>$object->id, 'perms' => $perm);
+                        $to_insert[] = array('perms' => $perm);
                 }
                 
-                if($to_remove['perms'])
+                if($to_remove['perms'] && property_exists($object, 'id')){
+                    $to_remove['user'] = $object->id;
                     $this->UPerms->removeByCond($to_remove);
-                
-                if($to_insert)
-                    $this->UPerms->create_batch($to_insert);
+                }
             }
         }
         
@@ -124,11 +127,17 @@ class Object extends MY_Controller
         }
         
         if(!$id){
-            $new_object['id'] = $this->User->create($new_object);
+            $new_object['id'] = $id = $this->User->create($new_object);
         }else{
             $this->User->set($id, $new_object);
         }
 
+        if($to_insert){
+            foreach($to_insert as &$toi)
+                $toi['user'] = $id;
+            $this->UPerms->create_batch($to_insert);
+        }
+        
         $this->redirect('/admin/user');
     }
 

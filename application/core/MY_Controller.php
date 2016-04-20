@@ -36,7 +36,7 @@ class MY_Controller extends CI_Controller
                 // TODO
                 // Increase session expiration if it's almost expired
                 
-                if($user->status > 1){
+                if($user && $user->status > 1){
                     $this->user = $user;
                     $this->user->perms = [];
                     
