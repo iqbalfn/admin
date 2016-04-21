@@ -45,6 +45,29 @@ pilih tab [Google APIs]. Pada form pencarian, masukan `Analytics API`, akan munc
 beberapa pilihan Analytics API. Klik `Analytics Reporting API V4` dan pada halaman
 yang baru, klik [Enable]. Lakukan hal yang sama pada hasil pencarian `Analytics API`.
 
+## Parameter google_analytics_content_group
+
+*Engine* CI Admin mendukung gruping konten post, untuk itu GA harus sudah bisa
+menerima konten gruping dengan analytics. Untuk bisa menggunakan konten gruping,
+ikuti langkah seperti berikut:
+
+1. Buka halaman Google Analytics
+2. Pilih website data, contohnya `All Web Site Data` untuk project ini.
+3. Pada tab paling atas, pilih menu `Admin`
+4. Pada submenu `view`, pilih `Content Grouping`
+5. Buat konten gruping baru dengan mengklik tombol `NEW CONTENT GROUPING`
+    1. Berikan nama grup untuk project
+    2. Pada field `Group by Tracking Code` klik `Enable Tracking Code`.
+    3. Pastikan `Enable` sudah menunjukkan teks `On`.
+    4. Pada `Select Index`, pilih index yang belum digunakan, dan nilai index
+       ini yang akan kita masukan sebagai nilai parameters `google_analytics_content_group`
+       dari admin panel project ini.
+    5. Klik `Done`.
+6. Klik `Save`
+7. Edit [site params]({{ site.baseurl }}{% post_url 2002-01-02-site-params %}) dengan name `google_analytics_content_group`
+   sesuai dengan index yang kita pilih pada saat pembuatan grup sebelumnya.
+
+
 Proses konfigurasi Google Analytics selesai.
 
 [Configurasi Cronjob]({{ site.baseurl }}{% post_url 2000-12-26-configurasi-cronjob %})
