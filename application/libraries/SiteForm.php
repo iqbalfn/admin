@@ -939,6 +939,13 @@ class SiteForm
     }
     
     /**
+     * Get all errors
+     */
+    public function getError(){
+        return $this->errors;
+    }
+    
+    /**
      * Get all external component
      */
     public function getExComponent(){

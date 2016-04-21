@@ -342,7 +342,7 @@ $config = array(
         'email' => array(
             'field' => 'email',
             'label' => 'Email',
-            'rules' => 'required|is_unique[user.email,0]',
+            'rules' => 'required|valid_email|is_unique[user.email,0]',
             'input' => array(
                 'type' => 'email'
             )
@@ -1044,7 +1044,7 @@ $config = array(
         'email' => array(
             'field' => 'email',
             'label' => 'Email',
-            'rules' => 'required|is_unique[user.email,3]',
+            'rules' => 'required|valid_email|is_unique[user.email,3]',
             'input' => array(
                 'type' => 'email'
             )
