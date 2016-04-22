@@ -8,6 +8,12 @@ class SiteMenu
     function __construct(){
         $this->CI =&get_instance();
         
+    }
+    
+    private function _parse(){
+        if($this->menus)
+            return;
+        
         $site_menus = $this->CI->cache->file->get('site_menu');
         
         if(!$site_menus || is_dev()){
@@ -258,6 +264,8 @@ class SiteMenu
      * @return array The menu.
      */
     public function item($name){
+        $this->_parse();
+        
         if(array_key_exists($name, $this->menus))
             return $this->_fillActiveProperty($this->menus[$name]);
         

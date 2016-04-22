@@ -17,8 +17,9 @@
                 </div>
                 
                 <?php
+                    $can_edit = ci()->can_i('update-post_category');
                     if(array_key_exists(0, $categories)){
-                        $recursiver = function($parent, $index) use ($categories, &$recursiver){
+                        $recursiver = function($parent, $index) use ($categories, $can_edit, &$recursiver){
                             if(!array_key_exists($parent, $categories))
                                 return;
                             
@@ -33,10 +34,10 @@
                                 
                                 echo    '<div class="col-md-' . $right_width . '">';
                                 echo        '<div class="list-group">';
-                                echo            '<a href="' . base_url('/admin/post/category/' . $cat->id) . '" class="list-group-item">';
+                                echo            ( $can_edit ? '<a href="' . base_url('/admin/post/category/' . $cat->id) . '" class="list-group-item">' : '<div class="list-group-item">' );
                                 echo                '<h4 class="list-group-item-heading">' . $cat->name . '</h4>';
                                 echo                '<p class="list-group-item-text">' . base_url($cat->page) . '</p>';
-                                echo            '</a>';
+                                echo            ( $can_edit ? '</a>' : '</div>' );
                                 echo            '<a href="' . base_url($cat->page) . '" class="list-group-closer btn btn-default btn-xs"><i class="glyphicon glyphicon-new-window"></i></a>';
                                 echo        '</div>';
                                 echo    '</div>';

@@ -8,6 +8,12 @@ class SiteParams
     function __construct(){
         $this->CI =&get_instance();
         
+    }
+    
+    private function _parse(){
+        if($this->site_params)
+            return;
+        
         $site_params = $this->CI->cache->file->get('site_params');
         if(!$site_params || is_dev()){
             $this->CI->load->model('Siteparams_model', 'Siteparams');
@@ -27,6 +33,8 @@ class SiteParams
      * @return mixed site params value.
      */
     public function item($name, $value=null){
+        $this->_parse();
+        
         if($value)
             $this->site_params[$name] = $value;
         if(array_key_exists($name, $this->site_params))

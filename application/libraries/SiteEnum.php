@@ -8,6 +8,12 @@ class SiteEnum
     function __construct(){
         $this->CI =&get_instance();
         
+    }
+    
+    private function _parse(){
+        if($this->site_enum)
+            return;
+        
         $site_enum = $this->CI->cache->file->get('site_enum');
         if(!$site_enum || is_dev()){
             $this->CI->load->model('Siteenum_model', 'SEnum');
@@ -31,6 +37,8 @@ class SiteEnum
      * @return array if value and label is null, string if at value or label is not null.
      */
     public function item($group, $value=null, $label=null){
+        $this->_parse();
+        
         if($label){
             if(!array_key_exists($group, $this->site_enum))
                 $this->site_enum[$group] = array();

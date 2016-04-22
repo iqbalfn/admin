@@ -22,6 +22,7 @@ class Google
         
         $scopes = ['https://www.googleapis.com/auth/analytics.readonly'];
         $this->client = new Google_Client();
+        $this->client->setClassConfig('Google_Cache_File', 'directory', APPPATH . '/cache');
         $credentials = $this->client->loadServiceAccountJson($ga_file, $scopes);
         $this->client->setAssertionCredentials($credentials);
 

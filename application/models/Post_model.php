@@ -52,6 +52,7 @@ class Post_model extends MY_Model
             
             $method = is_array($cond['tag']) ? 'where_in' : 'where';
             $this->db->$method("$post_tag.post_tag", $cond['tag']);
+            $this->db->group_by("$post_tag.post");
         }
         
         if(array_key_exists('category', $cond)){
@@ -61,6 +62,7 @@ class Post_model extends MY_Model
             
             $method = is_array($cond['category']) ? 'where_in' : 'where';
             $this->db->$method("$post_category.post_category", $cond['category']);
+            $this->db->group_by("$post_category.post");
         }
         
         return $this->getByCond([], $rpp, $page, $order);

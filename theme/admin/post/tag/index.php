@@ -17,13 +17,19 @@
                 </div>
                 
                 <div class="row">
-                    <?php foreach($tags as $tag): ?>
+                    <?php 
+                    $can_edit = ci()->can_i('update-post_tag');
+                    foreach($tags as $tag): ?>
                     <div class="col-md-4">
                         <div class="list-group">
+                            <?php if($can_edit): ?>
                             <a href="<?= base_url('/admin/post/tag/' . $tag->id) ?>" class="list-group-item">
+                            <?php else: ?>
+                            <div class="list-group-item">
+                            <?php endif; ?>
                                 <h4 class="list-group-item-heading"><?= $tag->name ?></h4>
                                 <p class="list-group-item-text"><?= base_url($tag->page) ?></p>
-                            </a>
+                            <?= ($can_edit ? '</a>' : '</div>') ?>
                             <a href="<?= base_url($tag->page) ?>" class="list-group-closer btn btn-default btn-xs"><i class="glyphicon glyphicon-new-window"></i></a>
                         </div>
                     </div>
