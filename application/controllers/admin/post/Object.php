@@ -134,6 +134,8 @@ class Object extends MY_Controller
                     }else{
                         $post_scheduled = $new_object['published'];
                     }
+                    if($id)
+                        $this->PSchedule->removeBy('post', $id);
                 }else{
                     unset($new_object['status']);
                     if(array_key_exists('published', $new_object))
@@ -143,6 +145,8 @@ class Object extends MY_Controller
         }elseif(array_key_exists('published', $new_object) && $object->status == 3){
             if($this->can_i('create-post_published')){
                 $post_scheduled = $new_object['published'];
+                if($id)
+                    $this->PSchedule->removeBy('post', $id);
             }else{
                 unset($new_object['published']);
             }
@@ -255,6 +259,7 @@ class Object extends MY_Controller
         }
         
         $this->output->delete_cache('/');
+        file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
         $this->cache->file->delete('_recent_posts');
         
         if($id){
@@ -431,6 +436,7 @@ class Object extends MY_Controller
         
         $this->output->delete_cache('/');
         $this->output->delete_cache($post->page);
+        file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
         $this->cache->file->delete('_recent_posts'); 
         
         $this->redirect('/admin/post');

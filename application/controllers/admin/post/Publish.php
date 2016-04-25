@@ -47,6 +47,7 @@ class Publish extends MY_Controller
         
         $this->output->delete_cache('/');
         $this->cache->file->delete('_recent_posts');
+        file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
         
         $this->Post->set($posts_id, ['status'=>4]);
         $this->PSchedule->removeBy('post', $posts_id);

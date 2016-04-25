@@ -66,6 +66,7 @@ class Category extends MY_Controller
             $this->output->delete_cache($object->page);
         }
 
+        file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
         $this->redirect('/admin/post/category');
     }
 
@@ -113,5 +114,6 @@ class Category extends MY_Controller
         $this->PCategory->remove($id);
         $this->PCChain->removeBy('post_category', $id);
         $this->redirect('/admin/post/category');
+        file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
     }
 }

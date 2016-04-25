@@ -56,6 +56,7 @@ class Object extends MY_Controller
         }
 
         $this->cache->file->delete('banner');
+        file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
         $this->redirect('/admin/banner');
     }
 
@@ -90,6 +91,9 @@ class Object extends MY_Controller
         if(!$this->can_i('delete-banner'))
             return $this->show_404();
 
+        $this->cache->file->delete('banner');
+        file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
+        
         $this->Banner->remove($id);
         $this->redirect('/admin/banner');
     }

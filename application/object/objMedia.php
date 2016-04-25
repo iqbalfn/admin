@@ -6,14 +6,20 @@ if(!defined('BASEPATH'))
 class objMedia implements JsonSerializable
 {
     public $value;
+    public $hotlinking;
     
     function __construct($value){
         $this->value = $value;
+        if(substr($value, 0, 4) == 'http')
+            $this->hotlinking = true;
     }
     
     private function absURL($file=null){
         if(!$file)
             $file = $this->value;
+        
+        if($this->hotlinking)
+            return $file;
         
         $base_url = ci()->setting->item('media_host');
         
@@ -23,6 +29,9 @@ class objMedia implements JsonSerializable
     }
     
     function __get($prop){
+        if($this->hotlinking)
+            return $this->value;
+        
         $exts = explode('.', $this->value);
         $ext  = end($exts);
         

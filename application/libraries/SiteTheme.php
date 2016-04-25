@@ -62,8 +62,12 @@ class SiteTheme
      * @return string absolute path to theme static file.
      */
     public function asset($file){
-        if(!is_dev())
-            $file = preg_replace('!\.([a-z]+)$!','.min.$1', $file);
+        if(!is_dev()){
+            $exts = explode('.', $file);
+            $ext  = end($exts);
+            if(in_array($ext, ['css', 'js']))
+                $file = preg_replace('!\.([a-z]+)$!','.min.$1', $file);
+        }
         
         $base_url = $this->CI->setting->item('theme_host');
         if($base_url)
