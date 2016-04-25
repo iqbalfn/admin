@@ -36,7 +36,7 @@ function is_dev(){
  * Short-hand of get_instance of CodeIgniter
  * @return the CI object.
  */
-function ci(){
+function &ci(){
     $ci =&get_instance();
     return $ci;
 }

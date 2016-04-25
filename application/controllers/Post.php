@@ -197,6 +197,27 @@ class Post extends MY_Controller
         $this->load->view('robot/feed', $params);
     }
     
+    public function instant($slug=null){
+        if(!$slug || !$this->setting->item('instant_article_support_for_post'))
+            return $this->show_404();
+        
+        $this->load->model('Post_model', 'Post');
+        $this->load->library('ObjectFormatter', '', 'formatter');
+        
+        $params = [];
+        
+        $post = $this->Post->getBy('slug', $slug);
+        if(!$post || $post->status != 4)
+            return $this->show_404();
+        
+        $post = $this->formatter->post($post, false, true);
+        
+        $params['post'] = $post;
+        
+        $view = 'post/instant';
+        $this->respond($view, $params);
+    }
+    
     public function single($slug=null){
         if(!$slug)
             return $this->show_404();

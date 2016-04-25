@@ -41,6 +41,10 @@ class SiteMeta
         if($facebook_code)
             $tx.= '<meta content="' . $facebook_code . '" property="fb:app_id">';
         
+        $facebook_page_id = $this->CI->setting->item('code_facebook_page_id');
+        if($facebook_page_id)
+            $tx.= '<meta content="' . $facebook_page_id . '" property="fb:pages">';
+        
         $tx.= '<meta property="og:site_name" content="' . $this->CI->setting->item('site_name') . '">';
         
         // additional metas
@@ -531,6 +535,124 @@ class SiteMeta
         ]);
         
         echo $this->_general($meta_title, $metas, $schemas);
+    }
+    
+    public function post_amp($post, $comps){
+        $meta_title = $post->seo_title;
+        if(!$meta_title)
+            $meta_title = $post->title;
+        
+        $meta_description = $post->seo_description;
+        if(!$meta_description)
+            $meta_description = $post->content->chars(160);
+        
+        $page = $this->CI->input->get('page');
+        if($page && $page > 2){
+            $meta_title = _l('Page') . ' ' . $page . ' ' . $meta_title;
+            $meta_description = _l('Page') . ' ' . $page . ' ' . $meta_description;
+        }
+        
+        $meta_keywords = $post->seo_keywords;
+        $meta_image = $post->cover;
+        $meta_name  = $this->CI->setting->item('site_name');
+        $meta_url   = base_url($post->page);
+        $schemas    = array();
+        
+        $metas = array(
+            "description"           => $meta_description,
+            "keywords"              => $meta_keywords,
+            "twitter:card"          => "summary_large_image",
+            "twitter:description"   => $meta_description,
+            "twitter:image:src"     => $meta_image,
+            "twitter:title"         => $meta_title,
+            "twitter:url"           => $meta_url,
+            "og:description"        => $meta_description,
+            "og:image"              => $meta_image,
+            "og:title"              => $meta_title,
+            "og:type"               => "article",
+            "og:url"                => $meta_url,
+            "article:published_time"=> $post->published->format('c'),
+            "article:modified_time" => $post->updated->format('c')
+        );
+        
+        if(property_exists($post, 'category')){
+            foreach($post->category as $cat)
+                $metas["article:section"] = $cat->name;
+        }
+        if(property_exists($post, 'tag')){
+            $metas['article:tag'] = array();
+            foreach($post->tag as $tag)
+                $metas['article:tag'][] = $tag->name;
+        }
+        
+        if(!$post->seo_schema->value)
+            $post->seo_schema = 'Article';
+        
+        // fuck get image sizes
+        $image_file = dirname(BASEPATH) . $meta_image->value;
+        if(is_file($image_file)){
+            list($img_width, $img_height) = getimagesize($image_file);
+            
+            $schemas[] = array(
+                '@context'      => 'http://schema.org',
+                '@type'         => $post->seo_schema,
+                'name'          => $meta_title,
+                'description'   => $meta_description,
+                'author'        => array(
+                    '@type'         => 'Person',
+                    'name'          => $post->user->fullname,
+                    'url'           => base_url($post->user->page)
+                ),
+                'image'         => array(
+                    '@type'         => 'ImageObject',
+                    'url'           => $meta_image,
+                    'height'        => $img_height,
+                    'width'         => $img_width
+                ),
+                'headline'      => $meta_title,
+                'url'           => $meta_url,
+                'keywords'      => $meta_keywords,
+                'mainEntityOfPage' => array(
+                    '@type'         => 'WebPage',
+                    '@id'           => $meta_url
+                ),
+                'publisher'     => array(
+                    '@type'         => 'Organization',
+                    'name'          => $meta_name,
+                    'logo'          => array(
+                        '@type'         => 'ImageObject',
+                        'url'           => $this->CI->theme->asset('/static/image/logo/logo-200x60.png'),
+                        'width'         => 200,
+                        'height'        => 60
+                    )
+                ),
+                'datePublished' => $post->published->format('c'),
+                'dateModified'  => $post->updated->format('c'),
+                'dateCreated'   => $post->created->format('c')
+            );
+        }
+        
+        // google analytics grouping
+        $ga = array();
+        if($post->ga_group)
+            $ga['group'] = $post->ga_group;
+        
+        $ga_code = $this->CI->setting->item('code_google_analytics');
+        $this->CI->setting->item('code_google_analytics', false);
+        
+        echo $this->_general($meta_title, $metas, $schemas, $ga);
+        echo '<style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>';
+        echo '<noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>';
+        
+        $this->CI->setting->item('code_google_analytics', $ga_code);
+        if($ga_code)
+            echo '<script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>';
+        
+        if($comps){
+            foreach($comps as $comp)
+                echo '<script async custom-element="' . $comp . '" src="https://cdn.ampproject.org/v0/' . $comp . '-0.1.js"></script>';
+        }
+        echo '<script async src="https://cdn.ampproject.org/v0.js"></script>';
     }
     
     public function post_single($post){

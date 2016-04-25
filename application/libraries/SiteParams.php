@@ -35,7 +35,7 @@ class SiteParams
     public function item($name, $value=null){
         $this->_parse();
         
-        if($value)
+        if(!is_null($value))
             $this->site_params[$name] = $value;
         if(array_key_exists($name, $this->site_params))
             return $this->site_params[$name];

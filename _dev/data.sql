@@ -88,6 +88,7 @@ INSERT INTO `site_params` ( `name`, `value` ) VALUES
     ( 'code_verification_pinterest', '' ),
     ( 'code_verification_google', '' ),
     ( 'code_verification_yandex', '' ),
+    ( 'code_facebook_page_id', '' ),
     
     ( 'google_analytics_statistic', 'google-analytics.json' ),
     
@@ -136,7 +137,8 @@ INSERT INTO `site_params` ( `name`, `value` ) VALUES
     ( 'theme_include_fb_js_api', '1'),
     ( 'theme_include_fb_js_api_with_ads', '0' ),
     
-    ( 'amphtml_support_for_post', '1');
+    ( 'amphtml_support_for_post', '1'),
+    ( 'instant_article_support_for_post', '0' );
 
 TRUNCATE `site_enum`;
 INSERT INTO `site_enum` ( `group`, `value`, `label` ) VALUES
