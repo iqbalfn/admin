@@ -203,6 +203,7 @@ class Post extends MY_Controller
         
         $this->load->model('Post_model', 'Post');
         $this->load->library('ObjectFormatter', '', 'formatter');
+        $this->load->library('Cinstant/Cinstant', '', 'cia');
         
         $params = [];
         
@@ -211,6 +212,13 @@ class Post extends MY_Controller
             return $this->show_404();
         
         $post = $this->formatter->post($post, false, true);
+        
+        $post->content = $post->content->value;
+        if($post->embed)
+            $post->content.= '<div>' . $post->embed . '</div>';
+        
+        $post->content = $this->cia->convert($post->content, ['localHost'=>base_url()]);
+        $post->content = new objText($post->content->article);
         
         $params['post'] = $post;
         
