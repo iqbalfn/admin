@@ -37,7 +37,7 @@
                                 <?= $this->form->field('slug', null, (!$slug_editable ? ['readonly'=>'readonly'] : [])) ?>
                                 <?= $this->form->field('location') ?>
                                 
-                                <?= (ci()->can_i('read-post_category') ? $this->form->field('category', $categories) : '')?>
+                                <?= (ci()->can_i('read-post_category') && $categories ? $this->form->field('category', $categories) : '')?>
                             </div>
                             <div class="col-md-4">
                                 <?= $this->form->field('sources') ?>

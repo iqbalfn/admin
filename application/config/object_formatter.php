@@ -91,7 +91,8 @@ $config['object_formatter'] = array(
     ),
     
     'slideshow' => array(
-        'image' => 'media'
+        'image' => 'media',
+        'title' => 'text'
     ),
     
     'user' => array(

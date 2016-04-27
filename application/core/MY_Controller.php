@@ -131,6 +131,9 @@ class MY_Controller extends CI_Controller
         
         $params['page_title'] = $page_title;
         
+        if(!$this->theme->exists($view) && !is_dev())
+            return $this->show_404();
+        
         $this->theme->load($view, $params);
     }
     

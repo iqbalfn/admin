@@ -24,6 +24,9 @@ class Post extends MY_Controller
         if(!$post || $post->status != 4)
             return $this->show_404();
         
+        if(!is_dev())
+            $this->output->cache((60*60*5));
+        
         $post = $this->formatter->post($post, false, true);
         
         $amp_options = [];
@@ -69,6 +72,9 @@ class Post extends MY_Controller
         if(!$page)
             $page = 1;
         
+        if(!is_dev() && $page == 1)
+            $this->output->cache((60*60*5));
+        
         $posts = $this->Post->findByCond($cond, $rpp, $page);
         if($posts)
             $params['posts'] = $this->formatter->post($posts);
@@ -102,6 +108,9 @@ class Post extends MY_Controller
         $category = $this->PCategory->getBy('slug', $slug);
         if(!$category)
             return $this->show_404();
+        
+        if(!is_dev())
+            $this->output->cache((60*60*5));
         
         $category = $this->formatter->post_category($category, false, false);
         
@@ -245,6 +254,9 @@ class Post extends MY_Controller
         if(!$post || $post->status != 4)
             return $this->show_404();
         
+        if(!is_dev())
+            $this->output->cache((60*60*5));
+        
         $params['post'] = $this->formatter->post($post, false, true);
         
         $view = 'post/single';
@@ -271,6 +283,9 @@ class Post extends MY_Controller
         if(!$tag)
             return $this->show_404();
         
+        if(!is_dev())
+            $this->output->cache((60*60*5));
+        
         $params['tag'] = $this->formatter->post_tag($tag, false, false);
         
         // posts
@@ -283,6 +298,9 @@ class Post extends MY_Controller
         $page = $this->input->get('page');
         if(!$page)
             $page = 1;
+        
+        if(!is_dev() && $page == 1)
+            $this->output->cache((60*60*5));
         
         $posts = $this->Post->findByCond($cond, $rpp, $page);
         if($posts)
@@ -315,6 +333,9 @@ class Post extends MY_Controller
         $tag = $this->PTag->getBy('slug', $slug);
         if(!$tag)
             return $this->show_404();
+        
+        if(!is_dev())
+            $this->output->cache((60*60*5));
         
         $tag = $this->formatter->post_tag($tag, false, false);
         
