@@ -52,7 +52,7 @@ class Robot extends MY_Controller
         $cond = array(
             'status'    => 4
         );
-        $posts = $this->Post->getByCond($cond, 30);
+        $posts = $this->Post->getByCond($cond, 30, 1, ['updated'=>'DESC', 'published'=>'DESC']);
         if($posts){
             $posts = $this->formatter->post($posts, false, ['category']);
             foreach($posts as $post){

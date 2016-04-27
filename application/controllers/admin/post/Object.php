@@ -361,7 +361,7 @@ class Object extends MY_Controller
         if(!$page)
             $page = 1;
 
-        $result = $this->Post->findByCond($cond, $rpp, $page);
+        $result = $this->Post->findByCond($cond, $rpp, $page, ['updated'=>'DESC', 'published'=>'DESC']);
         if($result)
             $params['posts'] = $this->formatter->post($result, false, false);
 
