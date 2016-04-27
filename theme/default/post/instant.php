@@ -10,8 +10,10 @@
       <header>
         <h1><?= $post->title->clean(); ?></h1>
         <time class="op-published" datetime="<?= $post->published->format('c') ?>"><?= $post->published->format('M d, Y') ?></time>
+        <?php if($post->published->time != $post->updated->time): ?>
         <time class="op-modified" dateTime="<?= $post->updated->format('c') ?>"><?= $post->updated->format('M d, Y') ?></time>
-
+        <?php endif; ?>
+        
         <address>
           <a rel="facebook" href="#"><?= $post->user->fullname ?></a>
           <?= $post->user->about ?>

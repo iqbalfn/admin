@@ -57,6 +57,7 @@ class Tag extends MY_Controller
             
             $object = $this->formatter->post_tag($object, false, false);    
             $this->output->delete_cache($object->page);
+            $this->output->delete_cache($object->page . '/feed.xml');
         }
 
         $this->redirect('/admin/post/tag');
@@ -100,6 +101,7 @@ class Tag extends MY_Controller
         $this->load->model('Posttagchain_model', 'PTChain');
         $tag = $this->formatter->post_tag($tag, false, false);    
         $this->output->delete_cache($tag->page);
+        $this->output->delete_cache($tag->page . '/feed.xml');
         
         $this->PTag->remove($id);
         $this->PTChain->removeBy('post_tag', $id);

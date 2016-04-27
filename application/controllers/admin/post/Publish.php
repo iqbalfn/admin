@@ -32,20 +32,27 @@ class Publish extends MY_Controller
             $posts_id[] = $post->id;
             
             $this->output->delete_cache($post->page);
+            $this->output->delete_cache($post->amp);
             
             if(property_exists($post, 'category')){
                 $post_categories = $post->category;
-                foreach($post_categories as $cat)
+                foreach($post_categories as $cat){
                     $this->output->delete_cache($cat->page);
+                    $this->output->delete_cache($cat->page . '/feed.xml');
+                }
             }
             if(property_exists($post, 'tag')){
                 $post_tags = $post->tag;
-                foreach($post_tags as $tag)
+                foreach($post_tags as $tag){
                     $this->output->delete_cache($tag->page);
+                    $this->output->delete_cache($tag->page . '/feed.xml');
+                }
             }
         }
         
         $this->output->delete_cache('/');
+        $this->output->delete_cache('/post/feed.xml');
+        $this->output->delete_cache('/post/instant.xml');
         $this->cache->file->delete('_recent_posts');
         file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
         

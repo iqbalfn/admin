@@ -144,12 +144,15 @@ $route['gallery/(:any)'] = 'gallery/single/$1';
 
 $route['page/(:any)'] = 'page/single/$1';
 
-$route['post/feed.xml'] = 'post/feed/index';
-$route['post/category/(:any)/feed.xml'] = 'post/categoryFeed/$1';
-$route['post/category/(:any)'] = 'post/category/$1';
+$route['post/feed.xml'] = 'post/feed';
+$route['post/instant.xml'] = 'post/feed/instant';
+
 $route['post/read/(:any)'] = 'post/single/$1';
 $route['post/amp/(:any)'] = 'post/amp/$1';
-$route['post/instant/(:any)'] = 'post/instant/$1';
+
+$route['post/category/(:any)/feed.xml'] = 'post/categoryFeed/$1';
+$route['post/category/(:any)'] = 'post/category/$1';
+
 $route['post/tag/(:any)/feed.xml'] = 'post/tagFeed/$1';
 $route['post/tag/(:any)'] = 'post/tag/$1';
 

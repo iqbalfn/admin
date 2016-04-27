@@ -149,27 +149,57 @@ class Post extends MY_Controller
         $this->load->view('robot/feed', $params);
     }
     
-    public function feed(){
+    public function feed($type='index'){
         $pages = array();
         $last_update = 0;
         
+        if(!in_array($type, array('index', 'instant')))
+            return $this->show_404();
+        
+        if($type == 'instant' && !$this->setting->item('instant_article_support_for_post'))
+            return $this->show_404();
+        
+        if(!is_dev())
+            $this->output->cache((60*60*5));
+        
         $this->load->model('Post_model', 'Post');
         $this->load->library('ObjectFormatter', '', 'formatter');
+        $this->load->library('Cinstant/Cinstant', '', 'cia');
         
         // POSTS
         $cond = array(
             'status'    => 4
         );
-        $posts = $this->Post->getByCond($cond, true);
+        $posts = $this->Post->getByCond($cond, 30);
+
         if($posts){
-            $posts = $this->formatter->post($posts, false, ['category']);
+            $posts = $this->formatter->post($posts, false, ['category', 'user']);
             foreach($posts as $post){
                 $page = (object)array(
                     'page' => base_url($post->page),
                     'description' => $post->seo_description->value ? $post->seo_description : $post->content->chars(160),
                     'title' => $post->title,
+                    'published' => $post->published->format('c'),
+                    'author' => $post->user->fullname,
                     'categories' => []
                 );
+                
+                // let create instant article content
+                if($type == 'instant'){
+                    if(!$post->instant_content){
+                        $post->instant_content = $post->content->value;
+                        if($post->embed)
+                            $post->instant_content.= '<div>' . $post->embed . '</div>';
+                    
+                        $instant = $this->cia->convert($post->instant_content, ['localHost'=>base_url()]);
+                        $post->instant_content = $instant->article;
+                        $this->Post->set($post->id, ['instant_content'=>$post->instant_content]);
+                    }
+                    
+                    $post->content = $post->instant_content;
+                    $theme_file = $this->theme->current('/post/instant.php');
+                    $page->content = $this->load->view($theme_file, ['post'=>$post], true);
+                }
                 
                 if(property_exists($post, 'category')){
                     foreach($post->category as $cat)
@@ -193,37 +223,13 @@ class Post extends MY_Controller
         $params['feed_owner_url'] = base_url();
         $params['feed_description'] = $this->setting->item('site_frontpage_description');
         $params['feed_image_url'] = $this->theme->asset('/static/image/logo/feed.jpg');
+        $params['last_update'] = date('c', $last_update);
         
-        $this->load->view('robot/feed', $params);
-    }
-    
-    public function instant($slug=null){
-        if(!$slug || !$this->setting->item('instant_article_support_for_post'))
-            return $this->show_404();
+        $view = 'robot/feed';
+        if($type == 'instant')
+            $view = 'robot/feed-instant';
         
-        $this->load->model('Post_model', 'Post');
-        $this->load->library('ObjectFormatter', '', 'formatter');
-        $this->load->library('Cinstant/Cinstant', '', 'cia');
-        
-        $params = [];
-        
-        $post = $this->Post->getBy('slug', $slug);
-        if(!$post || $post->status != 4)
-            return $this->show_404();
-        
-        $post = $this->formatter->post($post, false, true);
-        
-        $post->content = $post->content->value;
-        if($post->embed)
-            $post->content.= '<div>' . $post->embed . '</div>';
-        
-        $post->content = $this->cia->convert($post->content, ['localHost'=>base_url()]);
-        $post->content = new objText($post->content->article);
-        
-        $params['post'] = $post;
-        
-        $view = 'post/instant';
-        $this->respond($view, $params);
+        $this->load->view($view, $params);
     }
     
     public function single($slug=null){

@@ -101,6 +101,7 @@ CREATE TABLE `post` (
     `embed` TEXT,
     `gallery` BIGINT,
     `content` TEXT,
+    `instant_content` TEXT,
     `location` VARCHAR(200),
     `status` TINYINT DEFAULT 1,
     `featured` BOOLEAN DEFAULT FALSE,

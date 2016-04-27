@@ -64,6 +64,7 @@ class Category extends MY_Controller
             
             $object = $this->formatter->post_category($object, false, false);    
             $this->output->delete_cache($object->page);
+            $this->output->delete_cache($object->page . '/feed.xml');
         }
 
         file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
@@ -110,10 +111,12 @@ class Category extends MY_Controller
 
         $category = $this->formatter->post_category($category, false, false);    
         $this->output->delete_cache($category->page);
+        $this->output->delete_cache($category->page . '/feed.xml');
         
         $this->PCategory->remove($id);
         $this->PCChain->removeBy('post_category', $id);
-        $this->redirect('/admin/post/category');
         file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
+        
+        $this->redirect('/admin/post/category');
     }
 }

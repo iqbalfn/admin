@@ -123,8 +123,8 @@ class Cinstant
             
             // make the image to be absolute url
             $src = $img->getAttribute('src');
-            if(substr($src,0,4) != 'http'){
-                $src = rtrim($this->localHost, '/') . '/' . ltrim($src, '/');
+            if(substr($src,0,4) != 'http' && substr($src,0,2) != '//'){
+                $src = rtrim($this->localHost, '/') . '/' . ltrim($src, '/.');
                 $img->setAttribute('src', $src);
             }
             
@@ -151,8 +151,8 @@ class Cinstant
             
             // make the image to be absolute url
             $src = $iframe->getAttribute('src');
-            if(substr($src,0,4) != 'http'){
-                $src = rtrim($this->localHost, '/') . '/' . ltrim($src, '/');
+            if(substr($src,0,4) != 'http' && substr($src,0,2) != '//'){
+                $src = rtrim($this->localHost, '/') . '/' . ltrim($src, '/.');
                 $iframe->setAttribute('src', $src);
             }elseif(preg_match('!facebook|instagram|twitter|vine|youtu!', $src)){
                 $parentClass = 'op-social';

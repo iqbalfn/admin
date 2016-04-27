@@ -122,6 +122,10 @@ class Object extends MY_Controller
         if($new_object === true)
             return $this->redirect('/admin/post');
         
+        // remove instant article
+        if(array_key_exists('content', $new_object))
+            $new_object['instant_content'] = '';
+        
         // make sure user not publish it if user not allowed to publish it
         // or set the published property if it's published
         if(array_key_exists('status', $new_object)){
@@ -182,6 +186,7 @@ class Object extends MY_Controller
                         $to_insert[] = $cat;
                         $this->PCategory->inc($cat, 'posts', 1, true);
                         $this->output->delete_cache($category->page);
+                        $this->output->delete_cache($category->page . '/feed.xml');
                     }
                 }
                 
@@ -196,6 +201,7 @@ class Object extends MY_Controller
                         $to_delete[] = $cat;
                         $this->PCategory->dec($cat, 'posts', 1, true);
                         $this->output->delete_cache($category->page);
+                        $this->output->delete_cache($category->page . '/feed.xml');
                     }
                 }
                 
@@ -233,6 +239,7 @@ class Object extends MY_Controller
                         $to_insert[] = $cat;
                         $this->PTag->inc($cat, 'posts', 1, true);
                         $this->output->delete_cache($tag->page);
+                        $this->output->delete_cache($tag->page. '/feed.xml');
                     }
                 }
                 
@@ -247,6 +254,7 @@ class Object extends MY_Controller
                         $to_delete[] = $cat;
                         $this->PTag->dec($cat, 'posts', 1, true);
                         $this->output->delete_cache($tag->page);
+                        $this->output->delete_cache($tag->page. '/feed.xml');
                     }
                 }
                 
@@ -259,12 +267,16 @@ class Object extends MY_Controller
         }
         
         $this->output->delete_cache('/');
-        file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
+        $this->output->delete_cache('/post/feed.xml');
+        $this->output->delete_cache('/post/instant.xml');
         $this->cache->file->delete('_recent_posts');
+        
+        file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
         
         if($id){
             $object = $this->formatter->post($object, false, false);
             $this->output->delete_cache($object->page);
+            $this->output->delete_cache($object->amp);
         }
         
         if($new_object){
@@ -401,6 +413,7 @@ class Object extends MY_Controller
                 $cat = $cats[$cat_chain->post_category];
                 $this->PCategory->dec($cat->id, 'posts', 1, true);
                 $this->output->delete_cache($cat->page);
+                $this->output->delete_cache($cat->page . '/feed.xml');
             }
             
             $this->PCChain->remove($cats_chain_id);
@@ -420,6 +433,7 @@ class Object extends MY_Controller
                 $tag = $tags[$tag_chain->post_tag];
                 $this->PTag->dec($tag->id, 'posts', 1, true);
                 $this->output->delete_cache($tag->page);
+                $this->output->delete_cache($tag->page . '/feed.xml');
             }
             
             $this->PTChain->remove($tags_chain_id);
@@ -436,8 +450,12 @@ class Object extends MY_Controller
         
         $this->output->delete_cache('/');
         $this->output->delete_cache($post->page);
+        $this->output->delete_cache($post->amp);
+        $this->output->delete_cache('/post/feed.xml');
+        $this->output->delete_cache('/post/instant.xml');
+        $this->cache->file->delete('_recent_posts');
+        
         file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
-        $this->cache->file->delete('_recent_posts'); 
         
         $this->redirect('/admin/post');
     }
