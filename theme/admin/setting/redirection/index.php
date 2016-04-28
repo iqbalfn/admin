@@ -22,7 +22,7 @@
                     <?php foreach($urls as $url): ?>
                         <div class="list-group">
                             <?php if($editable): ?>
-                            <a href="http://admin.web/admin/setting/redirection/<?= $url->id ?>" class="list-group-item">
+                            <a href="<?= base_url('/admin/setting/redirection/' . $url->id ) ?>" class="list-group-item">
                                 <h4 class="list-group-item-heading"><?= $url->source ?></h4>
                                 <p class="list-group-item-text"><?= $url->target ?></p>
                             </a>
