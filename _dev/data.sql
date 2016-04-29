@@ -43,6 +43,10 @@ INSERT INTO `perms` ( `group`, `name`, `label`, `description` ) VALUES
     ( 'Post Selector',      'delete-post_selector',     'Delete Post Selection',        'Allow user to delete exists post selection' ),
     ( 'Post Selector',      'read-post_selector',       'Read Post Selection',          'Allow user to see all exists post selection' ),
     ( 'Post Selector',      'update-post_selector',     'Edit Post Selection',          'Allow user to update exists post selection' ),
+    ( 'Post Suggestion',    'create-post_suggestion',   'Create Post Suggestion',       'Allow user to create new post suggestion' ),
+    ( 'Post Suggestion',    'delete-post_suggestion',   'Delete Post Suggestion',       'Allow user to delete exists post suggestion' ),
+    ( 'Post Suggestion',    'read-post_suggestion',     'Read Post Suggestion',         'Allow user to see all exists post suggestion' ),
+    ( 'Post Suggestion',    'update-post_suggestion',   'Edit Post Suggestion',         'Allow user to update exists post suggestion' ),
     ( 'Site Enum',          'create-site_enum',         'Create Site Enum',             'Allow user to create new site enum' ),
     ( 'Site Enum',          'delete-site_enum',         'Delete Site Enum',             'Allow user to delete exists site enum' ),
     ( 'Site Enum',          'read-site_enum',           'Read Site Enum',               'Allow user to see all exists site enum' ),
@@ -252,6 +256,12 @@ INSERT INTO `user_perms` ( `user`, `perms` ) VALUES
     ( 1, 'delete-post_selector' ),
     ( 1, 'read-post_selector' ),
     ( 1, 'update-post_selector' ),
+    
+    -- POST SUGGESTION
+    ( 1, 'create-post_suggestion' ),
+    ( 1, 'delete-post_suggestion' ),
+    ( 1, 'read-post_suggestion' ),
+    ( 1, 'update-post_suggestion' ),
     
     -- SITE PARAMS
     ( 1, 'create-site_param' ),

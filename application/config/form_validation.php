@@ -682,6 +682,35 @@ $config = array(
         )
     ),
     
+    '/admin/post/suggestion' => array(
+        'title' => array(
+            'field' => 'title',
+            'label' => 'Title',
+            'rules' => 'required',
+            'input' => array(
+                'type' => 'text'
+            )
+        ),
+        
+        'source' => array(
+            'field' => 'source',
+            'label' => 'Source',
+            'rules' => 'required|valid_url',
+            'input' => array(
+                'type' => 'url'
+            )
+        ),
+        
+        'local' => array(
+            'field' => 'local',
+            'label' => 'Local',
+            'rules' => 'valid_url',
+            'input' => array(
+                'type' => 'url'
+            )
+        )
+    ),
+    
     '/admin/post/tag' => array(
         'slug' => array(
             'field' => 'slug',

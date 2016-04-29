@@ -102,6 +102,11 @@ class SiteMenu
                         'label' => 'Selector',
                         'perms' => 'read-post_selector',
                         'target'=> '/admin/post/selector'
+                    ),
+                    array(
+                        'label' => 'Suggestion',
+                        'perms' => 'read-post_suggestion',
+                        'target'=> '/admin/post/suggestion'
                     )
                 )
             ),

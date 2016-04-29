@@ -81,6 +81,10 @@ $config['object_formatter'] = array(
         'post' => '@parent[post]'
     ),
     
+    'post_suggestion' => array(
+        'title' => 'text'
+    ),
+    
     'post_tag' => array(
         'page' => 'join(/post/tag/|$slug)',
         'description' => 'text',

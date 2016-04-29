@@ -164,6 +164,15 @@ CREATE TABLE `post_selection` (
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+DROP TABLE IF EXISTS `post_suggestion`;
+CREATE TABLE `post_suggestion` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `title` VARCHAR(150),
+    `source` VARCHAR(250),
+    `local` VARCHAR(250),
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 DROP TABLE IF EXISTS `post_tag`;
 CREATE TABLE `post_tag` (
     `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
