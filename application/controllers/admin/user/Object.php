@@ -120,15 +120,19 @@ class Object extends MY_Controller
             return $this->redirect('/admin/user');
 
         if(array_key_exists('password', $new_object)){
-            if($this->can_i('update-user_password') || !$id)
-                $new_object['password'] = password_hash($new_object['password'], PASSWORD_DEFAULT);
-            else
+            if($new_object['password']){
+                if($this->can_i('update-user_password') || !$id)
+                    $new_object['password'] = password_hash($new_object['password'], PASSWORD_DEFAULT);
+                else
+                    unset($new_object['password']);
+            }else{
                 unset($new_object['password']);
+            }
         }
         
         if(!$id){
             $new_object['id'] = $id = $this->User->create($new_object);
-        }else{
+        }elseif($new_object){
             $this->User->set($id, $new_object);
         }
 
