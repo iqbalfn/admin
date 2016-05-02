@@ -13,7 +13,7 @@ class Category extends MY_Controller
         parent::__construct();
 
         $this->load->model('Postcategory_model', 'PCategory');
-        $this->load->library('ObjectFormatter', '', 'format');
+        $this->load->library('ObjectFormatter', '', 'formatter');
     }
 
     function edit($id=null){
@@ -67,6 +67,8 @@ class Category extends MY_Controller
             $this->output->delete_cache($object->page . '/feed.xml');
         }
 
+        $this->output->delete_cache('/extra/footer');
+        $this->output->delete_cache('/extra/sidebar');
         file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
         $this->redirect('/admin/post/category');
     }
@@ -89,8 +91,7 @@ class Category extends MY_Controller
 
         $result = $this->PCategory->getByCond($cond, $rpp, $page, ['name'=>'ASC']);
         if($result){
-            $this->load->library('ObjectFormatter', '', 'format');
-            $result = $this->format->post_category($result, false, true);
+            $result = $this->formatter->post_category($result, false, true);
             $params['categories'] = group_by_prop($result, 'parent');
         }
 
@@ -115,6 +116,8 @@ class Category extends MY_Controller
         
         $this->PCategory->remove($id);
         $this->PCChain->removeBy('post_category', $id);
+        $this->output->delete_cache('/extra/footer');
+        $this->output->delete_cache('/extra/sidebar');
         file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
         
         $this->redirect('/admin/post/category');
