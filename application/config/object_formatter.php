@@ -20,6 +20,7 @@ $config['object_formatter'] = array(
     
     'gallery' => array(
         'cover' => 'media',
+        'name' => 'text',
         'page' => 'join(/gallery/|$slug)',
         'description' => 'text',
         'created' => 'date',

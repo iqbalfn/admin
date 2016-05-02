@@ -156,7 +156,7 @@ class Robot extends MY_Controller
         );
         $users = $this->User->getByCond($cond, true);
         if($users){
-            $users = $this->formatter->user($userss, false, false);
+            $users = $this->formatter->user($users, false, false);
             foreach($users as $user){
                 $pages[] = (object)array(
                     'loc' => base_url($user->page),
