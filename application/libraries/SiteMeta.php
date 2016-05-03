@@ -169,7 +169,7 @@ class SiteMeta
             $meta_description = $event->content->chars(160);
         
         $page = $this->CI->input->get('page');
-        if($page && $page > 2){
+        if($page && $page > 1){
             $meta_title = _l('Page') . ' ' . $page . ' ' . $meta_title;
             $meta_description = _l('Page') . ' ' . $page . ' ' . $meta_description;
         }
@@ -256,7 +256,7 @@ class SiteMeta
             $meta_description = $gallery->description->chars(160);
         
         $page = $this->CI->input->get('page');
-        if($page && $page > 2){
+        if($page && $page > 1){
             $meta_title = _l('Page') . ' ' . $page . ' ' . $meta_title;
             $meta_description = _l('Page') . ' ' . $page . ' ' . $meta_description;
         }
@@ -313,7 +313,7 @@ class SiteMeta
         $meta_keywords = $this->CI->setting->item('site_frontpage_keywords');
         
         $page = $this->CI->input->get('page');
-        if($page && $page > 2){
+        if($page && $page > 1){
             $meta_title = _l('Page') . ' ' . $page . ' ' . $meta_title;
             $meta_description = _l('Page') . ' ' . $page . ' ' . $meta_description;
         }
@@ -547,7 +547,7 @@ class SiteMeta
             $meta_description = $post->content->chars(160);
         
         $page = $this->CI->input->get('page');
-        if($page && $page > 2){
+        if($page && $page > 1){
             $meta_title = _l('Page') . ' ' . $page . ' ' . $meta_title;
             $meta_description = _l('Page') . ' ' . $page . ' ' . $meta_description;
         }
@@ -665,7 +665,7 @@ class SiteMeta
             $meta_description = $post->content->chars(160);
         
         $page = $this->CI->input->get('page');
-        if($page && $page > 2){
+        if($page && $page > 1){
             $meta_title = _l('Page') . ' ' . $page . ' ' . $meta_title;
             $meta_description = _l('Page') . ' ' . $page . ' ' . $meta_description;
         }

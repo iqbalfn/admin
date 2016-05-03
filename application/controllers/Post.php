@@ -179,6 +179,9 @@ class Post extends MY_Controller
         $cond = array(
             'status'    => 4
         );
+        if($type == 'instant')
+            $cond['instant_content'] = NULL;
+        
         $posts = $this->Post->getByCond($cond, 30, 1, ['updated'=>'DESC', 'published'=>'DESC']);
 
         if($posts){
