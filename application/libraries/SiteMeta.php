@@ -658,7 +658,7 @@ class SiteMeta
     public function post_single($post){
         $meta_title = $post->seo_title;
         if(!$meta_title)
-            $meta_title = $post->title;
+            $meta_title = $post->title->clean();
         
         $meta_description = $post->seo_description;
         if(!$meta_description)
