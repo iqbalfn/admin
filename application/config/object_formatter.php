@@ -21,6 +21,7 @@ $config['object_formatter'] = array(
     'gallery' => array(
         'cover' => 'media',
         'name' => 'text',
+        'user' => '@parent[user]',
         'page' => 'join(/gallery/|$slug)',
         'description' => 'text',
         'created' => 'date',
@@ -29,6 +30,7 @@ $config['object_formatter'] = array(
     ),
     
     'gallery_media' => array(
+        'title' => 'text',
         'media' => 'media',
         'page' => 'join(/gallery/|$gallery.slug|/|$id)',
         'seo_schema' => 'enum',
@@ -68,6 +70,7 @@ $config['object_formatter'] = array(
         'page' => 'join(/post/category/|$slug)',
         'description' => 'text',
         'updated' => 'date',
+        'parent' => '@parent[post_category]',
         'created' => 'date',
         'content' => 'text',
         'seo_schema' => 'enum',

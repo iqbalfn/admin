@@ -249,7 +249,7 @@ class SiteMeta
     public function gallery_single($gallery){
         $meta_title = $gallery->seo_title;
         if(!$meta_title)
-            $meta_title = $gallery->title;
+            $meta_title = $gallery->name;
         
         $meta_description = $gallery->seo_description;
         if(!$meta_description)

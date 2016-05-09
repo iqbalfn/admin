@@ -124,7 +124,7 @@ class Object extends MY_Controller
         
         // remove instant article
         if(array_key_exists('content', $new_object))
-            $new_object['instant_content'] = '';
+            $new_object['instant_content'] = NULL;
         
         // make sure user not publish it if user not allowed to publish it
         // or set the published property if it's published

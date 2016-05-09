@@ -92,7 +92,16 @@ class Category extends MY_Controller
         $result = $this->PCategory->getByCond($cond, $rpp, $page, ['name'=>'ASC']);
         if($result){
             $result = $this->formatter->post_category($result, false, true);
-            $params['categories'] = group_by_prop($result, 'parent');
+            $groupped_result = [];
+            foreach($result as $row){
+                $parent = 0;
+                if($row->parent)
+                    $parent = $row->parent->id;
+                if(!array_key_exists($parent, $groupped_result))
+                    $groupped_result[$parent] = array();
+                $groupped_result[$parent][] = $row;
+            }
+            $params['categories'] = $groupped_result;
         }
 
         $this->respond('post/category/index', $params);

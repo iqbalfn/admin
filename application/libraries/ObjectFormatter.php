@@ -18,15 +18,21 @@ class ObjectFormatter
     
     private function _makeEmbed($url){
         $regexs = [
-            '/youtu\.be\/([\w\-.]+)/'                   => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 560, 'height' => 314, 'src' => 'https://www.youtube.com/embed/$1', 'allowFullscreen' => '1' ] ],
-            '/youtube\.com(.+)v=([^&]+)/'               => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 560, 'height' => 314, 'src' => 'https://www.youtube.com/embed/$2', 'allowFullscreen' => '1' ] ],
-            '/youtube.com\/embed\/([a-z0-9\-_]+)/i'     => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 560, 'height' => 314, 'src' => 'https://www.youtube.com/embed/$1', 'allowFullscreen' => '1' ] ],
-            '/vimeo\.com\/([0-9]+)/'                    => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 425, 'height' => 350, 'src' => 'https://player.vimeo.com/video/$1?title=0&amp;byline=0&amp;portrait=0&color=e3a01b', 'allowFullscreen' => '1' ] ],
-            '/vimeo\.com\/(.*)\/([0-9]+)/'              => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 425, 'height' => 350, 'src' => 'https://player.vimeo.com/video/$2?title=0&amp;byline=0&amp;portrait=0&color=e3a01b', 'allowFullscreen' => '1' ] ],
-            '/dailymotion.com\/embed\/video\/([^_]+)/'  => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 480, 'height' => 270, 'src' => 'https://www.dailymotion.com/embed/video/$1', 'allowFullscreen' => '1', 'frameborder' => '0' ] ],
-            '/dailymotion.com\/video\/([^_]+)/'         => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 480, 'height' => 270, 'src' => 'https://www.dailymotion.com/embed/video/$1', 'allowFullscreen' => '1', 'frameborder' => '0' ] ],
-            '/vidio.com\/watch\/([\w\-]+)/'             => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 480, 'height' => 270, 'src' => 'https://www.vidio.com/embed/$1?autoplay=false&amp;player_only=true', 'frameborder' => '0', 'class' => 'vidio-embed', 'scrolling' => 'no' ] ],
-            '/facebook.com/'                            => [ 'tag' => 'div',    'attrs' => [ 'data-href' => $url, 'data-width' => '670', 'data-show-text' => 'false', 'class' => 'fb-video', 'data-allowfullscreen' => 'true' ] ]
+            '/youtu\.be\/([\w\-.]+)/'                               => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 560, 'height' => 314, 'src' => 'https://www.youtube.com/embed/$1', 'allowFullscreen' => '1' ] ],
+            '/youtube\.com(.+)v=([^&]+)/'                           => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 560, 'height' => 314, 'src' => 'https://www.youtube.com/embed/$2', 'allowFullscreen' => '1' ] ],
+            '/youtube.com\/embed\/([a-z0-9\-_]+)/i'                 => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 560, 'height' => 314, 'src' => 'https://www.youtube.com/embed/$1', 'allowFullscreen' => '1' ] ],
+            '/vimeo\.com\/([0-9]+)/'                                => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 425, 'height' => 350, 'src' => 'https://player.vimeo.com/video/$1?title=0&amp;byline=0&amp;portrait=0&color=e3a01b', 'allowFullscreen' => '1' ] ],
+            '/vimeo\.com\/(.*)\/([0-9]+)/'                          => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 425, 'height' => 350, 'src' => 'https://player.vimeo.com/video/$2?title=0&amp;byline=0&amp;portrait=0&color=e3a01b', 'allowFullscreen' => '1' ] ],
+            '/dailymotion.com\/embed\/video\/([^_]+)/'              => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 480, 'height' => 270, 'src' => 'https://www.dailymotion.com/embed/video/$1', 'allowFullscreen' => '1', 'frameborder' => '0' ] ],
+            '/dailymotion.com\/video\/([^_]+)/'                     => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 480, 'height' => 270, 'src' => 'https://www.dailymotion.com/embed/video/$1', 'allowFullscreen' => '1', 'frameborder' => '0' ] ],
+            '/vidio.com\/watch\/([\w\-]+)/'                         => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 480, 'height' => 270, 'src' => 'https://www.vidio.com/embed/$1?autoplay=true&amp;player_only=true', 'frameborder' => '0', 'class' => 'vidio-embed', 'scrolling' => 'no' ] ],
+            '/vidio.com\/embed\/([\w\-]+)/'                         => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 480, 'height' => 270, 'src' => 'https://www.vidio.com/embed/$1?autoplay=true&amp;player_only=true', 'frameborder' => '0', 'class' => 'vidio-embed', 'scrolling' => 'no' ] ],
+            '/facebook.com/'                                        => [ 'tag' => 'div',    'attrs' => [ 'data-href' => $url, 'data-width' => '670', 'data-show-text' => 'false', 'class' => 'fb-video', 'data-allowfullscreen' => 'true' ] ],
+            '/liveleak.com\/ll_embed\?f=([\w\-]+)/'                 => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 640, 'height' => 360, 'src' => 'http://www.liveleak.com/ll_embed?f=$1', 'frameborder' => '0' ] ],
+            '/dailymail.co.uk\/video\/([\w]+)\/video-([0-9]+)/'     => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 698, 'height' => 573, 'src' => 'http://www.dailymail.co.uk/embed/video/$2.html', 'frameborder' => '0', 'allowfullscreen' => '1', 'scrolling' => 'no' ] ],
+            '/dailymail.co.uk\/([\w]+)\/video\/([0-9]+)/'           => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 698, 'height' => 573, 'src' => 'http://www.dailymail.co.uk/embed/video/$2.html', 'frameborder' => '0', 'allowfullscreen' => '1', 'scrolling' => 'no' ] ],
+            '/vid.me\/([\w\-]+)/'                                   => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 854, 'height' => 480, 'src' => 'https://vid.me/e/$1?tools=1', 'frameborder' => '0', 'allowfullscreen' => '1', 'scrolling' => 'no' ] ],
+            '/vid.me\/e\/([\w\-]+)/'                                => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 854, 'height' => 480, 'src' => 'https://vid.me/e/$1?tools=1', 'frameborder' => '0', 'allowfullscreen' => '1', 'scrolling' => 'no' ] ]
         ];
         
         $tx = '';
