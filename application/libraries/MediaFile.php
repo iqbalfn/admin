@@ -71,8 +71,10 @@ class MediaFile
      * @return media id on success, false otherwise.
      */
     private function _saveToDB($target, $type, $object=null){
+        $user_id = $this->CI->user ? $this->CI->user->id : 1;
+        
         $new = array(
-            'user' => $this->CI->user->id,
+            'user' => $user_id,
             'original_name' => $target['original_name'],
             'name' => $target['local_file'],
             'path' => $target['local_media_file'],

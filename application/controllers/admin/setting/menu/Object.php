@@ -41,6 +41,8 @@ class Object extends MY_Controller
                 if($get_val)
                     $object->$get = $get_val;
             }
+            if(!property_exists($object, 'group'))
+                return $this->redirect('/admin/setting/menu?e=1');
             $params['title'] = _l('Create Site Menu');
         }
 
