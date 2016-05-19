@@ -58,11 +58,11 @@ class SiteTheme
     /**
      * Get absolute path to theme static file.
      * @param string name The theme static file name.
-     * @param boolean version Add versioning on production system.
+     * @param boolean min Use minified on production, default true
      * @return string absolute path to theme static file.
      */
-    public function asset($file){
-        if(!is_dev()){
+    public function asset($file, $min=true){
+        if(!is_dev() && $min){
             $exts = explode('.', $file);
             $ext  = end($exts);
             if(in_array($ext, ['css', 'js']))
