@@ -16,17 +16,26 @@ $config = array(
         'media' => array(
             'field' => 'media',
             'label' => 'Media',
-            'rules' => 'required|media',
+            'rules' => 'media',
             'input' => array(
                 'type' => 'file',
                 'file_type' => 'jpg|jpeg|png|bmp|gif|mov|mp4|mpeg|mkv'
             )
         ),
         
+        'code' => array(
+            'field' => 'code',
+            'label' => 'Code',
+            'rules' => '',
+            'input' => array(
+                'type' => 'textarea'
+            )
+        ),
+        
         'link' => array(
             'field' => 'link',
             'label' => 'Link',
-            'rules' => 'required',
+            'rules' => 'valid_url',
             'input' => array(
                 'type' => 'url'
             )
@@ -784,7 +793,7 @@ $config = array(
         'slug' => array(
             'field' => 'slug',
             'label' => 'Slug',
-            'rules' => 'required|is_unique[post_tag.slug,4]',
+            'rules' => 'required|is_unique[post_category.slug,4]',
             'input' => array(
                 'type' => 'text',
                 'attrs' => array(

@@ -23,6 +23,7 @@ CREATE TABLE `banner` (
     `user` BIGINT NOT NULL,
     `name` VARCHAR(50),
     `media` VARCHAR(150),
+    `code` TEXT,
     `link` VARCHAR(150),
     `expired` DATETIME,
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
