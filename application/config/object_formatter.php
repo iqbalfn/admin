@@ -51,6 +51,7 @@ $config['object_formatter'] = array(
         'title' => 'text',
         'gallery' => '@parent[gallery]',
         'user' => '@parent[user]',
+        'publisher' => '@parent[user]',
         'amp' => 'join(/post/amp/|$slug)',
         'page' => 'join(/post/read/|$slug)',
         'content' => 'text',

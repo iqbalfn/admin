@@ -95,6 +95,7 @@ DROP TABLE IF EXISTS `post`;
 CREATE TABLE `post` (
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user` BIGINT NOT NULL,
+    `publisher` BIGINT,
     `title` VARCHAR(150),
     `slug` VARCHAR(150),
     `cover` VARCHAR(150),

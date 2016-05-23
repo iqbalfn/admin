@@ -133,10 +133,13 @@ class Object extends MY_Controller
                 if($this->can_i('create-post_published')){
                     if($new_object['status'] == 4){
                         $new_object['published'] = date('Y-m-d H:i:s');
+                        $new_object['publisher'] = $this->user->id;
+                        
                     // add the post to post_schedule to be listed on
                     // publish later post
                     }else{
                         $post_scheduled = $new_object['published'];
+                        $new_object['publisher'] = $this->user->id;
                     }
                     if($id)
                         $this->PSchedule->removeBy('post', $id);
