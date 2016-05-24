@@ -38,7 +38,7 @@ class Setting extends MY_Controller
             // user email
             if(array_key_exists('email', $user)){
                 $exists_user = $this->User->getBy('email', $user['email']);
-                if($exists_user->id != $this->user->id)
+                if($exists_user && $exists_user->id != $this->user->id)
                     $this->form->setError('email', 'The email already exists');
             }
             
