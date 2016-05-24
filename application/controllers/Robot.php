@@ -11,26 +11,9 @@ class Robot extends MY_Controller
         $pages = array();
         $last_update = 0;
         
-        $this->load->model('Gallery_model', 'Gallery');
         $this->load->model('Post_model', 'Post');
         $this->load->model('Event_model', 'Event');
         $this->load->library('ObjectFormatter', '', 'formatter');
-        
-        // GALLERIES
-        $galleries = $this->Gallery->getByCond([], 25);
-        if($galleries){
-            $galleries = $this->formatter->gallery($galleries, false, false);
-            foreach($galleries as $gallery){
-                $pages[] = (object)array(
-                    'page' => base_url($gallery->page),
-                    'description' => $gallery->seo_description->value ? $gallery->seo_description : $gallery->description->chars(160),
-                    'title' => $gallery->name,
-                    'categories' => []
-                );
-                if($gallery->created->time > $last_update)
-                    $last_update = $gallery->created->time;
-            }
-        }
         
         // EVENT
         $events = $this->Event->getByCond([], 25);
@@ -98,7 +81,6 @@ class Robot extends MY_Controller
         $two_days_ago = $two_days_ago->format('Y-m-d');
         
         $this->load->model('Event_model', 'Event');
-        $this->load->model('Gallery_model', 'Gallery');
         $this->load->model('Post_model', 'Post');
         $this->load->model('Postcategory_model', 'PCategory');
         $this->load->model('Postcategorychain_model', 'PCChain');
@@ -108,26 +90,6 @@ class Robot extends MY_Controller
         $this->load->model('Page_model', 'Page');
         $this->load->library('ObjectFormatter', '', 'formatter');
         
-        // GALLERIES
-        $cond = array(
-            'created' => (object)['>', $two_days_ago]
-        );
-        $galleries = $this->Gallery->getByCond($cond, true);
-        if($galleries){
-            $galleries = $this->formatter->gallery($galleries, false, false);
-            foreach($galleries as $gallery){
-                $pages[] = (object)array(
-                    'loc' => base_url($gallery->page),
-                    'lastmod' => $gallery->created->format('Y-m-d'),
-                    'changefreq' => 'yearly',
-                    'priority' => '0.5',
-                    'image_loc' => $gallery->cover,
-                    'image_caption' => $gallery->name
-                );
-                if($gallery->created->time > $last_update)
-                    $last_update = $gallery->created->time;
-            }
-        }
         
         // EVENTS
         $cond = array(

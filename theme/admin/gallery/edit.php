@@ -16,18 +16,13 @@
                 <form method="post">
                     <div class="row">
                         <div class="col-md-9">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <?= $this->form->field('name'); ?>
-                                </div>
-                            </div>
-                            
+                        
                             <div class="row">
                                 <div class="col-md-6">
                                     <?= $this->form->field('cover'); ?>
                                 </div>
                                 <div class="col-md-6">
-                                    <?= $this->form->field('slug'); ?>
+                                    <?= $this->form->field('name'); ?>
                                     <?= $this->form->field('description'); ?>
                                 </div>
                             </div>
@@ -45,14 +40,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="col-md-3 bg-info">
-                            <div>&#160;</div>
-                            <?= $this->form->field('seo_schema', 'gallery.seo_schema') ?>
-                            <?= $this->form->field('seo_title') ?>
-                            <?= $this->form->field('seo_description') ?>
-                            <?= $this->form->field('seo_keywords') ?>
                         </div>
                         
                     </div>

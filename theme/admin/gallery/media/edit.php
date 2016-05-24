@@ -15,9 +15,18 @@
                 
                 <form method="post">
                     <div class="row">
-                        <div class="col-md-4">
-                            <?= $this->form->field('media'); ?>
+                        <div class="col-md-8">
                             <?= $this->form->field('title'); ?>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <?= $this->form->field('media'); ?>
+                                </div>
+                                <div class="col-md-6">
+                                    <?= $this->form->field('media_label'); ?>
+                                </div>
+                            </div>
+                            
                             <?= $this->form->field('description'); ?>
                             
                             <div class="row">
@@ -34,14 +43,7 @@
                                 </div>
                             </div>
                         </div>
-                    
-                        <div class="col-md-3 bg-info">
-                            <div>&#160;</div>
-                            <?= $this->form->field('seo_schema', 'gallery_media.seo_schema') ?>
-                            <?= $this->form->field('seo_title') ?>
-                            <?= $this->form->field('seo_description') ?>
-                            <?= $this->form->field('seo_keywords') ?>
-                        </div>
+                        
                     </div>
                 </form>
             </div>

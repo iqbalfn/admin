@@ -148,16 +148,6 @@ TRUNCATE `site_enum`;
 INSERT INTO `site_enum` ( `group`, `value`, `label` ) VALUES
     ( 'event.seo_schema', 'Event', 'Event' ),
     
-    ( 'gallery.seo_schema', 'CollectionPage', 'CollectionPage' ),
-    ( 'gallery.seo_schema', 'ImageGallery', 'ImageGallery' ),
-    ( 'gallery.seo_schema', 'VideoGallery', 'VideoGallery' ),
-    
-    ( 'gallery_media.seo_schema', 'MediaObject', 'MediaObject' ),
-    ( 'gallery_media.seo_schema', 'AudioObject', 'AudioObject' ),
-    ( 'gallery_media.seo_schema', 'ImageObject', 'ImageObject' ),
-    ( 'gallery_media.seo_schema', 'MusicVideoObject', 'MusicVideoObject' ),
-    ( 'gallery_media.seo_schema', 'VideoObject', 'VideoObject' ),
-    
     ( 'post.status', 1, 'Draft' ),
     ( 'post.status', 2, 'Editor' ),
     ( 'post.status', 3, 'Schedule' ),

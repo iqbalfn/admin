@@ -22,19 +22,14 @@ $config['object_formatter'] = array(
         'cover' => 'media',
         'name' => 'text',
         'user' => '@parent[user]',
-        'page' => 'join(/gallery/|$slug)',
         'description' => 'text',
-        'created' => 'date',
-        'seo_schema' => 'enum',
-        'seo_description' => 'text'
+        'created' => 'date'
     ),
     
     'gallery_media' => array(
         'title' => 'text',
         'media' => 'media',
-        'page' => 'join(/gallery/|$gallery.slug|/|$id)',
-        'seo_schema' => 'enum',
-        'seo_description' => 'text'
+        'media_label' => 'text'
     ),
     
     'page' => array(

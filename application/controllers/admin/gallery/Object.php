@@ -94,11 +94,15 @@ class Object extends MY_Controller
         $this->load->model('Post_model', 'Post');
         $posts = $this->Post->getBy('gallery', $id, true);
         if($posts){
+            $this->load->library('ObjectFormatter', '', 'formatter');
+            
             $posts_id = prop_values($posts, 'id');
             $this->Post->set($posts_id, ['gallery'=>null]);
+            
+            $posts = $this->formatter->post($posts, false, false);
             // remove posts cache
             foreach($posts as $post)
-                $this->output->delete_cache('/post/read/' . $post->slug);
+                $this->output->delete_cache($post->page);
         }
 
         $this->Gallery->remove($id);

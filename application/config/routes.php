@@ -143,9 +143,6 @@ $route['media/(:any)/(:any)/(:any)/(:any)'] = 'media/resize/$1/$2/$3/$4';
 $route['event/feed.xml'] = 'event/feed';
 $route['event/(:any)'] = 'event/single/$1';
 
-$route['gallery/feed.xml'] = 'gallery/feed';
-$route['gallery/(:any)'] = 'gallery/single/$1';
-
 $route['page/(:any)'] = 'page/single/$1';
 
 $route['post/feed.xml'] = 'post/feed';

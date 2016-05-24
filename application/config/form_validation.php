@@ -169,19 +169,6 @@ $config = array(
             )
         ),
         
-        'slug' => array(
-            'field' => 'slug',
-            'label' => 'Slug',
-            'rules' => 'required|is_unique[gallery.slug,3]',
-            'input' => array(
-                'type' => 'text',
-                'attrs' => array(
-                    'class' => 'slugify',
-                    'data-source' => '#field-name'
-                )
-            )
-        ),
-        
         'name' => array(
             'field' => 'name',
             'label' => 'Name',
@@ -197,42 +184,6 @@ $config = array(
             'rules' => '',
             'input' => array(
                 'type' => 'textarea'
-            )
-        ),
-        
-        'seo_schema' => array(
-            'field' => 'seo_schema',
-            'label' => 'Schema',
-            'rules' => '',
-            'input' => array(
-                'type' => 'select'
-            )
-        ),
-        
-        'seo_title' => array(
-            'field' => 'seo_title',
-            'label' => 'Meta Title',
-            'rules' => '',
-            'input' => array(
-                'type' => 'text'
-            )
-        ),
-        
-        'seo_description' => array(
-            'field' => 'seo_description',
-            'label' => 'Meta Description',
-            'rules' => '',
-            'input' => array(
-                'type' => 'textarea'
-            )
-        ),
-        
-        'seo_keywords' => array(
-            'field' => 'seo_keywords',
-            'label' => 'Meta Keywords',
-            'rules' => '',
-            'input' => array(
-                'type' => 'tag'
             )
         )
         
@@ -259,50 +210,24 @@ $config = array(
             )
         ),
         
-        'description' => array(
-            'field' => 'description',
-            'label' => 'Description',
-            'rules' => '',
-            'input' => array(
-                'type' => 'textarea'
-            )
-        ),
-        
-        'seo_schema' => array(
-            'field' => 'seo_schema',
-            'label' => 'Schema',
-            'rules' => '',
-            'input' => array(
-                'type' => 'select'
-            )
-        ),
-        
-        'seo_title' => array(
-            'field' => 'seo_title',
-            'label' => 'Meta Title',
+        'media_label' => array(
+            'field' => 'media_label',
+            'label' => 'Media Label',
             'rules' => '',
             'input' => array(
                 'type' => 'text'
             )
         ),
         
-        'seo_description' => array(
-            'field' => 'seo_description',
-            'label' => 'Meta Description',
+        'description' => array(
+            'field' => 'description',
+            'label' => 'Description',
             'rules' => '',
             'input' => array(
-                'type' => 'textarea'
-            )
-        ),
-        
-        'seo_keywords' => array(
-            'field' => 'seo_keywords',
-            'label' => 'Meta Keywords',
-            'rules' => '',
-            'input' => array(
-                'type' => 'tag'
+                'type' => 'tinymce'
             )
         )
+        
     ),
     
     '/admin/me/login' => array(

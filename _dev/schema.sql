@@ -33,16 +33,9 @@ DROP TABLE IF EXISTS `gallery`;
 CREATE TABLE `gallery` (
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user` BIGINT NOT NULL,
-    `slug` VARCHAR(50),
     `name` VARCHAR(50),
     `cover` VARCHAR(150),
     `description` TEXT,
-    
-    `seo_schema` VARCHAR(25),
-    `seo_title` VARCHAR(160),
-    `seo_description` TEXT,
-    `seo_keywords` TEXT,
-    
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -52,14 +45,9 @@ CREATE TABLE `gallery_media` (
     `user` BIGINT NOT NULL,
     `gallery` BIGINT,
     `media` VARCHAR(150),
+    `media_label` VARCHAR(150),
     `title` VARCHAR(150),
     `description` TEXT,
-    
-    `seo_schema` VARCHAR(25),
-    `seo_title` VARCHAR(160),
-    `seo_description` TEXT,
-    `seo_keywords` TEXT,
-    
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
