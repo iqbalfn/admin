@@ -10,6 +10,31 @@ class SiteMeta
         
     }
     
+    public function _ga($ga){
+        $ga_code = $this->CI->setting->item('code_google_analytics');
+        
+        $tx = '';
+        
+        if($ga_code){
+            $tx.= '<script>';
+            $tx.=   '(function(i,s,o,g,r,a,m){';
+            $tx.=   'i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){';
+            $tx.=   '(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)';
+            $tx.=   '})(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\');';
+            $tx.=   'ga(\'create\', \'' . $ga_code . '\', \'auto\');';
+            if($ga){
+                $ga_group = array_key_exists('group', $ga) ? $ga['group'] : '';
+                $ga_index = array_key_exists('index', $ga) ? $ga['index'] : $this->CI->setting->item('google_analytics_content_group');
+                if($ga_group)
+                    $tx.= 'ga(\'set\', \'contentGroup' . $ga_index . '\', \'' . $ga_group . '\');';
+            }
+            $tx.=   'ga(\'send\', \'pageview\');';
+            $tx.= '</script>';
+        }
+        
+        return $tx;
+    }
+    
     private function _general($title=null, $metas=array(), $schemes=array(), $ga=array()){
         $tx = '<meta charset="utf-8">';
         $tx.= '<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">';
@@ -92,23 +117,7 @@ class SiteMeta
         
         $tx.= '<link href="' . base_url(uri_string()) . '" rel="canonical">';
         
-        $ga_code = $this->CI->setting->item('code_google_analytics');
-        if($ga_code){
-            $tx.= '<script>';
-            $tx.=   '(function(i,s,o,g,r,a,m){';
-            $tx.=   'i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){';
-            $tx.=   '(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)';
-            $tx.=   '})(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\');';
-            $tx.=   'ga(\'create\', \'' . $ga_code . '\', \'auto\');';
-            if($ga){
-                $ga_group = array_key_exists('group', $ga) ? $ga['group'] : '';
-                $ga_index = array_key_exists('index', $ga) ? $ga['index'] : $this->CI->setting->item('google_analytics_content_group');
-                if($ga_group)
-                    $tx.= 'ga(\'set\', \'contentGroup' . $ga_index . '\', \'' . $ga_group . '\');';
-            }
-            $tx.=   'ga(\'send\', \'pageview\');';
-            $tx.= '</script>';
-        }
+        $tx.= $this->_ga($ga);
         
         if($title)
             $tx.= '<title>' . $title . ' - ' . $this->CI->setting->item('site_name') . '</title>';

@@ -35,7 +35,23 @@
      </figure>
 
       <figure class="op-tracker">
-          <iframe src="<?= base_url($post->page) ?>?utm_source=instant&amp;utm_medium=cmp&amp;utm_campaign=instant"></iframe>
+          <iframe>
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <meta charset="utf-8">
+                    <title><?= $post->title->clean(); ?> - <?= ci()->setting->item('site_name') ?></title>
+                    <?php
+                        $ga = array();
+                        if($post->ga_group)
+                            $ga['group'] = $post->ga_group;
+                        echo $this->meta->_ga($ga);
+                    ?>
+                    <link rel="canonical" href="<?= base_url($post->page) ?>">
+                </head>
+                <body></body>
+            </html>
+          </iframe>
       </figure>
 
       <footer>
