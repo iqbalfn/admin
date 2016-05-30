@@ -743,7 +743,7 @@ class SiteForm
         );
         
         $preset_attrs = array(
-            'class'         => 'object-filter'
+            'class' => 'object-filter'
         );
         $input['attrs'] = $this->_genAttribute($preset_attrs);
         
@@ -768,6 +768,33 @@ class SiteForm
             }
         }
         
+        $input_group_btn = array(
+            'tag' => 'span',
+            'attrs' => array( 'class' => 'input-group-btn' ),
+            'children' => array(
+                array(
+                    'tag' => 'button',
+                    'attrs' => array(
+                        'class' => 'btn btn-default object-filter-cleaner',
+                        'type'  => 'button',
+                        'data-target' => '#' . $input['attrs']['id']
+                    ),
+                    'children' => array(
+                        array(
+                            'tag' => 'i',
+                            'attrs' => array( 'class' => 'glyphicon glyphicon-ban-circle' )
+                        )
+                    )
+                )
+            )
+        );
+        
+        $input_group = array(
+            'attrs' => ['class'=>'input-group'],
+            'children' => array( $input, $input_group_btn )
+        );
+        
+        return $input_group;
         return $input;
     }
     

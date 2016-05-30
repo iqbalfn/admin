@@ -136,6 +136,12 @@ $(function(){
                 return result;
             }
         });
+    $('.object-filter-cleaner').each(function(i,e){
+        $(e).click(function(){
+            var target = $($(this).data('target'));
+            target.selectpicker('val', '');
+        });
+    });
     
     // tinymce
     if($('.tinymce').get(0)){
