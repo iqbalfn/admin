@@ -19,7 +19,8 @@ class Object extends MY_Controller
         $files = array_diff(scandir(APPPATH . 'cache'), ['.', '..', '.htaccess', 'index.html']);
         foreach($files as $file){
             $file_path = APPPATH . 'cache/' . $file;
-            unlink($file_path);
+            if(is_file($file_path))
+                unlink($file_path);
         }
         
         $params = array(
