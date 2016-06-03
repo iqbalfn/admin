@@ -10,6 +10,9 @@ dan isikan nama domain project ini di bagian `$config['base_url']` pada baris `~
 Isikan dengan format `http://NAMADOMAIN.EXT/`. Nilai config ini harus full website
 dan dengan diakhiri '/'.
 
+Pastikan folder `./media` dan `./application/cache` bisa dibaca dan ditulis oleh
+user yang menjalankan script PHP.
+
 Jika Anda ingin menggunakan system ini untuk TimeZone yang bukan area `Asia/Jakarta`,
 ubah juga konfigurasi timezone di file `application/config/config.php` di bagian
 `$config['time_reference']` pada baris `~501`.
