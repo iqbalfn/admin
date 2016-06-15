@@ -34,8 +34,26 @@ class MY_Form_validation extends CI_Form_validation
         if(substr($str, 0, 4) === 'http')
             return true;
         
-        $abs = dirname(BASEPATH) . '/' . ltrim($str, '/');
-        return is_file($abs);
+        if(!strstr($str,',')){
+            $abs = dirname(BASEPATH) . '/' . ltrim($str, '/');
+            return is_file($abs);
+        }
+        
+        $new_values = [];
+        
+        $strs = explode(',', $str);
+        foreach($strs as $str){
+            $str = trim($str);
+            if(!$str)
+                continue;
+            $abs = dirname(BASEPATH) . '/' . ltrim($str, '/');
+            if(is_file($abs))
+                $new_values[] = $str;
+        }
+        
+        if(!count($new_values))
+            return false;
+        return implode(',', $new_values);
     }
     
     /**

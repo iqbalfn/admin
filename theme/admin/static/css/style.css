@@ -2612,6 +2612,34 @@ textarea.form-control {
 .form-control-preview > img {
   width: 100%;
 }
+.form-control-images {
+  display: block;
+  width: 100%;
+  border: 1px solid #ccc;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  overflow: auto;
+  padding-bottom: 10px;
+  position: relative;
+}
+.images-uploader-thumber {
+  overflow-x: auto;
+  min-height: 50px;
+  width: 100%;
+}
+.images-uploader-thumber > .thumbnail {
+  display: inline-block;
+  vertical-align: top;
+  width: 242px;
+  margin: 10px 0 0 10px;
+}
+.images-uploader-file {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-top: 0 none !important;
+  border-right: 0 none !important;
+}
 .form-control-multiple {
   display: block;
   width: 100%;

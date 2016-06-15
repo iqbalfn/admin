@@ -24,6 +24,9 @@ $(function(){
     $('.slugify').slugify();
     $('canvas.chart').chart();
     
+    $('.images-uploader').imageUploader();
+    $('.images-uploader-file').imageUploaderBtn();
+    
     $('.tokenfield').tokenfield();
     
     $('.select-box').selectpicker();

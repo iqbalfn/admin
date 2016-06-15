@@ -502,6 +502,54 @@ class SiteForm
     }
     
     /**
+     * multiple image
+     */
+    private function _inputImages(){
+        $input = array(
+            'tag' => 'input',
+            'children' => array()
+        );
+        
+        $preset_attrs = array(
+            'type' => 'hidden',
+            'class' => 'images-uploader',
+            'data-accept' => 'image/*',
+            'value' => set_value($this->input_name, $this->input_value),
+            'data-type' => $this->form_name . '.' . $this->input_name
+        );
+        
+        if($this->object && property_exists($this->object, 'id'))
+            $preset_attrs['data-object'] = $this->object->id;
+        
+        $input['attrs'] = $this->_genAttribute($preset_attrs);
+        
+        $image_thumber = array(
+            'children' => array(),
+            'attrs' => array(
+                'id' => $this->input_id . '-thumber',
+                'class' => 'images-uploader-thumber'
+            )
+        );
+        
+        $image_uploader = array(
+            'children' => '<i class="glyphicon glyphicon-open-file"></i>',
+            'attrs' => array(
+                'class' => 'images-uploader-file btn btn-default',
+                'data-target' => $this->input_id
+            )
+        );
+        
+        $images_container = array(
+            'children' => array($input, $image_uploader, $image_thumber),
+            'attrs' => array(
+                'class' => 'form-control-images'
+            )
+        );
+        
+        return $images_container;
+    }
+    
+    /**
      * general input
      */
     private function _inputMultiple(){
@@ -934,6 +982,8 @@ class SiteForm
             'object'            => '_inputObject',
             
             'boolean'           => '_inputBoolean',
+            
+            'images'            => '_inputImages',
             
             'multiple'          => '_inputMultiple',
             'parent'            => '_inputParent'
