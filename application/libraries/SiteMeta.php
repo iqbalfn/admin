@@ -429,7 +429,7 @@ class SiteMeta
         }
         
         if($contacts)
-            $data['contactPoint'] == $contacts;
+            $data['contactPoint'] = $contacts;
         
         $schemas[] = $data;
         
