@@ -390,7 +390,7 @@ class SiteForm
         
         // location
         if($this->input_type == 'location'){
-            $this->_addExComponent('http://maps.google.com/maps/api/js?libraries=places&ampkey=' . $this->CI->setting->item('code_google_map'), 'js');
+            $this->_addExComponent('http://maps.google.com/maps/api/js?libraries=places&amp;key=' . $this->CI->setting->item('code_google_map'), 'js');
             
             $span = array(
                 'tag' => 'span',

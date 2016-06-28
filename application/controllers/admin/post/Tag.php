@@ -13,7 +13,7 @@ class Tag extends MY_Controller
         parent::__construct();
 
         $this->load->model('Posttag_model', 'PTag');
-        $this->load->library('ObjectFormatter', '', 'format');
+        $this->load->library('ObjectFormatter', '', 'formatter');
     }
 
     function edit($id=null){
@@ -80,10 +80,8 @@ class Tag extends MY_Controller
         $page= false;
 
         $result = $this->PTag->getByCond($cond, $rpp, $page);
-        if($result){
-            $this->load->library('ObjectFormatter', '', 'format');
-            $params['tags'] = $this->format->post_tag($result, false, true);
-        }
+        if($result)
+            $params['tags'] = $this->formatter->post_tag($result, false, true);
 
         $this->respond('post/tag/index', $params);
     }

@@ -95,7 +95,7 @@ class Category extends MY_Controller
             $groupped_result = [];
             foreach($result as $row){
                 $parent = 0;
-                if($row->parent)
+                if($row->parent && is_object($row->parent))
                     $parent = $row->parent->id;
                 if(!array_key_exists($parent, $groupped_result))
                     $groupped_result[$parent] = array();
