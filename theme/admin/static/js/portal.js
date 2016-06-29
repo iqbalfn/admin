@@ -4058,6 +4058,344 @@ function sortObject(objs, prop){
 }(jQuery);
 
 /* ========================================================================
+ * Bootstrap: modal.js v3.3.6
+ * http://getbootstrap.com/javascript/#modals
+ * ========================================================================
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // MODAL CLASS DEFINITION
+  // ======================
+
+  var Modal = function (element, options) {
+    this.options             = options
+    this.$body               = $(document.body)
+    this.$element            = $(element)
+    this.$dialog             = this.$element.find('.modal-dialog')
+    this.$backdrop           = null
+    this.isShown             = null
+    this.originalBodyPad     = null
+    this.scrollbarWidth      = 0
+    this.ignoreBackdropClick = false
+
+    if (this.options.remote) {
+      this.$element
+        .find('.modal-content')
+        .load(this.options.remote, $.proxy(function () {
+          this.$element.trigger('loaded.bs.modal')
+        }, this))
+    }
+  }
+
+  Modal.VERSION  = '3.3.6'
+
+  Modal.TRANSITION_DURATION = 300
+  Modal.BACKDROP_TRANSITION_DURATION = 150
+
+  Modal.DEFAULTS = {
+    backdrop: true,
+    keyboard: true,
+    show: true
+  }
+
+  Modal.prototype.toggle = function (_relatedTarget) {
+    return this.isShown ? this.hide() : this.show(_relatedTarget)
+  }
+
+  Modal.prototype.show = function (_relatedTarget) {
+    var that = this
+    var e    = $.Event('show.bs.modal', { relatedTarget: _relatedTarget })
+
+    this.$element.trigger(e)
+
+    if (this.isShown || e.isDefaultPrevented()) return
+
+    this.isShown = true
+
+    this.checkScrollbar()
+    this.setScrollbar()
+    this.$body.addClass('modal-open')
+
+    this.escape()
+    this.resize()
+
+    this.$element.on('click.dismiss.bs.modal', '[data-dismiss="modal"]', $.proxy(this.hide, this))
+
+    this.$dialog.on('mousedown.dismiss.bs.modal', function () {
+      that.$element.one('mouseup.dismiss.bs.modal', function (e) {
+        if ($(e.target).is(that.$element)) that.ignoreBackdropClick = true
+      })
+    })
+
+    this.backdrop(function () {
+      var transition = $.support.transition && that.$element.hasClass('fade')
+
+      if (!that.$element.parent().length) {
+        that.$element.appendTo(that.$body) // don't move modals dom position
+      }
+
+      that.$element
+        .show()
+        .scrollTop(0)
+
+      that.adjustDialog()
+
+      if (transition) {
+        that.$element[0].offsetWidth // force reflow
+      }
+
+      that.$element.addClass('in')
+
+      that.enforceFocus()
+
+      var e = $.Event('shown.bs.modal', { relatedTarget: _relatedTarget })
+
+      transition ?
+        that.$dialog // wait for modal to slide in
+          .one('bsTransitionEnd', function () {
+            that.$element.trigger('focus').trigger(e)
+          })
+          .emulateTransitionEnd(Modal.TRANSITION_DURATION) :
+        that.$element.trigger('focus').trigger(e)
+    })
+  }
+
+  Modal.prototype.hide = function (e) {
+    if (e) e.preventDefault()
+
+    e = $.Event('hide.bs.modal')
+
+    this.$element.trigger(e)
+
+    if (!this.isShown || e.isDefaultPrevented()) return
+
+    this.isShown = false
+
+    this.escape()
+    this.resize()
+
+    $(document).off('focusin.bs.modal')
+
+    this.$element
+      .removeClass('in')
+      .off('click.dismiss.bs.modal')
+      .off('mouseup.dismiss.bs.modal')
+
+    this.$dialog.off('mousedown.dismiss.bs.modal')
+
+    $.support.transition && this.$element.hasClass('fade') ?
+      this.$element
+        .one('bsTransitionEnd', $.proxy(this.hideModal, this))
+        .emulateTransitionEnd(Modal.TRANSITION_DURATION) :
+      this.hideModal()
+  }
+
+  Modal.prototype.enforceFocus = function () {
+    $(document)
+      .off('focusin.bs.modal') // guard against infinite focus loop
+      .on('focusin.bs.modal', $.proxy(function (e) {
+        if (this.$element[0] !== e.target && !this.$element.has(e.target).length) {
+          this.$element.trigger('focus')
+        }
+      }, this))
+  }
+
+  Modal.prototype.escape = function () {
+    if (this.isShown && this.options.keyboard) {
+      this.$element.on('keydown.dismiss.bs.modal', $.proxy(function (e) {
+        e.which == 27 && this.hide()
+      }, this))
+    } else if (!this.isShown) {
+      this.$element.off('keydown.dismiss.bs.modal')
+    }
+  }
+
+  Modal.prototype.resize = function () {
+    if (this.isShown) {
+      $(window).on('resize.bs.modal', $.proxy(this.handleUpdate, this))
+    } else {
+      $(window).off('resize.bs.modal')
+    }
+  }
+
+  Modal.prototype.hideModal = function () {
+    var that = this
+    this.$element.hide()
+    this.backdrop(function () {
+      that.$body.removeClass('modal-open')
+      that.resetAdjustments()
+      that.resetScrollbar()
+      that.$element.trigger('hidden.bs.modal')
+    })
+  }
+
+  Modal.prototype.removeBackdrop = function () {
+    this.$backdrop && this.$backdrop.remove()
+    this.$backdrop = null
+  }
+
+  Modal.prototype.backdrop = function (callback) {
+    var that = this
+    var animate = this.$element.hasClass('fade') ? 'fade' : ''
+
+    if (this.isShown && this.options.backdrop) {
+      var doAnimate = $.support.transition && animate
+
+      this.$backdrop = $(document.createElement('div'))
+        .addClass('modal-backdrop ' + animate)
+        .appendTo(this.$body)
+
+      this.$element.on('click.dismiss.bs.modal', $.proxy(function (e) {
+        if (this.ignoreBackdropClick) {
+          this.ignoreBackdropClick = false
+          return
+        }
+        if (e.target !== e.currentTarget) return
+        this.options.backdrop == 'static'
+          ? this.$element[0].focus()
+          : this.hide()
+      }, this))
+
+      if (doAnimate) this.$backdrop[0].offsetWidth // force reflow
+
+      this.$backdrop.addClass('in')
+
+      if (!callback) return
+
+      doAnimate ?
+        this.$backdrop
+          .one('bsTransitionEnd', callback)
+          .emulateTransitionEnd(Modal.BACKDROP_TRANSITION_DURATION) :
+        callback()
+
+    } else if (!this.isShown && this.$backdrop) {
+      this.$backdrop.removeClass('in')
+
+      var callbackRemove = function () {
+        that.removeBackdrop()
+        callback && callback()
+      }
+      $.support.transition && this.$element.hasClass('fade') ?
+        this.$backdrop
+          .one('bsTransitionEnd', callbackRemove)
+          .emulateTransitionEnd(Modal.BACKDROP_TRANSITION_DURATION) :
+        callbackRemove()
+
+    } else if (callback) {
+      callback()
+    }
+  }
+
+  // these following methods are used to handle overflowing modals
+
+  Modal.prototype.handleUpdate = function () {
+    this.adjustDialog()
+  }
+
+  Modal.prototype.adjustDialog = function () {
+    var modalIsOverflowing = this.$element[0].scrollHeight > document.documentElement.clientHeight
+
+    this.$element.css({
+      paddingLeft:  !this.bodyIsOverflowing && modalIsOverflowing ? this.scrollbarWidth : '',
+      paddingRight: this.bodyIsOverflowing && !modalIsOverflowing ? this.scrollbarWidth : ''
+    })
+  }
+
+  Modal.prototype.resetAdjustments = function () {
+    this.$element.css({
+      paddingLeft: '',
+      paddingRight: ''
+    })
+  }
+
+  Modal.prototype.checkScrollbar = function () {
+    var fullWindowWidth = window.innerWidth
+    if (!fullWindowWidth) { // workaround for missing window.innerWidth in IE8
+      var documentElementRect = document.documentElement.getBoundingClientRect()
+      fullWindowWidth = documentElementRect.right - Math.abs(documentElementRect.left)
+    }
+    this.bodyIsOverflowing = document.body.clientWidth < fullWindowWidth
+    this.scrollbarWidth = this.measureScrollbar()
+  }
+
+  Modal.prototype.setScrollbar = function () {
+    var bodyPad = parseInt((this.$body.css('padding-right') || 0), 10)
+    this.originalBodyPad = document.body.style.paddingRight || ''
+    if (this.bodyIsOverflowing) this.$body.css('padding-right', bodyPad + this.scrollbarWidth)
+  }
+
+  Modal.prototype.resetScrollbar = function () {
+    this.$body.css('padding-right', this.originalBodyPad)
+  }
+
+  Modal.prototype.measureScrollbar = function () { // thx walsh
+    var scrollDiv = document.createElement('div')
+    scrollDiv.className = 'modal-scrollbar-measure'
+    this.$body.append(scrollDiv)
+    var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth
+    this.$body[0].removeChild(scrollDiv)
+    return scrollbarWidth
+  }
+
+
+  // MODAL PLUGIN DEFINITION
+  // =======================
+
+  function Plugin(option, _relatedTarget) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.modal')
+      var options = $.extend({}, Modal.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data) $this.data('bs.modal', (data = new Modal(this, options)))
+      if (typeof option == 'string') data[option](_relatedTarget)
+      else if (options.show) data.show(_relatedTarget)
+    })
+  }
+
+  var old = $.fn.modal
+
+  $.fn.modal             = Plugin
+  $.fn.modal.Constructor = Modal
+
+
+  // MODAL NO CONFLICT
+  // =================
+
+  $.fn.modal.noConflict = function () {
+    $.fn.modal = old
+    return this
+  }
+
+
+  // MODAL DATA-API
+  // ==============
+
+  $(document).on('click.bs.modal.data-api', '[data-toggle="modal"]', function (e) {
+    var $this   = $(this)
+    var href    = $this.attr('href')
+    var $target = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))) // strip for ie7
+    var option  = $target.data('bs.modal') ? 'toggle' : $.extend({ remote: !/#/.test(href) && href }, $target.data(), $this.data())
+
+    if ($this.is('a')) e.preventDefault()
+
+    $target.one('show.bs.modal', function (showEvent) {
+      if (showEvent.isDefaultPrevented()) return // only register focus restorer if modal will actually get shown
+      $target.one('hidden.bs.modal', function () {
+        $this.is(':visible') && $this.trigger('focus')
+      })
+    })
+    Plugin.call($target, option, this)
+  })
+
+}(jQuery);
+
+/* ========================================================================
  * Bootstrap: tooltip.js v3.3.6
  * http://getbootstrap.com/javascript/#tooltip
  * Inspired by the original jQuery.tipsy by Jason Frame
@@ -8460,7 +8798,6 @@ function sortObject(objs, prop){
 
 
 }).call(this);
-
 (function ($) {
     'use strict';
     
@@ -8545,6 +8882,10 @@ function sortObject(objs, prop){
     };
     
 })(jQuery);
+
+$(function(){
+    $('canvas.chart').chart();
+});
     // Color object
 var Color = function(val, customColors) {
   this.value = {
@@ -9634,6 +9975,9 @@ Color.prototype = {
 
   }));
 
+$(function(){
+    $('.color-picker').colorpicker();
+});
 /*! version : 4.17.37
  =========================================================
  bootstrap-datetimejs
@@ -12187,6 +12531,12 @@ Color.prototype = {
     };
 }));
 
+$(function(){
+    $('.date-picker').datetimepicker({format: 'YYYY-MM-DD'});
+    $('.datetime-picker').datetimepicker({format: 'YYYY-MM-DD HH:mm:ss'});
+    $('.month-picker').datetimepicker({format: 'MM'});
+    $('.time-picker').datetimepicker({format: 'HH:mm:ss'});
+});
 (function ($) {
   'use strict';
 
@@ -13879,6 +14229,11 @@ Color.prototype = {
   });
 })(jQuery);
 
+$(function(){
+    $('.select-box').selectpicker();
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent))
+        $('.select-box').selectpicker('mobile');
+});
 /*!
  * Ajax Bootstrap Select
  *
@@ -15739,6 +16094,9 @@ $.fn.ajaxSelectPicker.locale.en = $.fn.ajaxSelectPicker.locale['en-US'];
 	};
 }(jQuery || $)); // jQuery or jQuery-like library, such as Zepto
 
+$(function(){
+    $('.textarea-dynamic').autosize();
+});
 (function ($) {
     'use strict';
     
@@ -15815,6 +16173,10 @@ $.fn.ajaxSelectPicker.locale.en = $.fn.ajaxSelectPicker.locale['en-US'];
     };
     
 })(jQuery);
+
+$(function(){
+    $('.btn-uploader').fileUploader();
+});
 $(function(){
     $('.form-control-image').change(function(){
         var previewer = $(this).data('preview');
@@ -15850,6 +16212,10 @@ $(function(){
     };
     
 })(jQuery);
+
+$(function(){
+    $('.slugify').slugify();
+});
 /*!
  * bootstrap-tokenfield
  * https://github.com/sliptree/bootstrap-tokenfield
@@ -16893,6 +17259,9 @@ $(function(){
 
 }));
 
+$(function(){
+    $('.tokenfield').tokenfield();
+});
 /*! jquery-locationpicker - v0.1.13 - 2016-03-11 */
 (function($) {
     function GMapContext(domElement, options) {
@@ -17311,8 +17680,190 @@ $(function(){
     }
     
 }(window, jQuery);
+
 $(function(){
-    // btn-password-masker
+    $('.images-uploader').imageUploader();
+    $('.images-uploader-file').imageUploaderBtn();
+});
+$(function(){
+    $('.btn-confirm').click(function(e){
+        var $this = $(this);
+        var title = $this.data('title') || 'Confirmation';
+        var content = $this.data('confirm') || 'Are you sure?';
+        var href = $this.attr('href');
+        var label = $this.html();
+        
+        var classes = $this.attr('class').split(' ');
+        classes.splice(classes.indexOf('btn-confirm'),1);
+        classes = classes.join(' ');
+        
+        // let create modal windows to confirm deletion
+        var modal = '<div class="modal fade" tabindex="-1" role="dialog">'
+                  +     '<div class="modal-dialog">'
+                  +         '<div class="modal-content">'
+                  +             '<div class="modal-header">'
+                  +                 '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+                  +                 '<h4 class="modal-title">' + title + '</h4>'
+                  +             '</div>'
+                  +             '<div class="modal-body">'
+                  +                 '<p>' + content + '</p>'
+                  +             '</div>'
+                  +             '<div class="modal-footer">'
+                  +                 '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>'
+                  +                 '<a class="' + classes + '" href="' + href + '">' + label + '</a>'
+                  +             '</div>'
+                  +         '</div>'
+                  +     '</div>'
+                  + '</div>';
+        
+        modal = $(modal);
+        
+        $('body').append(modal);
+        modal.on('hidden.bs.modal', function(){
+            modal.remove();
+        });
+        modal.modal('show');
+        
+        e.preventDefault();
+    });
+});
+$(function(){
+    if($('.tinymce').get(0)){
+        var options = {
+                // main options
+                selector: '.tinymce',
+                menubar: false,
+                plugins: 'link table image media fullscreen pagebreak contextmenu autoresize paste wordcount',
+                toolbar: 'undo redo | styleselect | bold italic link | bullist numlist | table image media | pagebreak | fullscreen',
+                content_css: '/theme/admin/static/css/tinymce-content.css',
+                
+                // autoresize plugins
+                autoresize_min_height: 400,
+                autoresize_bottom_margin: 0,
+                
+                // paste configuration
+                paste_word_valid_elements: 'b,i,em,h1,h2,h3,a,li,ul,ol',
+                paste_retain_style_properties: '',
+                paste_preprocess: function(plugin, args){
+                    // TODO clean user pasted content
+                },
+                
+                // pagebreak plugins
+                pagebreak_separator: '<!-- PAGE BREAK -->',
+                
+                // parser configuration
+                convert_fonts_to_spans: true,
+                element_format: 'html',
+                fix_list_elements: true,
+                invalid_styles: {'*': 'color font-size font-family align summary'},
+                schema: 'html5',
+                browser_spellcheck: true,
+                
+                // link plugins
+                rel_list: [
+                    { title: 'None', value: '' },
+                    { title: 'No Follow', value: 'nofollow' }
+                ],
+                
+                // image plugins
+                image_dimensions: false,
+                image_caption: true,
+                image_prepend_url: false,
+
+                // media plugins
+                media_alt_source: false,
+                media_dimensions: false,
+                media_poster: false,
+                video_template_callback: function(data){
+                    if(!/facebook\.com\//.test(data.source1)){
+                        return (
+                            '<video width="' + data.width + '" height="' + data.height + '"' + (data.poster ? ' poster="' + data.poster + '"' : '') + ' controls="controls">\n' +
+                                '<source src="' + data.source1 + '"' + (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' +
+                                (data.source2 ? '<source src="' + data.source2 + '"' + (data.source2mime ? ' type="' + data.source2mime + '"' : '') + ' />\n' : '') +
+                            '</video>'
+                        );
+                    }else{
+                        return (
+                            '<div class="fb-video" contenteditable="false" data-href="' + data.source1 + '" data-allowfullscreen="true" data-width="500">' +
+                                '<a href="' + data.source1 + '" target="_blank">&#160;</a>' +
+                            '</div>'
+                        );
+                    }
+                },
+                
+                file_browser_callback: function(form, url, type, wind, wah){
+                    var accept = type == 'image' ? 'image/*' : undefined;
+                    var cTextArea = $(tinyMCE.activeEditor.targetElm);
+                    var opts = {'type': cTextArea.data('type')};
+                    
+                    if(cTextArea.data('object'))
+                        opts.object = cTextArea.data('object');
+                    
+                    $.selectFile(accept, function(file){
+                        opts.name = file.name;
+                        
+                        $.uploadFile(file, opts, function(err, data){
+                            if(err)
+                                return alert(err);
+                            $('#'+form).val(data.media_file);
+                        });
+                    });
+                }
+            };
+        
+        tinymce.init(options);
+    }
+});
+// object filterer
+
+$(function(){
+    $('.object-filter')
+        .selectpicker({
+            liveSearch: true
+        })
+        .ajaxSelectPicker({
+            ajax: {
+                url: '/admin/object-filter',
+                data: function(){
+                    var el = this.plugin.$element;
+                    var params = {
+                            q: '{{{q}}}',
+                            table: el.data('table')
+                        };
+                    return params;
+                },
+                method: 'get'
+            },
+            preprocessData: function(data){
+                if(data.error)
+                    return [];
+                
+                var el = this.plugin.$element;
+                var lbl = el.data('label');
+                var vlu = el.data('value');
+                
+                data = data.data;
+                var result = [];
+                for(var i=0; i<data.length; i++){
+                    result.push({
+                        value: data[i][vlu],
+                        text: data[i][lbl],
+                        disabled: false
+                    });
+                }
+                
+                return result;
+            }
+        });
+    $('.object-filter-cleaner').each(function(i,e){
+        $(e).click(function(){
+            var target = $($(this).data('target'));
+            target.selectpicker('val', '');
+        });
+    });
+});
+// btn-password-masker
+$(function(){
     $('.btn-password-masker').click(function(e){
         var target = $('#' + $(this).data('target'));
         var targetType = target.attr('type');
@@ -17326,27 +17877,9 @@ $(function(){
         var i = $(this).children('i');
         i.removeClass(classToRemove).addClass(classToAdd);
     });
-
-    $('.color-picker').colorpicker();
-    $('.date-picker').datetimepicker({format: 'YYYY-MM-DD'});
-    $('.datetime-picker').datetimepicker({format: 'YYYY-MM-DD HH:mm:ss'});
-    $('.month-picker').datetimepicker({format: 'MM'});
-    $('.time-picker').datetimepicker({format: 'HH:mm:ss'});
-    $('.textarea-dynamic').autosize();
-    $('.btn-uploader').fileUploader();
-    $('.slugify').slugify();
-    $('canvas.chart').chart();
-    
-    $('.images-uploader').imageUploader();
-    $('.images-uploader-file').imageUploaderBtn();
-    
-    $('.tokenfield').tokenfield();
-    
-    $('.select-box').selectpicker();
-    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent))
-        $('.select-box').selectpicker('mobile');
-    
-    // google map location pickup
+});
+// google map location pickup
+$(function(){
     $('.form-control-location').each(function(i,e){
         var $e = $(e);
         var pickerId = $e.attr('id') + '-location-pickup';
@@ -17412,137 +17945,7 @@ $(function(){
             $('#'+pickerId).locationpicker(opts);
         });
     });
+});
+$(function(){
     
-    // object filterer
-    $('.object-filter')
-        .selectpicker({
-            liveSearch: true
-        })
-        .ajaxSelectPicker({
-            ajax: {
-                url: '/admin/object-filter',
-                data: function(){
-                    var el = this.plugin.$element;
-                    var params = {
-                            q: '{{{q}}}',
-                            table: el.data('table')
-                        };
-                    return params;
-                },
-                method: 'get'
-            },
-            preprocessData: function(data){
-                if(data.error)
-                    return [];
-                
-                var el = this.plugin.$element;
-                var lbl = el.data('label');
-                var vlu = el.data('value');
-                
-                data = data.data;
-                var result = [];
-                for(var i=0; i<data.length; i++){
-                    result.push({
-                        value: data[i][vlu],
-                        text: data[i][lbl],
-                        disabled: false
-                    });
-                }
-                
-                return result;
-            }
-        });
-    $('.object-filter-cleaner').each(function(i,e){
-        $(e).click(function(){
-            var target = $($(this).data('target'));
-            target.selectpicker('val', '');
-        });
-    });
-    
-    // tinymce
-    if($('.tinymce').get(0)){
-        var options = {
-                // main options
-                selector: '.tinymce',
-                menubar: false,
-                plugins: 'link table image media fullscreen pagebreak contextmenu autoresize paste wordcount',
-                toolbar: 'undo redo | styleselect | bold italic link | bullist numlist | table image media | pagebreak | fullscreen',
-                content_css: '/theme/admin/static/css/tinymce-content.css',
-                
-                // autoresize plugins
-                autoresize_min_height: 400,
-                autoresize_bottom_margin: 0,
-                
-                // paste configuration
-                paste_word_valid_elements: 'b,i,em,h1,h2,h3,a,li,ul,ol',
-                paste_retain_style_properties: '',
-                paste_preprocess: function(plugin, args){
-                    // TODO clean user pasted content
-                },
-                
-                // pagebreak plugins
-                pagebreak_separator: '<!-- PAGE BREAK -->',
-                
-                // parser configuration
-                convert_fonts_to_spans: true,
-                element_format: 'html',
-                fix_list_elements: true,
-                invalid_styles: {'*': 'color font-size font-family align summary'},
-                schema: 'html5',
-                browser_spellcheck: true,
-                
-                // link plugins
-                rel_list: [
-                    { title: 'None', value: '' },
-                    { title: 'No Follow', value: 'nofollow' }
-                ],
-                
-                // image plugins
-                image_dimensions: false,
-                image_caption: true,
-                image_prepend_url: false,
-  
-                // media plugins
-                media_alt_source: false,
-                media_dimensions: false,
-                media_poster: false,
-                video_template_callback: function(data){
-                    if(!/facebook\.com\//.test(data.source1)){
-                        return (
-                            '<video width="' + data.width + '" height="' + data.height + '"' + (data.poster ? ' poster="' + data.poster + '"' : '') + ' controls="controls">\n' +
-                                '<source src="' + data.source1 + '"' + (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' +
-                                (data.source2 ? '<source src="' + data.source2 + '"' + (data.source2mime ? ' type="' + data.source2mime + '"' : '') + ' />\n' : '') +
-                            '</video>'
-                        );
-                    }else{
-                        return (
-                            '<div class="fb-video" contenteditable="false" data-href="' + data.source1 + '" data-allowfullscreen="true" data-width="500">' +
-                                '<a href="' + data.source1 + '" target="_blank">&#160;</a>' +
-                            '</div>'
-                        );
-                    }
-                },
-                
-                file_browser_callback: function(form, url, type, wind, wah){
-                    var accept = type == 'image' ? 'image/*' : undefined;
-                    var cTextArea = $(tinyMCE.activeEditor.targetElm);
-                    var opts = {'type': cTextArea.data('type')};
-                    
-                    if(cTextArea.data('object'))
-                        opts.object = cTextArea.data('object');
-                    
-                    $.selectFile(accept, function(file){
-                        opts.name = file.name;
-                        
-                        $.uploadFile(file, opts, function(err, data){
-                            if(err)
-                                return alert(err);
-                            $('#'+form).val(data.media_file);
-                        });
-                    });
-                }
-            };
-        
-        tinymce.init(options);
-    }
 });

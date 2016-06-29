@@ -22,3 +22,7 @@
     };
     
 })(jQuery);
+
+$(function(){
+    $('.slugify').slugify();
+});

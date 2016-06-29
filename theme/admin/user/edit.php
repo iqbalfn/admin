@@ -82,7 +82,7 @@
                         <div class="row">
                             <div class="col-md-5">
                                 <?php if(ci()->can_i('delete-user') && property_exists($user, 'id') && $user->id != 1): ?>
-                                <a href="<?= base_url('/admin/user/' . $user->id . '/remove') ?>" class="btn btn-danger"><?= _l('Delete') ?></a>
+                                <a href="<?= base_url('/admin/user/' . $user->id . '/remove') ?>" class="btn btn-danger btn-confirm" data-title="<?= _l('Delete Confirmation') ?>" data-confirm="<?= hs(_l('Are you sure want to delete this user permanently?')) ?>"><?= _l('Delete') ?></a>
                                 <?php endif; ?>
                             </div>
                             <div class="col-md-7 text-right">

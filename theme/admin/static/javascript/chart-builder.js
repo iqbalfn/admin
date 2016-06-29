@@ -82,3 +82,7 @@
     };
     
 })(jQuery);
+
+$(function(){
+    $('canvas.chart').chart();
+});

@@ -23,7 +23,7 @@
                         <div class="row">
                             <div class="col-md-5">
                                 <?php if(ci()->can_i('delete-site_menu') && property_exists($menu, 'id')): ?>
-                                <a href="<?= base_url('/admin/setting/menu/' . $menu->id . '/remove') ?>?group=<?= $menu->group ?>" class="btn btn-danger"><?= _l('Delete') ?></a>
+                                <a href="<?= base_url('/admin/setting/menu/' . $menu->id . '/remove') ?>?group=<?= $menu->group ?>" class="btn btn-danger btn-confirm" data-title="<?= _l('Delete Confirmation') ?>" data-confirm="<?= hs(_l('Are you sure want to delete this menu permanently?')) ?>"><?= _l('Delete') ?></a>
                                 <?php endif; ?>
                             </div>
                             <div class="col-md-7 text-right">

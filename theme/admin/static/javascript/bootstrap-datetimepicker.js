@@ -2550,3 +2550,10 @@
         viewDate: false
     };
 }));
+
+$(function(){
+    $('.date-picker').datetimepicker({format: 'YYYY-MM-DD'});
+    $('.datetime-picker').datetimepicker({format: 'YYYY-MM-DD HH:mm:ss'});
+    $('.month-picker').datetimepicker({format: 'MM'});
+    $('.time-picker').datetimepicker({format: 'HH:mm:ss'});
+});

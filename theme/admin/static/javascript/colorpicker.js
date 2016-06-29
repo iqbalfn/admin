@@ -566,3 +566,7 @@
     $.fn.colorpicker.constructor = Colorpicker;
 
   }));
+
+$(function(){
+    $('.color-picker').colorpicker();
+});

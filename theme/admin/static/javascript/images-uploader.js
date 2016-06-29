@@ -70,3 +70,8 @@
     }
     
 }(window, jQuery);
+
+$(function(){
+    $('.images-uploader').imageUploader();
+    $('.images-uploader-file').imageUploaderBtn();
+});

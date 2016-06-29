@@ -30,7 +30,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <?php if(ci()->can_i('delete-gallery') && property_exists($album, 'id')): ?>
-                                    <a href="<?= base_url('/admin/gallery/' . $album->id . '/remove') ?>" class="btn btn-danger"><?= _l('Delete') ?></a>
+                                    <a href="<?= base_url('/admin/gallery/' . $album->id . '/remove') ?>" class="btn btn-danger btn-confirm" data-title="<?= _l('Delete Confirmation') ?>" data-confirm="<?= hs(_l('Are you sure want to delete this gallery permanently?')) ?>"><?= _l('Delete') ?></a>
                                     <?php endif; ?>
                                 </div>
                                 <div class="col-md-6 text-right">

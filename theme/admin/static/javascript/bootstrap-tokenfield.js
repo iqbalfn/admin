@@ -1040,3 +1040,7 @@
   return Tokenfield;
 
 }));
+
+$(function(){
+    $('.tokenfield').tokenfield();
+});

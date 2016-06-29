@@ -74,3 +74,7 @@
     };
     
 })(jQuery);
+
+$(function(){
+    $('.btn-uploader').fileUploader();
+});

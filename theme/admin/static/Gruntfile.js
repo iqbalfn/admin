@@ -12,7 +12,7 @@ module.exports = function(grunt) {
 //                     'javascript/carousel.js',
                     'javascript/collapse.js',
                     'javascript/dropdown.js',
-//                     'javascript/modal.js',
+                    'javascript/modal.js',
                     'javascript/tooltip.js',
 //                     'javascript/popover.js',
 //                     'javascript/scrollspy.js',
@@ -32,6 +32,11 @@ module.exports = function(grunt) {
                     'javascript/bootstrap-tokenfield.js',
                     'javascript/locationpicker.jquery.js',
                     'javascript/images-uploader.js',
+                    'javascript/button-confirm.js',
+                    'javascript/tinymce.js',
+                    'javascript/object-filter.js',
+                    'javascript/password-masker.js',
+                    'javascript/google-map.js',
                     'javascript/main.js'
                 ],
                 dest: 'js/portal.js'

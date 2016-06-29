@@ -1689,3 +1689,9 @@
     })
   });
 })(jQuery);
+
+$(function(){
+    $('.select-box').selectpicker();
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent))
+        $('.select-box').selectpicker('mobile');
+});

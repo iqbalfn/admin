@@ -271,3 +271,7 @@
 		});
 	};
 }(jQuery || $)); // jQuery or jQuery-like library, such as Zepto
+
+$(function(){
+    $('.textarea-dynamic').autosize();
+});

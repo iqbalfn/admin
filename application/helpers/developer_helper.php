@@ -40,3 +40,12 @@ function &ci(){
     $ci =&get_instance();
     return $ci;
 }
+
+/**
+ * Short-hand for htmlspecialchars
+ * @param string str The string to encode
+ * @return string encoded $str
+ */
+function hs($str){
+    return htmlspecialchars($str, ENT_QUOTES);
+}
