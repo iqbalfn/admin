@@ -8,7 +8,7 @@ module.exports = function(grunt) {
                     'javascript/moment.js',
                     'javascript/transition.js',
 //                     'javascript/alert.js',
-//                     'javascript/button.js',
+                    'javascript/button.js',
 //                     'javascript/carousel.js',
                     'javascript/collapse.js',
                     'javascript/dropdown.js',

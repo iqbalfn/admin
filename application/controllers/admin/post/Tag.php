@@ -43,15 +43,23 @@ class Tag extends MY_Controller
 
         $params['tag'] = $object;
 
-        if(!($new_object=$this->form->validate($object)))
+        if(!($new_object=$this->form->validate($object))){
+            if($this->input->get('ajax')){
+                $errors = $this->form->getError();
+                return $this->ajax(false, $errors);
+            }
             return $this->respond('post/tag/edit', $params);
-
+        }
+        
         if($new_object === true)
             return $this->redirect('/admin/post/tag');
 
         if(!$id){
             $new_object['user'] = $this->user->id;
             $new_object['id'] = $this->PTag->create($new_object);
+            
+            if($this->input->get('ajax') == 1)
+                return $this->ajax($new_object);
         }else{
             $this->PTag->set($id, $new_object);
             

@@ -301,6 +301,7 @@
     liveSearchPlaceholder: null,
     liveSearchNormalize: false,
     liveSearchStyle: 'contains',
+    liveCreate: false,
     actionsBox: false,
     iconBase: 'glyphicon',
     tickIcon: 'glyphicon-ok',
@@ -411,12 +412,24 @@
           autofocus = this.autofocus ? ' autofocus' : '';
       // Elements
       var header = this.options.header ? '<div class="popover-title"><button type="button" class="close" aria-hidden="true">&times;</button>' + this.options.header + '</div>' : '';
-      var searchbox = this.options.liveSearch ?
-      '<div class="bs-searchbox">' +
-      '<input type="text" class="form-control" autocomplete="off"' +
-      (null === this.options.liveSearchPlaceholder ? '' : ' placeholder="' + htmlEscape(this.options.liveSearchPlaceholder) + '"') + '>' +
-      '</div>'
-          : '';
+      
+      var searchbox = '';
+      if(this.options.liveSearch){
+        searchbox = '<div class="bs-searchbox">';
+        
+        if( this.options.liveCreate ){
+            searchbox+= '<div class="input-group">';
+        }
+        searchbox+= '<input type="text" class="form-control" autocomplete="off"' + (null === this.options.liveSearchPlaceholder ? '' : ' placeholder="' + htmlEscape(this.options.liveSearchPlaceholder) + '"') + '>';
+        if( this.options.liveCreate ){
+            searchbox+=     '<span class="input-group-btn">';
+            searchbox+=         '<button class="btn btn-default" type="button" onclick="'+this.options.liveCreate+'(\''+this.$element[0].id+'\')"><i class="glyphicon glyphicon-plus"></i></button>';
+            searchbox+=     '</span>';
+            searchbox+= '</div>';
+        }
+        searchbox+= '</div>';
+      }
+      
       var actionsbox = this.multiple && this.options.actionsBox ?
       '<div class="bs-actionsbox">' +
       '<div class="btn-group btn-group-sm btn-block">' +
