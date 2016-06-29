@@ -223,7 +223,7 @@ class SiteForm
             'type'          => 'checkbox',
             'value'         => 1
         );
-        if($this->input_value == 1)
+        if(set_value($this->input_name, $this->input_value) == 1)
             $preset_attrs['checked'] = 'checked';
         
         $input['attrs'] = $this->_genAttribute($preset_attrs);
@@ -485,8 +485,9 @@ class SiteForm
                     )
                 );
                 
-                if($this->input_value)
-                    $preview_div['children'] = '<img src="' . $this->input_value . '" alt="Image">';
+                $image_src = set_value($this->input_name, $this->input_value);
+                if($image_src)
+                    $preview_div['children'] = '<img src="' . $image_src . '" alt="Image">';
                 
                 $preview_cont['children'][] = $preview_div;
                 $input_group = $preview_cont;
@@ -565,7 +566,7 @@ class SiteForm
             return $input;
         
         $name = $this->input_name;
-        $values = $this->input_value;
+        $values = set_value($this->input_name, $this->input_value);
         
         $recursiver = function($parent, &$container) use($options, $name, $values, &$recursiver){
             if(!array_key_exists($parent, $options))
@@ -653,7 +654,7 @@ class SiteForm
             return $input;
         
         $name = $this->input_name;
-        $value = $this->input_value;
+        $value = set_value($this->input_name, $this->input_value);
         $obj_id = -1;
         if(property_exists($this->object, 'id'))
             $obj_id = $this->object->id;
@@ -800,6 +801,7 @@ class SiteForm
         else
             $input['attrs']['aria-label'] = $this->input_label;
         
+        $input_value = set_value($this->input_name, $this->input_value);
         if($this->input_options){
             foreach($this->input_options as $val => $label){
                 $option = array(
@@ -809,7 +811,7 @@ class SiteForm
                     ),
                     'children' => $label
                 );
-                if($this->input_value == $val)
+                if($input_value == $val)
                     $option['attrs']['selected'] = 'selected';
                 
                 $input['children'][] = $option;

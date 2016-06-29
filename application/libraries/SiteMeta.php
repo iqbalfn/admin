@@ -255,63 +255,6 @@ class SiteMeta
         return $tx;
     }
     
-    public function gallery_single($gallery){
-        $meta_title = $gallery->seo_title;
-        if(!$meta_title)
-            $meta_title = $gallery->name;
-        
-        $meta_description = $gallery->seo_description;
-        if(!$meta_description)
-            $meta_description = $gallery->description->chars(160);
-        
-        $page = $this->CI->input->get('page');
-        if($page && $page > 1){
-            $meta_title = _l('Page') . ' ' . $page . ' ' . $meta_title;
-            $meta_description = _l('Page') . ' ' . $page . ' ' . $meta_description;
-        }
-        
-        $meta_keywords = $gallery->seo_keywords;
-        $meta_image = $gallery->cover;
-        $meta_url   = base_url($gallery->page);
-        
-        $metas = array(
-            "description"           => $meta_description,
-            "keywords"              => $meta_keywords,
-            "twitter:card"          => "summary_large_image",
-            "twitter:description"   => $meta_description,
-            "twitter:image:src"     => $meta_image,
-            "twitter:title"         => $meta_title,
-            "twitter:url"           => $meta_url,
-            "og:description"        => $meta_description,
-            "og:image"              => $meta_image,
-            "og:title"              => $meta_title,
-            "og:type"               => "website",
-            "og:url"                => $meta_url
-        );
-        
-        $schemas = array();
-        if($gallery->seo_schema->value){
-            $schemas[] = array(
-                '@context'      => 'http://schema.org',
-                '@type'         => $gallery->seo_schema,
-                'name'          => $meta_title,
-                'description'   => $meta_description,
-                'image'         => $meta_image,
-                'url'           => $meta_url,
-                'keywords'      => $gallery->seo_keywords,
-                'datePublished' => $gallery->created->format('c'),
-                'dateCreated'   => $gallery->created->format('c')
-            );
-        }
-        
-        $schemas[] = $this->_schemaBreadcrumb([
-            base_url() => $this->CI->setting->item('site_name'),
-            base_url('/gallery') => _l('Gallery')
-        ]);
-        
-        echo $this->_general($meta_title, $metas, $schemas);
-    }
-    
     public function home($meta_title=null){
         if(!$meta_title)
             $meta_title = $this->CI->setting->item('site_frontpage_title');

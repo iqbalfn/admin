@@ -21,7 +21,7 @@ class Trending extends MY_Controller
     
     public function index(){
         if(!$this->setting->item('google_analytics_statistic'))
-            return;
+            deb('GA Statistic file not set');
         
         // we're implementing google API v4
         $access_token = $this->google->get_analytics_token();
@@ -41,7 +41,7 @@ class Trending extends MY_Controller
         $result = $ga_analytics->data_ga->get("ga:$view_id", $date_start, $date_end, 'ga:pageviews', $opts);
         
         if($result->error)
-            return;
+            deb($result->error);
         
         $rows = $result->rows;
         $post_views = array();
@@ -108,5 +108,8 @@ class Trending extends MY_Controller
             $this->PTrending->truncate();
             $this->PTrending->create_batch($insertion);
         }
+        
+        deb('Inserted ' . count($insertion) . ' trending');
+        file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
     }
 }

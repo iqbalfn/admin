@@ -18,13 +18,6 @@
                 
                 <div class="row">
                     <div class="col-md-3">
-                        <?php if($groups): ?>
-                        <div class="list-group">
-                            <?php foreach($groups as $group => $total): ?>
-                            <a href="?group=<?= $group ?>" class="list-group-item<?= ($group==$current_group?' active':'') ?>"><?= $group ?></a>
-                            <?php endforeach; ?>
-                        </div>
-                        <?php endif; ?>
                         <?php if(ci()->can_i('create-site_menu')): ?>
                         <form method="get" class="form-group" action="<?= base_url('/admin/setting/menu/0') ?>">
                             <div class="input-group">
@@ -34,6 +27,13 @@
                                 </span>
                             </div>
                         </form>
+                        <?php endif; ?>
+                        <?php if($groups): ?>
+                        <div class="list-group">
+                            <?php foreach($groups as $group => $total): ?>
+                            <a href="?group=<?= $group ?>" class="list-group-item<?= ($group==$current_group?' active':'') ?>"><?= $group ?></a>
+                            <?php endforeach; ?>
+                        </div>
                         <?php endif; ?>
                     </div>
                     <div class="col-md-9">

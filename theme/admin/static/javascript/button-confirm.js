@@ -8,6 +8,8 @@ $(function(){
         
         var classes = $this.attr('class').split(' ');
         classes.splice(classes.indexOf('btn-confirm'),1);
+        if(!classes.length)
+            classes = ['btn', 'btn-danger'];
         classes = classes.join(' ');
         
         // let create modal windows to confirm deletion
