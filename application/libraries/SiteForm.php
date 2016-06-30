@@ -588,6 +588,9 @@ class SiteForm
                 elseif(property_exists($opt, 'name'))
                     $label = $opt->name;
                 
+                if(is_object($label))
+                    $label = $label->value;
+                
                 $div = array(
                     'attrs' => array(
                         'class' => 'form-control-multiple-item'
@@ -762,6 +765,8 @@ class SiteForm
         
         if($this->input_options){
             foreach($this->input_options as $val => $label){
+                if(is_object($label))
+                    $label = $label->value;
                 $option = array(
                     'tag' => 'option',
                     'attrs' => array(
