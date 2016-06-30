@@ -434,7 +434,7 @@ class SiteMeta
         if(!$meta_title)
             $meta_title = $category->name->clean();
         $meta_description = $category->seo_description->clean();
-        if(!$meta_description->value)
+        if(!$meta_description)
             $meta_description = $category->description->chars(160);
         
         $page = (int)$this->CI->input->get('page');
@@ -727,7 +727,7 @@ class SiteMeta
             $meta_title = $tag->name->clean();
         
         $meta_description = $tag->seo_description->clean();
-        if(!$meta_description->value)
+        if(!$meta_description)
             $meta_description = $tag->description->chars(160);
             
         $page = (int)$this->CI->input->get('page');
