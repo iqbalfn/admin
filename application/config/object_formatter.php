@@ -14,6 +14,8 @@ $config['object_formatter'] = array(
         'date' => 'date',
         'created' => 'date',
         'location' => 'location',
+        'name' => 'text',
+        'seo_title' => 'text',
         'seo_schema' => 'enum',
         'seo_description' => 'text'
     ),
@@ -34,8 +36,10 @@ $config['object_formatter'] = array(
     
     'page' => array(
         'page' => 'join(/page/|$slug)',
+        'title' => 'text',
         'content' => 'text',
         'created' => 'date',
+        'seo_title' => 'text',
         'seo_schema' => 'enum',
         'seo_description' => 'text'
     ),
@@ -54,6 +58,7 @@ $config['object_formatter'] = array(
         'status' => 'enum',
         'featured' => 'boolean',
         'editor_pick' => 'boolean',
+        'seo_title' => 'text',
         'seo_schema' => 'enum',
         'seo_description' => 'text',
         'embed' => 'embed',
@@ -68,7 +73,9 @@ $config['object_formatter'] = array(
         'updated' => 'date',
         'parent' => '@parent[post_category]',
         'created' => 'date',
+        'name' => 'text',
         'content' => 'text',
+        'seo_title' => 'text',
         'seo_schema' => 'enum',
         'seo_description' => 'text'
     ),
@@ -90,6 +97,8 @@ $config['object_formatter'] = array(
         'description' => 'text',
         'updated' => 'date',
         'created' => 'date',
+        'name' => 'text',
+        'seo_title' => 'text',
         'seo_schema' => 'enum',
         'seo_description' => 'text'
     ),

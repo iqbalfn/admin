@@ -169,11 +169,11 @@ class SiteMeta
     }
     
     public function event_single($event){
-        $meta_title = $event->seo_title;
+        $meta_title = $event->seo_title->clean();
         if(!$meta_title)
-            $meta_title = $event->name;
+            $meta_title = $event->name->clean();
         
-        $meta_description = $event->seo_description;
+        $meta_description = $event->seo_description->clean();
         if(!$meta_description)
             $meta_description = $event->content->chars(160);
         
@@ -380,11 +380,11 @@ class SiteMeta
     }
     
     public function page_single($page){
-        $meta_title = $page->seo_title;
+        $meta_title = $page->seo_title->clean();
         if(!$meta_title)
-            $meta_title = $page->title;
+            $meta_title = $page->title->clean();
         
-        $meta_description = $page->seo_description;
+        $meta_description = $page->seo_description->clean();
         if(!$meta_description)
             $meta_description = $page->content->chars(160);
         
@@ -430,10 +430,10 @@ class SiteMeta
     }
     
     public function post_category_single($category){
-        $meta_title = $category->seo_title;
+        $meta_title = $category->seo_title->clean();
         if(!$meta_title)
-            $meta_title = $category->name;
-        $meta_description = $category->seo_description;
+            $meta_title = $category->name->clean();
+        $meta_description = $category->seo_description->clean();
         if(!$meta_description->value)
             $meta_description = $category->description->chars(160);
         
@@ -490,11 +490,11 @@ class SiteMeta
     }
     
     public function post_amp($post, $comps){
-        $meta_title = $post->seo_title;
+        $meta_title = $post->seo_title->clean();
         if(!$meta_title)
-            $meta_title = $post->title;
+            $meta_title = $post->title->clean();
         
-        $meta_description = $post->seo_description;
+        $meta_description = $post->seo_description->clean();
         if(!$meta_description)
             $meta_description = $post->content->chars(160);
         
@@ -608,11 +608,11 @@ class SiteMeta
     }
     
     public function post_single($post){
-        $meta_title = $post->seo_title;
+        $meta_title = $post->seo_title->clean();
         if(!$meta_title)
             $meta_title = $post->title->clean();
         
-        $meta_description = $post->seo_description;
+        $meta_description = $post->seo_description->clean();
         if(!$meta_description)
             $meta_description = $post->content->chars(160);
         
@@ -722,11 +722,11 @@ class SiteMeta
     }
     
     public function post_tag_single($tag){
-        $meta_title = $tag->seo_title;
+        $meta_title = $tag->seo_title->clean();
         if(!$meta_title)
-            $meta_title = $tag->name;
+            $meta_title = $tag->name->clean();
         
-        $meta_description = $tag->seo_description;
+        $meta_description = $tag->seo_description->clean();
         if(!$meta_description->value)
             $meta_description = $tag->description->chars(160);
             
