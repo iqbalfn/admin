@@ -128,7 +128,7 @@ class SiteMeta
             'url'           => base_url(),
             'potentialAction' => array(
                 '@type'         => 'SearchAction',
-                'target'        => base_url('/post/search') . '?q={search_term_string}',
+                'target'        => base_url('/search') . '?q={search_term_string}',
                 'query-input'   => 'required name=search_term_string'
             )
         );
