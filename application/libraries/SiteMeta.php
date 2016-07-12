@@ -224,8 +224,7 @@ class SiteMeta
         );
         
         $schemas[] = $this->_schemaBreadcrumb([
-            base_url() => $this->CI->setting->item('site_name'),
-            base_url('/event') => _l('Event')
+            base_url() => $this->CI->setting->item('site_name')
         ]);
         
         echo $this->_general($meta_title, $metas, $schemas);
@@ -422,8 +421,7 @@ class SiteMeta
         }
         
         $schemas[] = $this->_schemaBreadcrumb([
-            base_url() => $meta_name,
-            base_url('/page') => _l('Page')
+            base_url() => $meta_name
         ]);
         
         echo $this->_general($meta_title, $metas, $schemas);
@@ -481,9 +479,7 @@ class SiteMeta
         }
         
         $schemas[] = $this->_schemaBreadcrumb([
-            base_url() => $meta_name,
-            base_url('/post') => _l('Post'),
-            base_url('/post/category') => _l('Category')
+            base_url() => $meta_name
         ]);
         
         echo $this->_general($meta_title, $metas, $schemas);
@@ -628,8 +624,7 @@ class SiteMeta
         $meta_url   = base_url($post->page);
         $schemas    = array();
         $schema_bread = [
-            base_url() => $meta_name,
-            base_url('/post') => _l('Post')
+            base_url() => $meta_name
         ];
         
         $metas = array(
@@ -771,9 +766,7 @@ class SiteMeta
         }
         
         $schemas[] = $this->_schemaBreadcrumb([
-            base_url() => $meta_name,
-            base_url('/post') => _l('Post'),
-            base_url('/post/tag') => _l('Tag')
+            base_url() => $meta_name
         ]);
         
         echo $this->_general($meta_title, $metas, $schemas);
@@ -796,8 +789,7 @@ class SiteMeta
         
         // schema breadcrumb
         $schemas[] = $this->_schemaBreadcrumb([
-            base_url() => $meta_name,
-            base_url('/search') => _l('Search')
+            base_url() => $meta_name
         ]);
         
         echo $this->_general($meta_title, $metas, $schemas);
@@ -851,8 +843,7 @@ class SiteMeta
         
         // schema breadcrumb
         $schemas[] = $this->_schemaBreadcrumb([
-            base_url() => $meta_name,
-            base_url('/user') => _l('User')
+            base_url() => $meta_name
         ]);
         
         echo $this->_general($meta_title, $metas, $schemas);
