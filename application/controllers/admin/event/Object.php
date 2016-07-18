@@ -13,6 +13,7 @@ class Object extends MY_Controller
         parent::__construct();
 
         $this->load->model('Event_model', 'Event');
+        $this->load->library('ObjectFormatter', '', 'formatter');
     }
 
     function edit($id=null){
@@ -79,10 +80,8 @@ class Object extends MY_Controller
             $page = 1;
 
         $result = $this->Event->getByCond($cond, $rpp, $page);
-        if($result){
-            $this->load->library('ObjectFormatter', '', 'format');
-            $params['events'] = $this->format->event($result, false, true);
-        }
+        if($result)
+            $params['events'] = $this->formatter->event($result, false, true);
 
         $this->respond('event/index', $params);
     }
