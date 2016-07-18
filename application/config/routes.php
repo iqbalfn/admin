@@ -89,6 +89,8 @@ $route['admin/post/category/(:num)/remove']  = 'admin/post/category/remove/$1';
 
 $route['admin/post/publish'] = 'admin/post/publish/index';
 
+$route['admin/post/instant/clear'] = 'admin/post/instant/clear';
+
 $route['admin/post/selector']                = 'admin/post/selector/index';
 $route['admin/post/selector/(:num)']         = 'admin/post/selector/edit/$1';
 $route['admin/post/selector/(:num)/remove']  = 'admin/post/selector/remove/$1';

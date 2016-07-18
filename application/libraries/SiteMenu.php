@@ -107,6 +107,11 @@ class SiteMenu
                         'label' => 'Suggestion',
                         'perms' => 'read-post_suggestion',
                         'target'=> '/admin/post/suggestion'
+                    ),
+                    array(
+                        'label' => 'Clear Instant Content',
+                        'perms' => 'delete-post_instant',
+                        'target'=> '/admin/post/instant/clear'
                     )
                 )
             ),
