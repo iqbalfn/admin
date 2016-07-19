@@ -6,6 +6,7 @@ $(function(){
             liveSearch: true
         })
         .ajaxSelectPicker({
+//             preserveSelected: true,
             ajax: {
                 url: '/admin/object-filter',
                 data: function(){

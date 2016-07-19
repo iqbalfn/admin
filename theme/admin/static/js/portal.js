@@ -14373,16 +14373,16 @@ $(function(){
  *
  * Extends existing [Bootstrap Select] implementations by adding the ability to search via AJAX requests as you type. Originally for CROSCON.
  *
- * @version 1.3.4
+ * @version 1.3.7
  * @author Adam Heim - https://github.com/truckingsim
  * @link https://github.com/truckingsim/Ajax-Bootstrap-Select
- * @copyright 2015 Adam Heim
+ * @copyright 2016 Adam Heim
  * @license Released under the MIT license.
  *
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2015-10-12 3:07:08 PM EDT
+ * Last build: 2016-06-24 1:36:43 PM EDT
  */
 !(function ($, window) {
 
@@ -14968,14 +14968,15 @@ var AjaxBootstrapSelectList = function (plugin) {
             text: $option.text(),
             'class': $option.attr('class') || '',
             data: $option.data() || {},
-            preserved: false,
-            selected: false
+            preserved: plugin.options.preserveSelected,
+            selected: !!$option.attr('selected')
         });
     });
     this.cacheSet(/*query=*/'', initial_options);
 
     // Preserve selected options.
     if (plugin.options.preserveSelected) {
+        that.selected = initial_options;
         plugin.$element.on('change.abs.preserveSelected', function (e) {
             var $selected = plugin.$element.find(':selected');
             that.selected = [];
@@ -15697,8 +15698,7 @@ $.fn.ajaxSelectPicker.defaults = {
      *     39: "right",
      *     38: "up",
      *     40: "down",
-     *     91: "meta",
-     *     229: "unknown"
+     *     91: "meta"
      * }
      * ```
      */
@@ -15712,8 +15712,7 @@ $.fn.ajaxSelectPicker.defaults = {
         39: "right",
         38: "up",
         40: "down",
-        91: "meta",
-        229: "unknown"
+        91: "meta"
     },
 
     /**
@@ -17958,6 +17957,7 @@ $(function(){
             liveSearch: true
         })
         .ajaxSelectPicker({
+//             preserveSelected: true,
             ajax: {
                 url: '/admin/object-filter',
                 data: function(){

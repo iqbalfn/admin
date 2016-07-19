@@ -59,10 +59,6 @@ class ObjectMeta
         $this->CI->load->helper('pagination');
     }
     
-    private function _generateBreadcrumb(){
-        return '';
-    }
-    
     public function _generateGA($group=null){
         $ga_code = $this->CI->setting->item('code_google_analytics');
         
@@ -182,6 +178,11 @@ class ObjectMeta
                 'query-input'       => 'required name=search_term_string'
             )
         );
+        
+        if(property_exists($this->object, 'schema')){
+            foreach($this->object->schema as $schema)
+                $schemas[] = $schema;
+        }
         
         
         $tx = '';
@@ -330,10 +331,12 @@ class ObjectMeta
         $this->rules        = null;
         $this->attr_value   = array();
         
+        if(!$this->object)
+            $this->object = new stdClass;
+        
         $tx = $this->_generateMeta();
         $tx.= $this->_generateLink();
         $tx.= $this->_generateSchema();
-        $tx.= $this->_generateBreadcrumb();
         $tx.= $this->_generateScript();
         
         $title = $this->_metaValueFromObject('title');

@@ -434,7 +434,12 @@ $config = array(
             'label' => 'Tag',
             'rules' => '',
             'input' => array(
-                'type' => 'select-multiple'
+                'type' => 'object-multiple',
+                'attrs' => array(
+                    'data-table' => 'post_tag',
+                    'data-label' => 'name',
+                    'data-value' => 'id'
+                )
             )
         ),
         

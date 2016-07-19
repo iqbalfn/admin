@@ -166,8 +166,8 @@ CREATE TABLE `post_suggestion` (
 DROP TABLE IF EXISTS `post_tag`;
 CREATE TABLE `post_tag` (
     `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name` VARCHAR(25),
-    `slug` VARCHAR(25) NOT NULL UNIQUE,
+    `name` VARCHAR(50),
+    `slug` VARCHAR(50) NOT NULL UNIQUE,
     `user` BIGINT NOT NULL,
     `description` TEXT,
     

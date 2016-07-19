@@ -800,6 +800,10 @@ class SiteForm
             'class' => 'object-filter'
         );
         $input['attrs'] = $this->_genAttribute($preset_attrs);
+        if($this->input_type == 'object-multiple'){
+            $input['attrs']['multiple'] = 'multiple';
+            $input['attrs']['name'] = $this->input_name . '[]';
+        }
         
         if($this->input_label_show)
             $input['attrs']['aria-labelledby'] = $this->input_id . '-label';
@@ -809,6 +813,8 @@ class SiteForm
         $input_value = set_value($this->input_name, $this->input_value);
         if($this->input_options){
             foreach($this->input_options as $val => $label){
+                if(is_object($label))
+                    $label = $label->value;
                 $option = array(
                     'tag' => 'option',
                     'attrs' => array(
@@ -816,40 +822,43 @@ class SiteForm
                     ),
                     'children' => $label
                 );
-                if($input_value == $val)
+                if((is_array($input_value) && in_array($val, $input_value)) || ($input_value == $val))
                     $option['attrs']['selected'] = 'selected';
                 
                 $input['children'][] = $option;
             }
         }
         
-        $input_group_btn = array(
-            'tag' => 'span',
-            'attrs' => array( 'class' => 'input-group-btn' ),
-            'children' => array(
-                array(
-                    'tag' => 'button',
-                    'attrs' => array(
-                        'class' => 'btn btn-default object-filter-cleaner',
-                        'type'  => 'button',
-                        'data-target' => '#' . $input['attrs']['id']
-                    ),
-                    'children' => array(
-                        array(
-                            'tag' => 'i',
-                            'attrs' => array( 'class' => 'glyphicon glyphicon-ban-circle' )
+        if($this->input_type == 'object'){
+            $input_group_btn = array(
+                'tag' => 'span',
+                'attrs' => array( 'class' => 'input-group-btn' ),
+                'children' => array(
+                    array(
+                        'tag' => 'button',
+                        'attrs' => array(
+                            'class' => 'btn btn-default object-filter-cleaner',
+                            'type'  => 'button',
+                            'data-target' => '#' . $input['attrs']['id']
+                        ),
+                        'children' => array(
+                            array(
+                                'tag' => 'i',
+                                'attrs' => array( 'class' => 'glyphicon glyphicon-ban-circle' )
+                            )
                         )
                     )
                 )
-            )
-        );
+            );
+            
+            $input_group = array(
+                'attrs' => ['class'=>'input-group'],
+                'children' => array( $input, $input_group_btn )
+            );
+            
+            return $input_group;
+        }
         
-        $input_group = array(
-            'attrs' => ['class'=>'input-group'],
-            'children' => array( $input, $input_group_btn )
-        );
-        
-        return $input_group;
         return $input;
     }
     
@@ -987,6 +996,7 @@ class SiteForm
             'select'            => '_inputSelect',
             
             'object'            => '_inputObject',
+            'object-multiple'   => '_inputObject',
             
             'boolean'           => '_inputBoolean',
             

@@ -93,6 +93,17 @@ class Object extends MY_Controller
             if($tags){
                 $all_tags = $this->formatter->post_tag($tags, 'id', false);
                 $params['tags'] = prop_as_key($tags, 'id', 'name');
+                
+                // let show only all selected tag
+                $visible_tag = array();
+                if($object->tag){
+                    foreach($object->tag as $tag){
+                        if(array_key_exists($tag, $params['tags']))
+                            $visible_tag[$tag] = $params['tags'][$tag];
+                    }
+                }
+                
+                $params['tags'] = $visible_tag;
             }
         }
         
@@ -327,7 +338,7 @@ class Object extends MY_Controller
             'title' => _l('Posts'),
             'posts' => [],
             'categories' => array(),
-            'tags' => array(),
+            'tag' => null,
             'statuses' => $this->enum->item('post.status'),
             'pagination' => array(),
             'user' => null
@@ -347,16 +358,15 @@ class Object extends MY_Controller
         elseif(array_key_exists('user', $cond))
             $params['user'] = $this->User->get($cond['user']);
         
+        if(array_key_exists('tag', $cond)){
+            $this->load->model('Posttag_model', 'PTag');
+            $params['tag'] = $this->PTag->get($cond['tag']);
+        }
+        
         if($this->can_i('read-post_category')){
             $this->load->model('Postcategory_model', 'PCategory');
             $all_categories = $this->PCategory->getByCond([], true);
             $params['categories'] = $all_categories;
-        }
-        
-        if($this->can_i('read-post_tag')){
-            $this->load->model('Posttag_model', 'PTag');
-            $all_tags = $this->PTag->getByCond([], true);
-            $params['tags'] = $all_tags;
         }
         
         $rpp = 20;
