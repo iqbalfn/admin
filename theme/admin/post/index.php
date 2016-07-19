@@ -42,12 +42,12 @@
                         </div>
                         <?php endif; ?>
                         
-                        <?php if($tags): ?>
+                        <?php if(ci()->can_i('read-post_tag')): ?>
                         <div class="form-group">
-                            <select class="selectpicker" name="tag" title="<?= _l('Tag') ?>">
-                                <?php foreach($tags as $tag): ?>
-                                <option value="<?= $tag->id ?>"<?= ($tag->id == $this->input->get('tag') ? ' selected="selected"' : '') ?>><?= $tag->name ?></option>
-                                <?php endforeach; ?>
+                            <select name="tag" class="object-filter" title="<?= _l('Tag') ?>" placeholder="<?= _l('Tag') ?>" data-table="post_tag" data-label="name" data-value="id">
+                            <?php if($tag): ?>
+                            <option value="<?= $tag->id ?>" selected="selected"><?= $tag->name ?></option>
+                            <?php endif; ?>
                             </select>
                         </div>
                         <?php endif; ?>

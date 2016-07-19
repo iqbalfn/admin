@@ -1,6 +1,39 @@
 <?php
 
 /**
+ * Add ?page or ?gallery to the url
+ * @param string url The url to append
+ * @return string new URL with page or/and gallery
+ */
+function implement_url_pagination($url){
+    $params = ['page', 'gallery'];
+    foreach($params as $param){
+        $sign = strstr($url, '?') ? '&amp;' : '?';
+        $value= ci()->input->get($param);
+        if($value)
+            $url.= $sign . $param . '=' . $value;
+    }
+    
+    return $url;
+}
+
+/**
+ * Add 'page' or 'gallery' to the string.
+ * @param string str The string to append the it.
+ * @return string new string contain gallery or page string.
+ */
+function implement_title_pagination($str){
+    $params = ['page', 'gallery'];
+    foreach($params as $param){
+        $value= ci()->input->get($param);
+        if($value)
+            $str = ucfirst($param) . ' ' . $value . ': ' . $str;
+    }
+    
+    return $str;
+}
+
+/**
  * Calculate pagination
  * @param integer total Total all items.
  * @param integer current Current page.

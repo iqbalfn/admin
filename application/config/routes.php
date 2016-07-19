@@ -143,29 +143,29 @@ $route['upload']                            = 'media/upload';
 $route['media/(:any)/(:any)/(:any)/(:any)'] = 'media/resize/$1/$2/$3/$4';
 
 $route['event/feed.xml'] = 'event/feed';
-$route['event/(:any)'] = 'event/single/$1';
+$route['event/(:any)'] = 'event/single/$1';                                     // ObjectMeta-ed
 
-$route['page/(:any)'] = 'page/single/$1';
+$route['page/(:any)'] = 'page/single/$1';                                       // ObjectMeta-ed
 
 $route['post/feed.xml'] = 'post/feed';
 $route['post/instant.xml'] = 'post/feed/instant';
 
-$route['post/read/(:any)'] = 'post/single/$1';
-$route['post/amp/(:any)'] = 'post/amp/$1';
+$route['post/read/(:any)'] = 'post/single/$1';                                  // ObjectMeta-ed
+$route['post/amp/(:any)'] = 'post/amp/$1';                                      //
 
 $route['post/category/(:any)/feed.xml'] = 'post/categoryFeed/$1';
-$route['post/category/(:any)'] = 'post/category/$1';
+$route['post/category/(:any)'] = 'post/category/$1';                            // ObjectMeta-ed
 
 $route['post/tag/(:any)/feed.xml'] = 'post/tagFeed/$1';
-$route['post/tag/(:any)'] = 'post/tag/$1';
+$route['post/tag/(:any)'] = 'post/tag/$1';                                      // ObjectMeta-ed
 
-$route['user/(:any)'] = 'user/single/$1';
+$route['user/(:any)'] = 'user/single/$1';                                       // ObjectMeta-ed
 $route['user/(:any)/post/feed.xml'] = 'user/feedPost/$1';
 
 $route['feed.xml'] = 'robot/feed';
 $route['sitemap.xml'] = 'robot/sitemap';
 $route['sitemap-news.xml'] = 'robot/sitemapNews';
 
-$route['default_controller']    = 'home';
+$route['default_controller']    = 'home';                                       // ObjectMeta-ed
 $route['404_override']          = 'my_controller/show_404';
 $route['translate_uri_dashes']  = FALSE;

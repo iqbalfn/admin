@@ -23,6 +23,7 @@ class Object extends MY_Controller
         $filterable_table = array(
             'gallery' => array('field' => 'name',       'perms' => 'read-gallery'),
             'post'    => array('field' => 'title',      'perms' => 'read-post'),
+            'post_tag'=> array('field' => 'name',       'perms' => 'read-post_tag'),
             'user'    => array('field' => 'fullname',   'perms' => 'read-user')
         );
         

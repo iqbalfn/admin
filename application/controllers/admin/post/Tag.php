@@ -79,18 +79,29 @@ class Tag extends MY_Controller
 
         $params = array(
             'title' => _l('Post Tags'),
-            'tags' => []
+            'tags' => [],
+            'pagination' => array()
         );
 
         $cond = array();
 
-        $rpp = true;
-        $page= false;
+        $rpp = 100;
+        $page= $this->input->get('page');
+        if(!$page)
+            $page = 1;
 
-        $result = $this->PTag->getByCond($cond, $rpp, $page);
+        $result = $this->PTag->getByCond($cond, $rpp, $page, ['name'=>'ASC']);
         if($result)
             $params['tags'] = $this->formatter->post_tag($result, false, true);
 
+        // for pagination
+        $total_result = $this->PTag->count();
+        if($total_result > $rpp){
+            $pagination_cond = $cond;
+            $this->load->helper('pagination');
+            $params['pagination'] = calculate_pagination($total_result, $page, $rpp, $pagination_cond);
+        }
+        
         $this->respond('post/tag/index', $params);
     }
 
