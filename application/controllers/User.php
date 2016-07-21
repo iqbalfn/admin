@@ -10,6 +10,49 @@ class User extends MY_Controller
         
     }
     
+    private function _schemaUser($user){
+        $schemas = array();
+        
+        $data = array(
+            '@context'      => 'http://schema.org',
+            '@type'         => 'Person',
+            'email'         => $user->email,
+            'jobTitle'      => 'Reporter',
+            'description'   => $user->about,
+            'image'         => $user->avatar,
+            'name'          => $user->fullname,
+            'url'           => base_url($user->page)
+        );
+        $schemas[] = $data;
+        
+        $breadcs = array(
+            '@context'  => 'http://schema.org',
+            '@type'     => 'BreadcrumbList',
+            'itemListElement' => array(
+                array(
+                    '@type' => 'ListItem',
+                    'position' => 1,
+                    'item' => array(
+                        '@id' => base_url(),
+                        'name' => $this->setting->item('site_name')
+                    )
+                ),
+                array(
+                    '@type' => 'ListItem',
+                    'position' => 2,
+                    'item' => array(
+                        '@id' => base_url('/#user'),
+                        'name' => 'User'
+                    )
+                )
+            )
+        );
+        
+        $schemas[] = $breadcs;
+        
+        return $schemas;
+    }
+    
     public function feedPost($name=null){
         $pages = array();
         $last_update = 0;
@@ -80,7 +123,10 @@ class User extends MY_Controller
         $params = array();
         
         $this->load->library('ObjectFormatter', '', 'formatter');
-        $params['user'] = $this->formatter->user($user, false, false);
+        
+        $user = $this->formatter->user($user, false, false);
+        $user->schema = $this->_schemaUser($user);
+        $params['user'] = $user;
         
         $view = 'user/single';
         if($this->theme->exists('user/single-' . $user->name))

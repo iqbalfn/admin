@@ -10,6 +10,67 @@ class Event extends MY_Controller
         
     }
     
+    private function _schemaEvent($event){
+        $schemas = array();
+        
+        $meta_title = $event->seo_title->clean();
+        if(!$meta_title)
+            $meta_title = $event->name->clean();
+        
+        $meta_description = $event->seo_description->clean();
+        if(!$meta_description)
+            $meta_description = $event->content->chars(160);
+        
+        if($event->seo_schema->value){
+            $data = array(
+                '@context'      => 'http://schema.org',
+                '@type'         => $event->seo_schema,
+                'name'          => $meta_title,
+                'description'   => $meta_description,
+                'location'      => array(
+                    '@type'         => 'Place',
+                    'name'          => $event->name->clean(),
+                    'address'       => $event->address
+                ),
+                'image'         => $event->cover,
+                'url'           => base_url($event->page),
+                'keywords'      => $event->seo_keywords,
+                'startDate'     => $event->date->format('c'),
+//                 'endDate'       => '...',
+//                 'offers'        => '...',
+//                 'performer'     => '...'
+            );
+            
+            $schemas[] = $data;
+        }
+        
+        $breadcs = array(
+            '@context'  => 'http://schema.org',
+            '@type'     => 'BreadcrumbList',
+            'itemListElement' => array(
+                array(
+                    '@type' => 'ListItem',
+                    'position' => 1,
+                    'item' => array(
+                        '@id' => base_url(),
+                        'name' => $this->setting->item('site_name')
+                    )
+                ),
+                array(
+                    '@type' => 'ListItem',
+                    'position' => 2,
+                    'item' => array(
+                        '@id' => base_url('/#event'),
+                        'name' => 'Event'
+                    )
+                )
+            )
+        );
+        
+        $schemas[] = $breadcs;
+        return $schemas;
+    }
+    
     public function feed(){
         $pages = array();
         $last_update = 0;
@@ -58,14 +119,20 @@ class Event extends MY_Controller
             return $this->show_404();
         
         $this->load->model('Event_model', 'Event');
+        $this->load->library('ObjectFormatter', '', 'formatter');
+        
         $event = $this->Event->getBy('slug', $slug);
         if(!$event)
             return $this->show_404();
         
+        if(!is_dev())
+            $this->output->cache((60*60*5));
+        
         $params = array();
         
-        $this->load->library('ObjectFormatter', '', 'formatter');
-        $params['event'] = $this->formatter->event($event, false, false);
+        $event = $this->formatter->event($event, false, false);
+        $event->schema = $this->_schemaEvent($event);
+        $params['event'] = $event;
         
         $view = 'event/single';
         if($this->theme->exists('event/single-' . $event->slug))

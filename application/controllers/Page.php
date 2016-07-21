@@ -10,6 +10,58 @@ class Page extends MY_Controller
         
     }
     
+    private function _schemaPage($page){
+        $schemas = array();
+        
+        $meta_title = $page->seo_title->clean();
+        if(!$meta_title)
+            $meta_title = $page->name->clean();
+        
+        $meta_description = $page->seo_description->clean();
+        if(!$meta_description)
+            $meta_description = $page->content->chars(160);
+        
+        if($page->seo_schema->value){
+            $data = array(
+                '@context'      => 'http://schema.org',
+                '@type'         => $page->seo_schema,
+                'name'          => $meta_title,
+                'description'   => $meta_description,
+                'url'           => base_url($page->page),
+                'dateCreated'   => $page->created->format('c')
+            );
+            
+            $schemas[] = $data;
+        }
+        
+        $breadcs = array(
+            '@context'  => 'http://schema.org',
+            '@type'     => 'BreadcrumbList',
+            'itemListElement' => array(
+                array(
+                    '@type' => 'ListItem',
+                    'position' => 1,
+                    'item' => array(
+                        '@id' => base_url(),
+                        'name' => $this->setting->item('site_name')
+                    )
+                ),
+                array(
+                    '@type' => 'ListItem',
+                    'position' => 2,
+                    'item' => array(
+                        '@id' => base_url('/#page'),
+                        'name' => 'Page'
+                    )
+                )
+            )
+        );
+        
+        $schemas[] = $breadcs;
+        
+        return $schemas;
+    }
+    
     public function single($slug=null){
         if(!$slug)
             return $this->show_404();
@@ -22,7 +74,10 @@ class Page extends MY_Controller
         $params = array();
         
         $this->load->library('ObjectFormatter', '', 'formatter');
-        $params['page'] = $this->formatter->page($page, false, false);
+        
+        $page = $this->formatter->page($page, false, false);
+        $page->schema = $this->_schemaPage($page);
+        $params['page'] = $page;
         
         $view = 'page/single';
         if($this->theme->exists('page/single-' . $page->slug))

@@ -76,7 +76,36 @@ $config['object_meta'] = array(
         'twitter:description'   => '@description',
         'twitter:image:src'     => '@og:image',
         'twitter:title'         => '@title',
-        'twitter:url'           => '@canonical'
+        'twitter:url'           => '@canonical',
+        'ga:group'              => 'ga_group|object_property',
+        'amphtml'               => 'amp|object_property|base_url'
+    ),
+    
+    'post_amp'                  => array(
+//         'article:author'        => '...',
+        'article:modified_time' => 'updated->format(c)|object_property',
+        'article:published_time'=> 'published->format(c)|object_property',
+        'article:section'       => 'category|object_property|prop_values($,name)|current($)',
+        'article:tag'           => 'tag|object_property|prop_values($,name)',
+        'article:publisher'     => 'code_facebook_page_id|setting->item',
+        'canonical'             => 'page|object_property|base_url|implement_url_pagination',
+        'description'           => ['seo_description->clean()|object_property|implement_title_pagination', 'content->chars(160)|object_property|implement_title_pagination'],
+//         'fb:admins'             => '...',
+        'fb:profile_id'         => '',
+        'keywords'              => 'seo_keywords|object_property',
+        'og:description'        => '@description',
+        'og:image'              => 'cover|object_property',
+        'og:title'              => '@title',
+        'og:type'               => 'article',
+        'og:updated_time'       => '@article:modified_time',
+        'og:url'                => '@canonical',
+        'title'                 => ['seo_title->clean()|object_property|implement_title_pagination', 'title->clean()|object_property|implement_title_pagination'],
+        'twitter:card'          => 'summary_large_image',
+        'twitter:description'   => '@description',
+        'twitter:image:src'     => '@og:image',
+        'twitter:title'         => '@title',
+        'twitter:url'           => '@canonical',
+        'ga:group'              => 'ga_group|object_property'
     ),
     
     'post_category'             => array(

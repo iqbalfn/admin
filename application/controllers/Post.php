@@ -10,6 +10,313 @@ class Post extends MY_Controller
         
     }
     
+    private function _schemaPostBreadcrumb($post){
+        $breadcs = array(
+            '@context'  => 'http://schema.org',
+            '@type'     => 'BreadcrumbList',
+            'itemListElement' => array(
+                array(
+                    '@type' => 'ListItem',
+                    'position' => 1,
+                    'item' => array(
+                        '@id' => base_url(),
+                        'name' => $this->setting->item('site_name')
+                    )
+                )
+            )
+        );
+        
+        if(!property_exists($post, 'category')){
+            $breadcs['itemListElement'][] = array(
+                '@type' => 'ListItem',
+                'position' => 2,
+                'item' => array(
+                    '@id' => base_url('/#post'),
+                    'name' => 'Post'
+                )
+            );
+            return $breadcs;
+        }
+        
+        $categories = prop_as_key($post->category, 'id');
+        ksort($categories);
+        $last_category = end($categories);
+        $desc_breads = array($last_category);
+        while(array_key_exists($last_category->parent, $categories)){
+            $last_category = $categories[$last_category->parent];
+            $desc_breads[] = $last_category;
+        }
+        krsort($desc_breads);
+        $index = 1;
+        foreach($desc_breads as $cat){
+            $index++;
+            $breadcs['itemListElement'][] = array(
+                '@type' => 'ListItem',
+                'position' => $index,
+                'item' => array(
+                    '@id' => base_url($cat->page),
+                    'name' => $cat->name
+                )
+            );
+        }
+        
+        return $breadcs;
+    }
+    
+    private function _schemaAmp($post){
+        $meta_title = $post->seo_title->clean();
+        if(!$meta_title)
+            $meta_title = $post->title->clean();
+        
+        $meta_description = $post->seo_description->clean();
+        if(!$meta_description)
+            $meta_description = $post->content->chars(160);
+        
+        $meta_name  = $this->setting->item('site_name');
+        $meta_url   = base_url($post->page);
+        
+        if(!$post->seo_schema->value)
+            $post->seo_schema->value = 'Article';
+        
+        if(!in_array($post->seo_schema->value, array('Article', 'NewsArticle')))
+            $post->seo_schema->value = 'Article';
+        
+        $schemas = array();
+        $image_file = dirname(BASEPATH) . $post->cover->value;
+        if(is_file($image_file)){
+            list($img_width, $img_height) = getimagesize($image_file);
+            
+            $schemas[] = array(
+                '@context'      => 'http://schema.org',
+                '@type'         => $post->seo_schema->value,
+                'name'          => $meta_title,
+                'description'   => $meta_description,
+                'author'        => array(
+                    '@type'         => 'Person',
+                    'name'          => $post->user->fullname,
+                    'url'           => base_url($post->user->page)
+                ),
+                'image'         => array(
+                    '@type'         => 'ImageObject',
+                    'url'           => $post->cover,
+                    'height'        => $img_height,
+                    'width'         => $img_width
+                ),
+                'headline'      => $meta_title,
+                'url'           => $meta_url,
+                'keywords'      => $post->seo_keywords,
+                'mainEntityOfPage' => array(
+                    '@type'         => 'WebPage',
+                    '@id'           => $meta_url
+                ),
+                'publisher'     => array(
+                    '@type'         => 'Organization',
+                    'name'          => $meta_name,
+                    'logo'          => array(
+                        '@type'         => 'ImageObject',
+                        'url'           => $this->theme->asset('/static/image/logo/logo-200x60.png'),
+                        'width'         => 200,
+                        'height'        => 60
+                    )
+                ),
+                'datePublished' => $post->published->format('c'),
+                'dateModified'  => $post->updated->format('c'),
+                'dateCreated'   => $post->created->format('c')
+            );
+        }
+        
+        $schemas[] = $this->_schemaPostBreadcrumb($post);
+        
+        return $schemas;
+    }
+    
+    private function _schemaCategory($category){
+        $meta_title = $category->seo_title->clean();
+        if(!$meta_title)
+            $meta_title = $category->name->clean();
+        $meta_description = $category->seo_description->clean();
+        if(!$meta_description)
+            $meta_description = $category->description->chars(160);
+        
+        $schemas = array();
+        
+        if($category->seo_schema->value){
+            $schemas[] = array(
+                '@context'      => 'http://schema.org',
+                '@type'         => $category->seo_schema,
+                'name'          => $meta_title,
+                'description'   => $meta_description,
+                'image'         => $this->theme->asset('/static/image/logo/logo.png'),
+                'url'           => base_url($category->page),
+                'keywords'      => $category->seo_keywords,
+                'datePublished' => $category->created->format('c'),
+                'dateCreated'   => $category->created->format('c')
+            );
+        }
+        
+        $breadcs = array(
+            '@context'  => 'http://schema.org',
+            '@type'     => 'BreadcrumbList',
+            'itemListElement' => array(
+                array(
+                    '@type' => 'ListItem',
+                    'position' => 1,
+                    'item' => array(
+                        '@id' => base_url(),
+                        'name' => $this->setting->item('site_name')
+                    )
+                ),
+                array(
+                    '@type' => 'ListItem',
+                    'position' => 2,
+                    'item' => array(
+                        '@id' => base_url('/#post'),
+                        'name' => 'Post'
+                    )
+                ),
+                array(
+                    '@type' => 'ListItem',
+                    'position' => 3,
+                    'item' => array(
+                        '@id' => base_url('/#post/category'),
+                        'name' => 'Category'
+                    )
+                )
+            )
+        );
+        
+        $schemas[] = $breadcs;
+        
+        return $schemas;
+    }
+    
+    private function _schemaPost($post){
+        $meta_title = $post->seo_title->clean();
+        if(!$meta_title)
+            $meta_title = $post->title->clean();
+        
+        $meta_description = $post->seo_description->clean();
+        if(!$meta_description)
+            $meta_description = $post->content->chars(160);
+            
+        $meta_keywords = $post->seo_keywords;
+        $meta_image = $post->cover;
+        $meta_name  = $this->setting->item('site_name');
+        $meta_url   = base_url($post->page);
+        
+        if(!$post->seo_schema->value)
+            $post->seo_schema->value = 'Article';
+        
+        // fuck get image sizes
+        $image_file = dirname(BASEPATH) . $meta_image->value;
+        if(is_file($image_file)){
+            list($img_width, $img_height) = getimagesize($image_file);
+            
+            $schemas[] = array(
+                '@context'      => 'http://schema.org',
+                '@type'         => $post->seo_schema->value,
+                'name'          => $meta_title,
+                'description'   => $meta_description,
+                'author'        => array(
+                    '@type'         => 'Person',
+                    'name'          => $post->user->fullname,
+                    'url'           => base_url($post->user->page)
+                ),
+                'image'         => array(
+                    '@type'         => 'ImageObject',
+                    'url'           => $meta_image,
+                    'height'        => $img_height,
+                    'width'         => $img_width
+                ),
+                'headline'      => $meta_title,
+                'url'           => $meta_url,
+                'keywords'      => $meta_keywords,
+                'mainEntityOfPage' => array(
+                    '@type'         => 'WebPage',
+                    '@id'           => $meta_url
+                ),
+                'publisher'     => array(
+                    '@type'         => 'Organization',
+                    'name'          => $meta_name,
+                    'logo'          => array(
+                        '@type'         => 'ImageObject',
+                        'url'           => $this->theme->asset('/static/image/logo/logo-200x60.png'),
+                        'width'         => 200,
+                        'height'        => 60
+                    )
+                ),
+                'datePublished' => $post->published->format('c'),
+                'dateModified'  => $post->updated->format('c'),
+                'dateCreated'   => $post->created->format('c')
+            );
+        }
+        
+        $schemas[] = $this->_schemaPostBreadcrumb($post);
+        return $schemas;
+    }
+    
+    private function _schemaTag($tag){
+        $meta_title = $tag->seo_title->clean();
+        if(!$meta_title)
+            $meta_title = $tag->name->clean();
+        
+        $meta_description = $tag->seo_description->clean();
+        if(!$meta_description)
+            $meta_description = $tag->description->chars(160);
+        
+        $schemas = array();
+        
+        if($tag->seo_schema->value){
+            $data = array(
+                '@context'      => 'http://schema.org',
+                '@type'         => $tag->seo_schema,
+                'name'          => $meta_title,
+                'description'   => $meta_description,
+                'image'         => $this->theme->asset('/static/image/logo/logo.png'),
+                'url'           => base_url($tag->page),
+                'keywords'      => $tag->seo_keywords,
+                'datePublished' => $tag->created->format('c'),
+                'dateCreated'   => $tag->created->format('c')
+            );
+            $schemas[] = $data;
+        }
+        
+        $breadcs = array(
+            '@context'  => 'http://schema.org',
+            '@type'     => 'BreadcrumbList',
+            'itemListElement' => array(
+                array(
+                    '@type' => 'ListItem',
+                    'position' => 1,
+                    'item' => array(
+                        '@id' => base_url(),
+                        'name' => $this->setting->item('site_name')
+                    )
+                ),
+                array(
+                    '@type' => 'ListItem',
+                    'position' => 2,
+                    'item' => array(
+                        '@id' => base_url('/#post'),
+                        'name' => 'Post'
+                    )
+                ),
+                array(
+                    '@type' => 'ListItem',
+                    'position' => 3,
+                    'item' => array(
+                        '@id' => base_url('/#post/tag'),
+                        'name' => 'Tag'
+                    )
+                )
+            )
+        );
+        
+        $schemas[] = $breadcs;
+        
+        return $schemas;
+    }
+    
     public function amp($slug=null){
         if(!$slug || !$this->setting->item('amphtml_support_for_post'))
             return $this->show_404();
@@ -28,6 +335,7 @@ class Post extends MY_Controller
             $this->output->cache((60*60*5));
         
         $post = $this->formatter->post($post, false, true);
+        $post->schema = $this->_schemaAmp($post);
         
         $amp_options = [];
         $amp_text = $post->content . '<p>' . $post->embed . '</p>';
@@ -59,7 +367,9 @@ class Post extends MY_Controller
         if(!$category)
             return $this->show_404();
         
-        $params['category'] = $this->formatter->post_category($category, false, false);
+        $category = $this->formatter->post_category($category, false, false);
+        $category->schema = $this->_schemaCategory($category);
+        $params['category'] = $category;
         
         // posts
         $cond = array(
@@ -260,7 +570,9 @@ class Post extends MY_Controller
         if(!is_dev())
             $this->output->cache((60*60*5));
         
-        $params['post'] = $this->formatter->post($post, false, true);
+        $post = $this->formatter->post($post, false, true);
+        $post->schema = $this->_schemaPost($post);
+        $params['post'] = $post;
         
         $view = 'post/single';
         if($this->theme->exists('post/single-' . $post->slug))
@@ -286,10 +598,9 @@ class Post extends MY_Controller
         if(!$tag)
             return $this->show_404();
         
-        if(!is_dev())
-            $this->output->cache((60*60*5));
-        
-        $params['tag'] = $this->formatter->post_tag($tag, false, false);
+        $tag = $this->formatter->post_tag($tag, false, false);
+        $tag->schema = $this->_schemaTag($tag);
+        $params['tag'] = $tag;
         
         // posts
         $cond = array(

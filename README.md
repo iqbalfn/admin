@@ -14,6 +14,7 @@ Read the doc [http://iqbalfn.com/admin](here).
     6. SiteMeta
     7. SiteParams
     8. SiteTheme
+    9. ObjectMeta
 2. Create libary to replace SiteMeta
 3. Post preview before posting
 4. Preset Post with gallery medias
@@ -21,3 +22,4 @@ Read the doc [http://iqbalfn.com/admin](here).
 6. ExtraJS
 7. Root automatic permissions
 8. last_update.txt per object
+9. More property for Event schema

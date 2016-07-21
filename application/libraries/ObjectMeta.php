@@ -20,12 +20,10 @@ class ObjectMeta
         'article:publisher'             => 'property',
         'article:section'               => 'property',
         'article:tag'                   => 'property',
-        'code_application_facebook'     => 'property',
-        'code_facebook_page_id'         => 'property',
-        'code_verification_alexa'       => 'name',
-        'code_verification_bing'        => 'name',
-        'code_verification_pinterest'   => 'name',
-        'code_verification_yandex'      => 'name',
+        'alexaVerifyID'                 => 'name',
+        'msvalidate.01'                 => 'name',
+        'p:domain_verify'               => 'name',
+        'yandex-verification'           => 'name',
         'description'                   => 'name',
         'fb:admins'                     => 'property',
         'fb:app_id'                     => 'property',
@@ -73,7 +71,7 @@ class ObjectMeta
             $tx.=   'ga(\'create\', \'' . $ga_code . '\', \'auto\');';
             if($group){
                 $index = $this->CI->setting->item('google_analytics_content_group');
-                if($ga_group)
+                if($group)
                     $tx.= 'ga(\'set\', \'contentGroup' . $index . '\', \'' . $group . '\');';
             }
             $tx.=   'ga(\'send\', \'pageview\');';
@@ -94,6 +92,13 @@ class ObjectMeta
         $canonical = $this->_metaValueFromObject('canonical');
         if($canonical)
             $tx.= '<link href="' . $canonical . '" rel="canonical">';
+        
+        if($this->CI->setting->item('amphtml_support_for_post')){
+            $amphtml = $this->_metaValueFromObject('amphtml');
+            if($amphtml)
+                $tx.= '<link rel="amphtml" href="' . $amphtml . '">';
+        }
+        
         
         return $tx;
     }

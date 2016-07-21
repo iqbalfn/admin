@@ -22,12 +22,14 @@
             <a rel="facebook" href="#" title="Reporter"><?= $post->user->fullname ?></a>
         </address>
         
+        <?php if($post->cover): ?>
         <figure>
             <img src="<?= $post->cover ?>" />
             <?php if($post->cover_label): ?>
             <figcaption><?= $post->cover_label ?></figcaption>
             <?php endif; ?>
         </figure>
+        <?php endif; ?>
       
         <figure class="op-ad">
             <iframe width="320" height="50" style="border:0; margin:0;" src="https://www.facebook.com/adnw_request?placement=1738038036454020_1738038136454010&amp;adtype=banner320x50"></iframe>
@@ -43,13 +45,8 @@
             <html>
                 <head>
                     <meta charset="utf-8">
-                    <title><?= $post->title->clean(); ?> - <?= ci()->setting->item('site_name') ?></title>
-                    <?php
-                        $ga = array();
-                        if($post->ga_group)
-                            $ga['group'] = $post->ga_group;
-                        echo $this->meta->_ga($ga);
-                    ?>
+                    <title><?= ( $post->seo_title->clean() ? $post->seo_title->clean() : $post->title->clean() ); ?> - <?= ci()->setting->item('site_name') ?></title>
+                    <?= $this->ometa->_generateGA($post->ga_group); ?>
                     <link rel="canonical" href="<?= base_url($post->page) ?>">
                 </head>
                 <body></body>
@@ -58,7 +55,7 @@
       </figure>
 
       <footer>
-        <aside>Semua kontent dalam halaman ini adalah alternatif instant artikel untuk artikel yang sudah ada di website resmi MrSeru</aside>
+        <aside>Semua kontent dalam halaman ini adalah alternatif instant artikel untuk artikel yang sudah ada di website resmi.</aside>
         <small>&copy; 2015 <?= ci()->setting->item('site_name') ?></small>
       </footer>
     </article>

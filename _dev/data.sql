@@ -147,7 +147,26 @@ INSERT INTO `site_params` ( `name`, `value` ) VALUES
 
 TRUNCATE `site_enum`;
 INSERT INTO `site_enum` ( `group`, `value`, `label` ) VALUES
+
     ( 'event.seo_schema', 'Event', 'Event' ),
+    ( 'event.seo_schema', 'BusinessEvent', 'BusinessEvent' ),
+    ( 'event.seo_schema', 'ChildrensEvent', 'ChildrensEvent' ),
+    ( 'event.seo_schema', 'ComedyEvent', 'ComedyEvent' ),
+    ( 'event.seo_schema', 'DanceEvent', 'DanceEvent' ),
+    ( 'event.seo_schema', 'DeliveryEvent', 'DeliveryEvent' ),
+    ( 'event.seo_schema', 'EducationEvent', 'EducationEvent' ),
+    ( 'event.seo_schema', 'ExhibitionEvent', 'ExhibitionEvent' ),
+    ( 'event.seo_schema', 'Festival', 'Festival' ),
+    ( 'event.seo_schema', 'FoodEvent', 'FoodEvent' ),
+    ( 'event.seo_schema', 'LiteraryEvent', 'LiteraryEvent' ),
+    ( 'event.seo_schema', 'MusicEvent', 'MusicEvent' ),
+    ( 'event.seo_schema', 'PublicationEvent', 'PublicationEvent' ),
+    ( 'event.seo_schema', 'SaleEvent', 'SaleEvent' ),
+    ( 'event.seo_schema', 'ScreeningEvent', 'ScreeningEvent' ),
+    ( 'event.seo_schema', 'SocialEvent', 'SocialEvent' ),
+    ( 'event.seo_schema', 'SportsEvent', 'SportsEvent' ),
+    ( 'event.seo_schema', 'TheaterEvent', 'TheaterEvent' ),
+    ( 'event.seo_schema', 'VisualArtsEvent', 'VisualArtsEvent' ),
     
     ( 'post.status', 1, 'Draft' ),
     ( 'post.status', 2, 'Editor' ),
