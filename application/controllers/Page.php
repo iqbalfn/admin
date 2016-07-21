@@ -15,7 +15,7 @@ class Page extends MY_Controller
         
         $meta_title = $page->seo_title->clean();
         if(!$meta_title)
-            $meta_title = $page->name->clean();
+            $meta_title = $page->title->clean();
         
         $meta_description = $page->seo_description->clean();
         if(!$meta_description)
