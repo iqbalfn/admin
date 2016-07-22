@@ -151,9 +151,9 @@ class ObjectMeta
             if($prop){
                 if(is_array($value)){
                     foreach($value as $val)
-                        $tx.= '<meta ' . $prop . '="' . hs($name) . '" content="' . hs($val) . '">';
+                        $tx.= '<meta ' . $prop . '="' . $name . '" content="' . $val . '">';
                 }else{
-                    $tx.= '<meta ' . $prop . '="' . hs($name) . '" content="' . hs($value) . '">';
+                    $tx.= '<meta ' . $prop . '="' . $name . '" content="' . $value . '">';
                 }
             }
         }
