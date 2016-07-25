@@ -81,6 +81,7 @@ class Auth extends MY_Controller
             return $this->respond('me/login', $params);
         }
         
+        $this->event->me->logged_in($user);
         $this->loginSet($user);
         $this->loginDone();
     }
@@ -93,7 +94,7 @@ class Auth extends MY_Controller
         $this->input->set_cookie($cookie_name, '', -15000);
         
         $this->USession->remove($this->session->id);
-        
+        $this->event->me->logged_out($this->user);
         $this->redirect('/');
     }
     
@@ -105,6 +106,8 @@ class Auth extends MY_Controller
         
         $user_id = $this->input->post('id');
         $this->USession->set($this->session->id, ['user'=>$user_id]);
+        
+        $this->event->me->relogged_in($this->user, $user_id);
         
         $this->redirect('/admin');
     }

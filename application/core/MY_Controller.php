@@ -21,6 +21,7 @@ class MY_Controller extends CI_Controller
         $this->load->library('SiteForm', '', 'form');
         $this->load->library('SiteMeta', '', 'meta');
         $this->load->library('ObjectMeta', '', 'ometa');
+        $this->load->library('ActionEvent', '', 'event');
 
         $cookie_name = config_item('sess_cookie_name');
         $hash = $this->input->cookie($cookie_name);

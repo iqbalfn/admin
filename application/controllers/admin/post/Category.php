@@ -59,17 +59,20 @@ class Category extends MY_Controller
         if(!$id){
             $new_object['user'] = $this->user->id;
             $new_object['id'] = $this->PCategory->create($new_object);
+            
+            $this->event->post_category->created($new_object);
         }else{
             $this->PCategory->set($id, $new_object);
+            
+            $this->event->post_category->updated($object, $new_object);
             
             $object = $this->formatter->post_category($object, false, false);    
             $this->output->delete_cache($object->page);
             $this->output->delete_cache($object->page . '/feed.xml');
+            
+            // Delete all post cache that use me
         }
 
-        $this->output->delete_cache('/extra/footer');
-        $this->output->delete_cache('/extra/sidebar');
-        file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
         $this->redirect('/admin/post/category');
     }
 
@@ -119,15 +122,17 @@ class Category extends MY_Controller
         
         $this->load->model('Postcategorychain_model', 'PCChain');
 
+        $this->event->post_category->deleted($category);
+        
         $category = $this->formatter->post_category($category, false, false);    
         $this->output->delete_cache($category->page);
         $this->output->delete_cache($category->page . '/feed.xml');
         
+        // TODO 
+        // delete all post cache that use me.
+        
         $this->PCategory->remove($id);
         $this->PCChain->removeBy('post_category', $id);
-        $this->output->delete_cache('/extra/footer');
-        $this->output->delete_cache('/extra/sidebar');
-        file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
         
         $this->redirect('/admin/post/category');
     }

@@ -51,9 +51,12 @@ class Object extends MY_Controller
 
         if(!$id){
             $new_object['id'] = $this->Event->create($new_object);
+            $this->event->event->created($new_object);
+            
         }else{
             $this->Event->set($id, $new_object);
             
+            $this->event->event->updated($object, $new_object);
             $object = $this->formatter->event($object, false, false);
             $this->output->delete_cache($object->page);
         }
@@ -95,6 +98,8 @@ class Object extends MY_Controller
         $event = $this->Event->get($id);
         if(!$event)
             return $this->show_404();
+        
+        $this->event->event->deleted($event);
         
         $event = $this->formatter->event($event, false, false);
         

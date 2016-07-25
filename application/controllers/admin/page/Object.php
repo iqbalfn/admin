@@ -50,8 +50,14 @@ class Object extends MY_Controller
 
         if(!$id){
             $new_object['id'] = $this->Page->create($new_object);
+            $this->event->page->created($new_object);
         }else{
             $this->Page->set($id, $new_object);
+            
+            $this->event->page->updated($object, $new_object);
+            
+            $object = $this->formatter->page($object, false, false);
+            $this->output->delete_cache($object->page);
         }
 
         $this->redirect('/admin/page');
@@ -88,6 +94,14 @@ class Object extends MY_Controller
         if(!$this->can_i('delete-page'))
             return $this->show_404();
 
+        $object = $this->Page->get($id);
+        if(!$object)
+            return $this->show_404();
+        
+        $this->event->page->deleted($object);
+        $object = $this->formatter->page($object, false, false);
+        $this->output->delete_cache($object->page);
+        
         $this->Page->remove($id);
         $this->redirect('/admin/page');
     }

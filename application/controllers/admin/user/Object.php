@@ -132,8 +132,10 @@ class Object extends MY_Controller
         
         if(!$id){
             $new_object['id'] = $id = $this->User->create($new_object);
+            $this->event->user->created($new_object);
         }elseif($new_object){
             $this->User->set($id, $new_object);
+            $this->event->user->updated($object, $new_object);
         }
 
         if($to_insert){
@@ -201,6 +203,7 @@ class Object extends MY_Controller
         if(!$this->can_i('delete-user'))
             return $this->show_404();
 
+        $this->event->user->deleted($id);
         $this->user->set($id, ['status'=>0]);
         $this->redirect('/admin/user');
     }

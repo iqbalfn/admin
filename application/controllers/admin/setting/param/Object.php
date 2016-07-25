@@ -42,16 +42,18 @@ class Object extends MY_Controller
 
        $params['param'] = $object;
 
-       if(!($object=$this->form->validate($object)))
+       if(!($new_object=$this->form->validate($object)))
            return $this->respond('setting/param/edit', $params);
 
-       if($object === true)
+       if($new_object === true)
            return $this->redirect('/admin/setting/param');
 
        if(!$id){
-           $object['id'] = $this->SParams->create($object);
+           $new_object['id'] = $this->SParams->create($new_object);
+           $this->event->param->created($new_object);
        }else{
-           $this->SParams->set($id, $object);
+           $this->SParams->set($id, $new_object);
+           $this->event->param->updated($object, $new_object);
        }
 
        $this->cache->file->delete('site_params');
@@ -82,13 +84,15 @@ class Object extends MY_Controller
    }
 
    function remove($id){
-       if(!$this->user)
-           return $this->redirect('/admin/me/login?next=' . uri_string());
-       if(!$this->can_i('delete-site_param'))
-           return $this->show_404();
+        if(!$this->user)
+            return $this->redirect('/admin/me/login?next=' . uri_string());
+        if(!$this->can_i('delete-site_param'))
+            return $this->show_404();
+            
+        $this->event->param->deleted($id);
 
-       $this->cache->file->delete('site_params');
-       $this->SParams->remove($id);
-       $this->redirect('/admin/setting/param');
+        $this->cache->file->delete('site_params');
+        $this->SParams->remove($id);
+        $this->redirect('/admin/setting/param');
    }
 }

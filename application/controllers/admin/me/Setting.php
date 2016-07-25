@@ -49,8 +49,10 @@ class Setting extends MY_Controller
         if(!$this->form->errors){
             $params['success'] = true;
             
-            if($user !== true)
+            if($user !== true){
                 $this->User->set($this->user->id, $user);
+                $this->event->me->updated($this->user, $user);
+            }
         }
         
         $this->respond('me/setting', $params);

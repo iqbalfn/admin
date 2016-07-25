@@ -28,6 +28,7 @@ class Instant extends MY_Controller
             $this->Post->setByCond([], ['instant_content'=>NULL]);
         }
         
+        $this->event->post_instant->cleared();
         $this->respond('post/instant/clear', $params);
     }
 }

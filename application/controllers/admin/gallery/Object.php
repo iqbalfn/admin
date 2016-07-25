@@ -12,11 +12,31 @@ class Object extends MY_Controller
     function __construct(){
         parent::__construct();
 
+        $this->load->library('ObjectFormatter', '', 'formatter');
         $this->load->model('Gallerymedia_model', 'GMedia');
         $this->load->model('Gallery_model', 'Gallery');
     }
+    
+    private function _removePostCache($gallery, $update_post=false){
+        $this->load->model('Post_model', 'Post');
 
-    function edit($id=null){
+        $posts = $this->Post->getBy('gallery', $gallery, true);
+        
+        if($posts){
+            if($update_post){
+                $posts_id = prop_values($posts, 'id');
+                $this->Post->set($posts_id, ['gallery'=>null]);
+            }
+            
+            $posts = $this->formatter->post($posts, false, false);
+            
+            // remove posts cache
+            foreach($posts as $post)
+                $this->output->delete_cache($post->page);
+        }
+    }
+
+    public function edit($id=null){
         if(!$this->user)
             return $this->redirect('/admin/me/login?next=' . uri_string());
         if(!$id && !$this->can_i('create-gallery'))
@@ -52,14 +72,17 @@ class Object extends MY_Controller
         if(!$id){
             $new_object['user'] = $this->user->id;
             $new_object['id'] = $this->Gallery->create($new_object);
+            $this->event->gallery->created($new_object);
         }else{
             $this->Gallery->set($id, $new_object);
+            $this->event->gallery->updated($object, $new_object);
+            $this->_removePostCache($object->id);
         }
 
         $this->redirect('/admin/gallery');
     }
 
-    function index(){
+    public function index(){
         if(!$this->user)
             return $this->redirect('/admin/me/login?next=' . uri_string());
         if(!$this->can_i('read-gallery'))
@@ -76,34 +99,20 @@ class Object extends MY_Controller
         $page= false;
 
         $result = $this->Gallery->getByCond($cond, $rpp, $page, ['name'=>'ASC']);
-        if($result){
-            $this->load->library('ObjectFormatter', '', 'formatter');
+        if($result)
             $params['albums'] = $this->formatter->gallery($result);
-        }
         
         $this->respond('gallery/index', $params);
     }
 
-    function remove($id){
+    public function remove($id){
         if(!$this->user)
             return $this->redirect('/admin/me/login?next=' . uri_string());
         if(!$this->can_i('delete-gallery'))
             return $this->show_404();
         
-        // remove gallery property of post if i'm included as gallery property
-        $this->load->model('Post_model', 'Post');
-        $posts = $this->Post->getBy('gallery', $id, true);
-        if($posts){
-            $this->load->library('ObjectFormatter', '', 'formatter');
-            
-            $posts_id = prop_values($posts, 'id');
-            $this->Post->set($posts_id, ['gallery'=>null]);
-            
-            $posts = $this->formatter->post($posts, false, false);
-            // remove posts cache
-            foreach($posts as $post)
-                $this->output->delete_cache($post->page);
-        }
+        $this->_removePostCache($id, true);
+        $this->event->gallery->removed($id);
 
         $this->Gallery->remove($id);
         $this->GMedia->removeBy('gallery', $id);

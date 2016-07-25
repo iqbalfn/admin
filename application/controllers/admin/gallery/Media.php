@@ -15,8 +15,22 @@ class Media extends MY_Controller
         $this->load->model('Gallerymedia_model', 'GMedia');
         $this->load->model('Gallery_model', 'Gallery');
     }
+    
+    private function _removePostCache($gallery){
+        $this->load->model('Post_model', 'Post');
 
-    function edit($id=null, $gallery=null){
+        $posts = $this->Post->getBy('gallery', $gallery, true);
+        
+        if($posts){
+            $posts = $this->formatter->post($posts, false, false);
+            
+            // remove posts cache
+            foreach($posts as $post)
+                $this->output->delete_cache($post->page);
+        }
+    }
+
+    public function edit($id=null, $gallery=null){
         if(!$this->user)
             return $this->redirect('/admin/me/login?next=' . uri_string());
         if(!$id && !$this->can_i('create-gallery_media'))
@@ -57,14 +71,19 @@ class Media extends MY_Controller
             $new_object['user'] = $this->user->id;
             $new_object['gallery'] = $gallery;
             $new_object['id'] = $this->GMedia->create($new_object);
+            
+            $this->event->gallery_media->created($new_object);
         }else{
             $this->GMedia->set($id, $new_object);
+            
+            $this->event->gallery_media->updated($object, $new_object);
+            $this->_removePostCache($object->gallery);
         }
 
         $this->redirect('/admin/gallery/' . $gallery . '/media');
     }
 
-    function index($gallery){
+    public function index($gallery){
         if(!$this->user)
             return $this->redirect('/admin/me/login?next=' . uri_string());
         if(!$this->can_i('read-gallery_media'))
@@ -95,11 +114,14 @@ class Media extends MY_Controller
         $this->respond('gallery/media/index', $params);
     }
 
-    function remove($id, $gallery){
+    public function remove($id, $gallery){
         if(!$this->user)
             return $this->redirect('/admin/me/login?next=' . uri_string());
         if(!$this->can_i('delete-gallery_media'))
             return $this->show_404();
+        
+        $this->event->gallery_media->deleted($id, $gallery);
+        $this->_removePostCache($gallery);
 
         $this->GMedia->remove($id);
         $this->redirect('/admin/gallery/' . $gallery . '/media');

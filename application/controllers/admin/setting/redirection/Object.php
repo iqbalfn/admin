@@ -53,8 +53,10 @@ class Object extends MY_Controller
         
         if(!$id){
             $new_object['id'] = $this->URedirection->create($new_object);
+            $this->event->redirection->created($object, $new_object);
         }else{
             $this->URedirection->set($id, $new_object);
+            $this->event->redirection->updated($object, $new_object);
         }
 
         $this->redirect('/admin/setting/redirection');
@@ -88,6 +90,8 @@ class Object extends MY_Controller
             return $this->redirect('/admin/me/login?next=' . uri_string());
         if(!$this->can_i('delete-url_redirection'))
             return $this->show_404();
+        
+        $this->event->redirection->deleted($id);
 
         $this->URedirection->remove($id);
         $this->redirect('/admin/setting/redirection');

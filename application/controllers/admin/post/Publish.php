@@ -50,11 +50,10 @@ class Publish extends MY_Controller
             }
         }
         
-        $this->output->delete_cache('/');
         $this->output->delete_cache('/post/feed.xml');
         $this->output->delete_cache('/post/instant.xml');
-        $this->cache->file->delete('_recent_posts');
-        file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
+        
+        $this->event->post_schedule->published($posts_id);
         
         $this->Post->set($posts_id, ['status'=>4]);
         $this->PSchedule->removeBy('post', $posts_id);

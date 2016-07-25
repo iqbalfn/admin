@@ -42,6 +42,7 @@ class Object extends MY_Controller
             $ranks[$prop] = (int)$value;
         }
         
+        $this->event->stat->alexa_calculated($ranks);
         return $ranks;
     }
     
@@ -64,6 +65,7 @@ class Object extends MY_Controller
             'rank_local' => array_key_exists(1, $match) ? str_replace(',', '', $match[1]) : 0
         );
         
+        $this->event->stat->similarweb_calculated($ranks);
         return $ranks;
     }
     

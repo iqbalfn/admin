@@ -15,7 +15,7 @@ class objText implements JsonSerializable
     
     public function chars($len=20){
         $ctx = $this->clean();
-        return trim(substr($ctx, 0, $len));
+        return trim(substr($ctx, 0, $len), ' &');
     }
     
     public function clean(){

@@ -58,14 +58,21 @@ class Tag extends MY_Controller
             $new_object['user'] = $this->user->id;
             $new_object['id'] = $this->PTag->create($new_object);
             
+            $this->event->post_tag->created($new_object);
+            
             if($this->input->get('ajax') == 1)
                 return $this->ajax($new_object);
         }else{
             $this->PTag->set($id, $new_object);
             
+            $this->event->post_tag->updated($object, $new_object);
+            
             $object = $this->formatter->post_tag($object, false, false);    
             $this->output->delete_cache($object->page);
             $this->output->delete_cache($object->page . '/feed.xml');
+            
+            // TODO
+            // delete all post cache that use me.
         }
 
         $this->redirect('/admin/post/tag');
@@ -115,11 +122,16 @@ class Tag extends MY_Controller
         if(!$tag)
             return $this->show_404();
 
+        
+        $this->event->post_tag->deleted($tag);
+        
         $this->load->model('Posttagchain_model', 'PTChain');
         $tag = $this->formatter->post_tag($tag, false, false);    
         $this->output->delete_cache($tag->page);
         $this->output->delete_cache($tag->page . '/feed.xml');
         
+        // TODO
+        // delete all post cache that use me.
         $this->PTag->remove($id);
         $this->PTChain->removeBy('post_tag', $id);
         $this->redirect('/admin/post/tag');

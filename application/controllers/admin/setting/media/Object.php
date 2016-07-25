@@ -41,6 +41,7 @@ class Object extends MY_Controller
                 unlink($target_file);
         }
         
+        $this->event->media->cleared(null);
         $this->ajax('success', false);
     }
     

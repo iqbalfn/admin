@@ -214,9 +214,11 @@ class Object extends MY_Controller
                         
                         $to_delete[] = $cat;
                         $this->PCategory->dec($cat, 'posts', 1, true);
-                        $this->output->delete_cache($category->page);
-                        $this->output->delete_cache($category->page . '/feed.xml');
                     }
+                    
+                    // delete all post category cached
+                    $this->output->delete_cache($category->page);
+                    $this->output->delete_cache($category->page . '/feed.xml');
                 }
                 
                 if($to_delete)
@@ -253,7 +255,7 @@ class Object extends MY_Controller
                         $to_insert[] = $cat;
                         $this->PTag->inc($cat, 'posts', 1, true);
                         $this->output->delete_cache($tag->page);
-                        $this->output->delete_cache($tag->page. '/feed.xml');
+                        $this->output->delete_cache($tag->page . '/feed.xml');
                     }
                 }
                 
@@ -267,9 +269,9 @@ class Object extends MY_Controller
                         
                         $to_delete[] = $cat;
                         $this->PTag->dec($cat, 'posts', 1, true);
-                        $this->output->delete_cache($tag->page);
-                        $this->output->delete_cache($tag->page. '/feed.xml');
                     }
+                    $this->output->delete_cache($tag->page);
+                    $this->output->delete_cache($tag->page . '/feed.xml');
                 }
                 
                 if($to_delete)
@@ -280,17 +282,13 @@ class Object extends MY_Controller
             }
         }
         
-        $this->output->delete_cache('/');
         $this->output->delete_cache('/post/feed.xml');
         $this->output->delete_cache('/post/instant.xml');
-        $this->cache->file->delete('_recent_posts');
-        
-        file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
         
         if($id){
-            $object = $this->formatter->post($object, false, false);
-            $this->output->delete_cache($object->page);
-            $this->output->delete_cache($object->amp);
+            $fobject = $this->formatter->post($object, false, false);
+            $this->output->delete_cache($fobject->page);
+            $this->output->delete_cache($fobject->amp);
         }
         
         if($new_object){
@@ -299,8 +297,12 @@ class Object extends MY_Controller
                 $new_object['user'] = $this->user->id;
                 $new_object['id'] = $this->Post->create($new_object);
                 $id = $new_object['id'];
+                
+                $this->event->post->created($new_object);
             }else{
                 $this->Post->set($id, $new_object);
+                
+                $this->event->post->updated($object, $new_object);
             }
             
             if($post_scheduled){
@@ -459,16 +461,14 @@ class Object extends MY_Controller
             $this->PSelection->removeBy('post', $post->id);
         }
         
+        $this->event->post->deleted($post);
+        
         $post = $this->formatter->post($post, false, false);
         
-        $this->output->delete_cache('/');
         $this->output->delete_cache($post->page);
         $this->output->delete_cache($post->amp);
         $this->output->delete_cache('/post/feed.xml');
         $this->output->delete_cache('/post/instant.xml');
-        $this->cache->file->delete('_recent_posts');
-        
-        file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
         
         $this->redirect('/admin/post');
     }

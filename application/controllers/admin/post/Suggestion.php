@@ -50,8 +50,10 @@ class Suggestion extends MY_Controller
 
         if(!$id){
             $new_object['id'] = $this->Postsuggestion->create($new_object);
+            $this->event->post_suggestion->created($new_object);
         }else{
             $this->Postsuggestion->set($id, $new_object);
+            $this->event->post_suggestion->updated($object, $new_object);
         }
 
         $this->redirect('/admin/post/suggestion');
@@ -87,6 +89,8 @@ class Suggestion extends MY_Controller
             return $this->redirect('/admin/me/login?next=' . uri_string());
         if(!$this->can_i('delete-post_suggestion'))
             return $this->show_404();
+        
+        $this->event->post_suggestion->deleted($id);
 
         $this->Postsuggestion->remove($id);
         $this->redirect('/admin/post/suggestion');

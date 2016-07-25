@@ -28,6 +28,7 @@ class Object extends MY_Controller
             'caches' => $files
         );
         
+        $this->event->cache->cleared(null);
         $this->respond('setting/cache/index', $params);
     }
     

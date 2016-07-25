@@ -107,6 +107,8 @@ class Trending extends MY_Controller
         if($insertion){
             $this->PTrending->truncate();
             $this->PTrending->create_batch($insertion);
+            
+            $this->event->post_trending->calculated($insertion);
         }
         
         deb('Inserted ' . count($insertion) . ' trending');

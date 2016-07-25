@@ -71,11 +71,12 @@ class Selector extends MY_Controller
                     $new_object[$get] = $get_val;
             }
             $new_object['id'] = $this->PSelection->create($new_object);
+            $this->event->post_selection->created($new_object);
         }else{
             $this->PSelection->set($id, $new_object);
+            $this->event->post_selection->updated($object, $new_object);
         }
 
-        $this->cache->file->delete('post_selection');
         $this->redirect('/admin/post/selector?group=' . $object->group);
     }
 
@@ -123,7 +124,8 @@ class Selector extends MY_Controller
         if($this->input->get('group'))
             $next.= '?group=' . $this->input->get('group');
 
-        $this->cache->file->delete('post_selection');
+        $this->event->post_selection->deleted($id);
+        
         $this->PSelection->remove($id);
         $this->redirect($next);
     }

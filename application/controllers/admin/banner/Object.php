@@ -51,12 +51,13 @@ class Object extends MY_Controller
         if(!$id){
             $new_object['user'] = $this->user->id;
             $new_object['id'] = $this->Banner->create($new_object);
+            $this->event->banner->created($new_object);
         }else{
             $this->Banner->set($id, $new_object);
+            $this->event->banner->updated($object, $new_object);
         }
 
         $this->cache->file->delete('banner');
-        file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
         $this->redirect('/admin/banner');
     }
 
@@ -76,7 +77,7 @@ class Object extends MY_Controller
         $rpp = true;
         $page= false;
 
-        $result = $this->Banner->getByCond($cond, $rpp, $page);
+        $result = $this->Banner->getByCond($cond, $rpp, $page, ['name'=>'ASC']);
         if($result){
             $this->load->library('ObjectFormatter', '', 'format');
             $params['banners'] = $this->format->banner($result, false, true);
@@ -92,7 +93,7 @@ class Object extends MY_Controller
             return $this->show_404();
 
         $this->cache->file->delete('banner');
-        file_put_contents(dirname(BASEPATH) . '/last-update.txt', time());
+        $this->event->banner->deleted($id);
         
         $this->Banner->remove($id);
         $this->redirect('/admin/banner');

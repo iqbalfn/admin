@@ -40,20 +40,23 @@ class Object extends MY_Controller
         
         $params['enum'] = $enum;
         
-        if(!($enum=$this->form->validate($enum)))
+        if(!($new_enum=$this->form->validate($enum)))
             return $this->respond('setting/enum/edit', $params);
         
-        if($enum === true)
+        if($new_enum === true)
             return $this->redirect('/admin/setting/enum');
         
         if(!$id){
-            if(!array_key_exists('group', $enum))
-                $enum['group'] = $this->input->get('group');
+            if(!array_key_exists('group', $new_enum))
+                $new_enum['group'] = $this->input->get('group');
             
-            $enum['id'] = $this->SEnum->create($enum);
+            $new_enum['id'] = $this->SEnum->create($new_enum);
+            
+            $this->event->enum->created($new_enum);
         }else{
-            $this->SEnum->set($id, $enum);
+            $this->SEnum->set($id, $new_enum);
             
+            $this->event->enum->updated($enum, $new_enum);
         }
         
         $this->cache->file->delete('site_enum');
@@ -84,6 +87,8 @@ class Object extends MY_Controller
             return $this->redirect('/admin/me/login?next=' . uri_string());
         if(!$this->can_i('delete-site_enum'))
             return $this->show_404();
+        
+        $this->event->enum->deleted($id);
         
         $this->SEnum->remove($id);
         $this->cache->file->delete('site_enum');

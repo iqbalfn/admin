@@ -72,8 +72,12 @@ class Object extends MY_Controller
             }
             
             $new_object['id'] = $this->SMenu->create($new_object);
+            
+            $this->event->menu->created($new_object);
         }else{
             $this->SMenu->set($id, $new_object);
+            
+            $this->event->menu->updated($object, $new_object);
         }
 
         $this->cache->file->delete('site_menu');
@@ -120,6 +124,8 @@ class Object extends MY_Controller
         $next = '/admin/setting/menu';
         if($this->input->get('group'))
             $next.= '?group=' . $this->input->get('group');
+        
+        $this->event->menu->deleted($id);
 
         $this->cache->file->delete('site_menu');
         $this->SMenu->remove($id);

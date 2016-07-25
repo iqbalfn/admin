@@ -63,8 +63,12 @@ class Object extends MY_Controller
             }
             $new_object['user'] = $this->user->id;
             $new_object['id'] = $this->Slideshow->create($new_object);
+            
+            $this->event->slideshow->created($new_object);
         }else{
             $this->Slideshow->set($id, $new_object);
+            
+            $this->event->slideshow->updated($object, $new_object);
         }
 
         $this->redirect('/admin/setting/slideshow?group=' . $object->group);
@@ -112,6 +116,8 @@ class Object extends MY_Controller
         $next = '/admin/setting/slideshow';
         if($this->input->get('group'))
             $next.= '?group=' . $this->input->get('group');
+        
+        $this->event->slideshow->deleted($id);
 
         $this->Slideshow->remove($id);
         $this->redirect($next);
