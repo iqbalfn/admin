@@ -176,110 +176,123 @@ class Object extends MY_Controller
         
         // save category chain
         $to_insert_category = array();
-        if(array_key_exists('category', $new_object)){
-            $new_categories = $new_object['category'];
-            unset($new_object['category']);
+        if(!array_key_exists('category', $new_object))
+            $new_object['category'] = array();
+        
+        $new_categories = $new_object['category'];
+        unset($new_object['category']);
+        
+        if($this->can_i('read-post_category')){
             
-            if($this->can_i('read-post_category')){
-                
-                $old_categories = array();
-                if($id)
-                    $old_categories = $object->category;
-                
-                $to_insert = array();
-                $to_delete = array();
-                
-                foreach($new_categories as $cat){
-                    if(!in_array($cat, $old_categories)){
-                        $category = null;
-                        if(array_key_exists($cat, $all_categories))
-                            $category = $all_categories[$cat];
-                        if(!$category)
-                            continue;
-                        
-                        $to_insert[] = $cat;
-                        $this->PCategory->inc($cat, 'posts', 1, true);
-                        $this->output->delete_cache($category->page);
-                        $this->output->delete_cache($category->page . '/feed.xml');
-                    }
-                }
-                
-                foreach($old_categories as $cat){
-                    if(!in_array($cat, $new_categories)){
-                        $category = null;
-                        if(array_key_exists($cat, $all_categories))
-                            $category = $all_categories[$cat];
-                        if(!$category)
-                            continue;
-                        
-                        $to_delete[] = $cat;
-                        $this->PCategory->dec($cat, 'posts', 1, true);
-                    }
+            $old_categories = array();
+            if($id)
+                $old_categories = $object->category;
+            
+            $to_insert = array();
+            $to_delete = array();
+            
+            foreach($new_categories as $cat){
+                if(!in_array($cat, $old_categories)){
+                    $category = null;
+                    if(array_key_exists($cat, $all_categories))
+                        $category = $all_categories[$cat];
+                    if(!$category)
+                        continue;
                     
-                    // delete all post category cached
+                    $to_insert[] = $cat;
+                    $this->PCategory->inc($cat, 'posts', 1, true);
                     $this->output->delete_cache($category->page);
                     $this->output->delete_cache($category->page . '/feed.xml');
                 }
-                
-                if($to_delete)
-                    $this->PCChain->removeByCond(['post'=>$id, 'post_category'=>$to_delete]);
-
-                if($to_insert)
-                    $to_insert_category = $to_insert;
             }
+            
+            foreach($old_categories as $cat){
+                $old_category = null;
+                if(array_key_exists($cat, $all_categories))
+                    $old_category = $all_categories[$cat];
+                    
+                if(!in_array($cat, $new_categories)){
+                    $category = null;
+                    if(array_key_exists($cat, $all_categories))
+                        $category = $all_categories[$cat];
+                    if(!$category)
+                        continue;
+                    
+                    $to_delete[] = $cat;
+                    $this->PCategory->dec($cat, 'posts', 1, true);
+                }
+                
+                // delete all post category cache
+                if($old_category){
+                    $this->output->delete_cache($old_category->page);
+                    $this->output->delete_cache($old_category->page . '/feed.xml');
+                }
+            }
+            
+            if($to_delete)
+                $this->PCChain->removeByCond(['post'=>$id, 'post_category'=>$to_delete]);
+
+            if($to_insert)
+                $to_insert_category = $to_insert;
         }
         
         // save tag chain
         $to_insert_tag = array();
-        if(array_key_exists('tag', $new_object)){
-            $new_tags = $new_object['tag'];
-            unset($new_object['tag']);
+        if(!array_key_exists('tag', $new_object))
+            $new_object['tag'] = array();
+        
+        $new_tags = $new_object['tag'];
+        unset($new_object['tag']);
+        
+        if($this->can_i('read-post_tag')){
+        
+            $old_tags = array();
+            if($id)
+                $old_tags = $object->tag;
             
-            if($this->can_i('read-post_tag')){
+            $to_insert = array();
+            $to_delete = array();
             
-                $old_tags = array();
-                if($id)
-                    $old_tags = $object->tag;
-                
-                $to_insert = array();
-                $to_delete = array();
-                
-                foreach($new_tags as $cat){
-                    if(!in_array($cat, $old_tags)){
-                        $tag = null;
-                        if(array_key_exists($cat, $all_tags))
-                            $tag = $all_tags[$cat];
-                        if(!$tag)
-                            continue;
-                        
-                        $to_insert[] = $cat;
-                        $this->PTag->inc($cat, 'posts', 1, true);
-                        $this->output->delete_cache($tag->page);
-                        $this->output->delete_cache($tag->page . '/feed.xml');
-                    }
-                }
-                
-                foreach($old_tags as $cat){
-                    if(!in_array($cat, $new_tags)){
-                        $tag = null;
-                        if(array_key_exists($cat, $all_tags))
-                            $tag = $all_tags[$cat];
-                        if(!$tag)
-                            continue;
-                        
-                        $to_delete[] = $cat;
-                        $this->PTag->dec($cat, 'posts', 1, true);
-                    }
+            foreach($new_tags as $cat){
+                if(!in_array($cat, $old_tags)){
+                    $tag = null;
+                    if(array_key_exists($cat, $all_tags))
+                        $tag = $all_tags[$cat];
+                    if(!$tag)
+                        continue;
+                    
+                    $to_insert[] = $cat;
+                    $this->PTag->inc($cat, 'posts', 1, true);
                     $this->output->delete_cache($tag->page);
                     $this->output->delete_cache($tag->page . '/feed.xml');
                 }
-                
-                if($to_delete)
-                    $this->PTChain->removeByCond(['post'=>$id, 'post_tag'=>$to_delete]);
-
-                if($to_insert)
-                    $to_insert_tag = $to_insert;
             }
+            
+            foreach($old_tags as $cat){
+                $old_tag = null;
+                if(array_key_exists($cat, $all_tags))
+                    $old_tag = $all_tags[$cat];
+                if(!in_array($cat, $new_tags)){
+                    $tag = null;
+                    if(array_key_exists($cat, $all_tags))
+                        $tag = $all_tags[$cat];
+                    if(!$tag)
+                        continue;
+                    
+                    $to_delete[] = $cat;
+                    $this->PTag->dec($cat, 'posts', 1, true);
+                }
+                if($old_tag){
+                    $this->output->delete_cache($old_tag->page);
+                    $this->output->delete_cache($old_tag->page . '/feed.xml');
+                }
+            }
+            
+            if($to_delete)
+                $this->PTChain->removeByCond(['post'=>$id, 'post_tag'=>$to_delete]);
+
+            if($to_insert)
+                $to_insert_tag = $to_insert;
         }
         
         $this->output->delete_cache('/post/feed.xml');

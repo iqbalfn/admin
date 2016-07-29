@@ -202,7 +202,11 @@ class ObjectMeta
     
     private function _generateScript(){
         $ga_group = $this->_metaValueFromObject('ga:group');
-        $tx = $this->_generateGA($ga_group);
+        $tx = '';
+        
+        // AMP Page shouldn't with ga
+        if(!$this->_metaValueFromObject('is_amp'))
+            $tx.= $this->_generateGA($ga_group);
         
         return $tx;
     }

@@ -21,5 +21,4 @@ Read the doc [http://iqbalfn.com/admin](here).
 5. Searh page
 6. ExtraJS
 7. Root automatic permissions
-8. last_update.txt per object
 9. More property for Event schema

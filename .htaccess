@@ -41,7 +41,7 @@ RewriteRule . index.php
   </ifModule>
 </filesMatch>
 
-<filesMatch "last-update\.json">
+<filesMatch "update\.json">
   FileETag None
   <ifModule mod_headers.c>
      Header unset ETag

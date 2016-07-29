@@ -105,7 +105,8 @@ $config['object_meta'] = array(
         'twitter:image:src'     => '@og:image',
         'twitter:title'         => '@title',
         'twitter:url'           => '@canonical',
-        'ga:group'              => 'ga_group|object_property'
+        'ga:group'              => 'ga_group|object_property',
+        'is_amp'                => 'id|object_property'
     ),
     
     'post_category'             => array(
