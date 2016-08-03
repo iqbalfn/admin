@@ -34,9 +34,11 @@ class #ctrl_name# extends #ctrl_parent#                                         
             if($object->user != $this->user->id)                                | ctrl_edit, ctrl_edit_mine_only
                 return $this->show_404();                                       | ctrl_edit, ctrl_edit_mine_only
             $params['title'] = _l('#ctrl_edit_title_edit#');                    | ctrl_edit
-        }else{                                                                  | ctrl_edit
-            $object = (object)array();                                          | ctrl_edit
-            $params['title'] = _l('#ctrl_edit_title_create#');                  | ctrl_edit
+        }else{                                                                  | ctrl_edit, ctrl_edit_permission_create
+            $object = (object)array();                                          | ctrl_edit, ctrl_edit_permission_create
+            $params['title'] = _l('#ctrl_edit_title_create#');                  | ctrl_edit, ctrl_edit_permission_create
+        }else{                                                                  | ctrl_edit, !ctrl_edit_permission_create
+            return $this->show_404();                                           | ctrl_edit, !ctrl_edit_permission_create
         }                                                                       | ctrl_edit
                                                                                 | ctrl_edit
         $this->form->setObject($object);                                        | ctrl_edit
@@ -52,12 +54,13 @@ class #ctrl_name# extends #ctrl_parent#                                         
                                                                                 | ctrl_edit, ctrl_edit_set_updated_field
         $new_object['updated'] = date('Y-m-d H:i:s');                           | ctrl_edit, ctrl_edit_set_updated_field
                                                                                 | ctrl_edit
-        if(!$id){                                                               | ctrl_edit
-            $new_object['user'] = $this->user->id;                              | ctrl_edit, ctrl_edit_set_user_field
-            $new_object['id'] = $this->#model_name#->create($new_object);       | ctrl_edit
-        }else{                                                                  | ctrl_edit
-            $this->#model_name#->set($id, $new_object);                         | ctrl_edit
-        }                                                                       | ctrl_edit
+        if(!$id){                                                               | ctrl_edit, ctrl_edit_permission_create
+            $new_object['user'] = $this->user->id;                              | ctrl_edit, ctrl_edit_set_user_field, ctrl_edit_permission_create
+            $new_object['id'] = $this->#model_name#->create($new_object);       | ctrl_edit, ctrl_edit_permission_create
+        }else{                                                                  | ctrl_edit, ctrl_edit_permission_create
+            $this->#model_name#->set($id, $new_object);                         | ctrl_edit, ctrl_edit_permission_create
+        }                                                                       | ctrl_edit, ctrl_edit_permission_create
+        $this->#model_name#->set($id, $new_object);                             | ctrl_edit, !ctrl_edit_permission_create
                                                                                 | ctrl_edit
         $this->redirect('#ctrl_edit_redirect#');                                | ctrl_edit
     }                                                                           | ctrl_edit
@@ -94,9 +97,9 @@ class #ctrl_name# extends #ctrl_parent#                                         
                                                                                 | ctrl_index
         $result = $this->#model_name#->getByCond($cond, $rpp, $page);                               | ctrl_index
         if($result){                                                                                | ctrl_index
-            $this->load->library('ObjectFormatter', '', 'format');                                  | ctrl_index
-            $params['#ctrl_index_param_name#'] = $this->format->#table_name#($result, false, true); | ctrl_index
-        }                                                                                           | ctrl_index
+            $this->load->library('ObjectFormatter', '', 'formatter');           | ctrl_index
+            $params['#ctrl_index_param_name#'] = $this->formatter->#table_name#($result, false, true); | ctrl_index
+        }                                                                              | ctrl_index, ctrl_index_rpp
                                                                                        | ctrl_index, ctrl_index_rpp
         // for pagination                                                              | ctrl_index, ctrl_index_rpp
         $total = $this->#model_name#->countByCond($cond);                              | ctrl_index, ctrl_index_rpp
