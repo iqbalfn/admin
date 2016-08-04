@@ -26,7 +26,7 @@
                                     <input type="hidden" name="status" value="<?= $this->input->get('status') ?>">
                                     <?php endif; ?>
                                     <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button"><i class="glyphicon glyphicon-search"></i></button>
+                                        <button class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
                                     </span>
                                 </div>
                             </div>

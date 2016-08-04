@@ -1118,7 +1118,7 @@ class SiteForm
             
             if(!array_key_exists($prop, $preset_object))
                 $obj[$prop] = $value;
-            elseif($value != $preset_object[$prop])
+            elseif(in_array($input['type'], ['multiple']) || $value != $preset_object[$prop])
                 $obj[$prop] = $value;
         }
         
