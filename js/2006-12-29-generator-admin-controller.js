@@ -57,10 +57,13 @@ class #ctrl_name# extends #ctrl_parent#                                         
         if(!$id){                                                               | ctrl_edit, ctrl_edit_permission_create
             $new_object['user'] = $this->user->id;                              | ctrl_edit, ctrl_edit_set_user_field, ctrl_edit_permission_create
             $new_object['id'] = $this->#model_name#->create($new_object);       | ctrl_edit, ctrl_edit_permission_create
+            $this->event->#table_name#->created($new_object);                   | ctrl_edit, ctrl_edit_permission_create
         }else{                                                                  | ctrl_edit, ctrl_edit_permission_create
             $this->#model_name#->set($id, $new_object);                         | ctrl_edit, ctrl_edit_permission_create
+            $this->event->#table_name#->updated($object, $new_object);          | ctrl_edit, ctrl_edit_permission_create
         }                                                                       | ctrl_edit, ctrl_edit_permission_create
         $this->#model_name#->set($id, $new_object);                             | ctrl_edit, !ctrl_edit_permission_create
+        $this->event->#table_name#->updated($object, $new_object);              | ctrl_edit, !ctrl_edit_permission_create
                                                                                 | ctrl_edit
         $this->redirect('#ctrl_edit_redirect#');                                | ctrl_edit
     }                                                                           | ctrl_edit
@@ -127,6 +130,8 @@ class #ctrl_name# extends #ctrl_parent#                                         
         $this->cache->file->delete('#ctrl_remove_cache#');                      | ctrl_remove, ctrl_remove_cache
                                                                                 | ctrl_remove, ctrl_remove_cache
         $this->#model_name#->remove($id);                                       | ctrl_remove
+        $this->event->#table_name#->deleted($id);                               | ctrl_remove, !ctrl_remove_mine_only
+        $this->event->#table_name#->deleted($object);                           | ctrl_remove, ctrl_remove_mine_only
         $this->redirect('#ctrl_remove_redirect#');                              | ctrl_remove
     }                                                                           | ctrl_remove
 }                                                                               | 1`;
