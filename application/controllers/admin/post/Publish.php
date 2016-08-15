@@ -50,6 +50,7 @@ class Publish extends MY_Controller
             }
         }
         
+        $this->output->delete_cache('/');
         $this->output->delete_cache('/post/feed.xml');
         $this->output->delete_cache('/post/instant.xml');
         

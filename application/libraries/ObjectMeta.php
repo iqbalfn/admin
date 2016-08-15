@@ -13,6 +13,8 @@ class ObjectMeta
     private $attr_value = array();
     private $rules;
     
+    private $afterJQFiles = array();
+    
     private $meta_to_attr = array(
         'article:author'                => 'property',
         'article:modified_time'         => 'property',
@@ -325,6 +327,71 @@ class ObjectMeta
         }
         
         return $value;
+    }
+    
+    /**
+     * Add new script after JQ loaded
+     * @param string|array files The file name to load
+     */
+    public function addAfterJQ($files){
+        if(!is_array($files))
+            $files = [$files];
+        
+        foreach($files as $file){
+            if($file == 'cac.js')
+                $file = base_url('/theme/static/js/cac.js');
+            if(!in_array($file, $this->afterJQFiles))
+                $this->afterJQFiles[] = $file;
+        }
+    }
+    
+    /**
+     * Print footer scripts
+     * @param string|array files List of additional files to append
+     * @return string scripts tag
+     */
+    public function footer($files){
+        $tx = '';
+        
+        if($files)
+            $this->addAfterJQ($files);
+        
+        // facebook js
+        if($this->CI->setting->item('theme_include_fb_js_api')){
+            $fb_app_id = $this->CI->setting->item('code_application_facebook');
+            $fb_ads_api= $this->CI->setting->item('theme_include_fb_js_api_with_ads');
+            
+            $tx.= '<script>';
+            $tx.=   '(function(d,s,id){';
+            $tx.=       'var js,fjs=d.getElementsByTagName(s)[0];';
+            $tx.=       'if(d.getElementById(id)) return;';
+            $tx.=       'js=d.createElement(s);js.id=id;js.src="';
+            $tx.=       $fb_ads_api
+                        ? '//connect.facebook.net/en_US/sdk/xfbml.ad.js#xfbml=1&version=v2.5&appId='
+                        : '//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=';
+            $tx.=       $fb_app_id;
+            $tx.=       '";fjs.parentNode.insertBefore(js,fjs);';
+            $tx.=   '}(document,\'script\',\'facebook-jssdk\'));';
+            $tx.= '</script>';
+        }
+        
+        if($this->afterJQFiles){
+            $tx.= '<script src="https://code.jquery.com/jquery-1.12.3.min.js" async defer></script>';
+            $tx.= '<script>';
+            $tx.= 'function loadJS(){';
+            $tx.=   'if(!window.jQuery) return setTimeout(loadJS,100);';
+            $tx.=   'var files = ' . json_encode($this->afterJQFiles) . ';';
+            $tx.=   'for(var i=0; i<files.length; i++){';
+            $tx.=       'var s = document.createElement(\'script\');';
+            $tx.=       's[files[i].substr(0,4)==\'http\'?\'src\':\'innerHTML\'] = files[i];';
+            $tx.=       'document.body.appendChild(s);';
+            $tx.=   '}';
+            $tx.= '}';
+            $tx.= 'loadJS()';
+            $tx.= '</script>';
+        }
+        
+        return $tx;
     }
     
     /**
