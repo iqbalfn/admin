@@ -16,12 +16,17 @@ class Auth extends MY_Controller
         // only if i can see admin home page
         // or back to index otherwise
         if(!$next){
-            $this->load->model('Userperms_model', 'UPerms');
-            $cond = array(
-                'user' => $this->user->id,
-                'perms' => 'read-admin_page'
-            );
-            $allowed = $this->UPerms->getByCond($cond, 1);
+            if($this->user->id == 1){
+                $allowed = true;
+            }else{
+                $this->load->model('Userperms_model', 'UPerms');
+                $cond = array(
+                    'user' => $this->user->id,
+                    'perms' => 'read-admin_page'
+                );
+                $allowed = $this->UPerms->getByCond($cond, 1);
+            }
+            
             $next = $allowed ? '/admin' : '/';
         }
         

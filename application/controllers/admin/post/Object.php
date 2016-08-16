@@ -44,6 +44,11 @@ class Object extends MY_Controller
             $object = $this->Post->get($id);
             if(!$object)
                 return $this->show_404();
+            
+            // allow user to edit other user posts only if he's allowed to do so.
+            if($object->user != $this->user->id && !$this->can_i('update-post_other_user'))
+                return $this->show_404();
+            
             $params['title'] = _l('Edit Post');
             
             $object_categories = $this->PCChain->getBy('post', $id, true);

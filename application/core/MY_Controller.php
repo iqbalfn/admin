@@ -43,10 +43,17 @@ class MY_Controller extends CI_Controller
                     $this->user->perms = [];
                     
                     if($user){
-                        $this->load->model('Userperms_model', 'UPerms');
-                        $user_perms = $this->UPerms->getBy('user', $user->id, true);
-                        if($user_perms)
-                            $this->user->perms = prop_values($user_perms, 'perms');
+                        if($user->id == 1){
+                            $this->load->model('Perms_model', 'Perms');
+                            $user_perms = $this->Perms->getByCond([], true, false);
+                            $this->user->perms = prop_values($user_perms, 'name');
+                        }else{
+                            $this->load->model('Userperms_model', 'UPerms');
+                            $user_perms = $this->UPerms->getBy('user', $user->id, true);
+                            if($user_perms)
+                                $this->user->perms = prop_values($user_perms, 'perms');
+                        }
+                        
                         $this->user->perms[] = 'logged_in';
                     }
                 }

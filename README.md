@@ -1,8 +1,6 @@
 # admin
 The CI Admin
 
-Read the doc [http://iqbalfn.com/admin](here).
-
 ## TODO
 
 1. Move finished library to system
@@ -15,10 +13,6 @@ Read the doc [http://iqbalfn.com/admin](here).
     7. SiteParams
     8. SiteTheme
     9. ObjectMeta
-2. Create libary to replace SiteMeta
-3. Post preview before posting
-4. Preset Post with gallery medias
-5. Searh page
-6. ExtraJS
-7. Root automatic permissions
-9. More property for Event schema
+2. Post preview before posting
+3. Searh page
+4. File manager
