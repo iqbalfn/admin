@@ -16,3 +16,4 @@ The CI Admin
 2. Post preview before posting
 3. Searh page
 4. File manager
+5. Post page view counter

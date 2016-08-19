@@ -21,6 +21,7 @@ class Object extends MY_Controller
         $table = $this->input->get('table');
         
         $filterable_table = array(
+            'banner'  => array('field' => 'name',       'perms' => 'read-banner'),
             'gallery' => array('field' => 'name',       'perms' => 'read-gallery'),
             'post'    => array('field' => 'title',      'perms' => 'read-post'),
             'post_tag'=> array('field' => 'name',       'perms' => 'read-post_tag'),
