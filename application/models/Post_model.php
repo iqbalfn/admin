@@ -34,15 +34,9 @@ class Post_model extends MY_Model
         
         $post = $this->table;
         
-        if(array_key_exists('q', $cond))
+        if(array_key_exists('q', $cond)){
             $this->db->like('post.title', $cond['q']);
-        if(array_key_exists('status', $cond)){
-            $method = is_array($cond['status']) ? 'where_in' : 'where';
-            $this->db->$method('post.status', $cond['status']);
-        }
-        if(array_key_exists('user', $cond)){
-            $method = is_array($cond['user']) ? 'where_in' : 'where';
-            $this->db->$method('post.user', $cond['user']);
+            unset($cond['q']);
         }
         
         if(array_key_exists('tag', $cond)){
@@ -53,6 +47,7 @@ class Post_model extends MY_Model
             $method = is_array($cond['tag']) ? 'where_in' : 'where';
             $this->db->$method("$post_tag.post_tag", $cond['tag']);
             $this->db->group_by("$post_tag.post");
+            unset($cond['tag']);
         }
         
         if(array_key_exists('category', $cond)){
@@ -63,9 +58,10 @@ class Post_model extends MY_Model
             $method = is_array($cond['category']) ? 'where_in' : 'where';
             $this->db->$method("$post_category.post_category", $cond['category']);
             $this->db->group_by("$post_category.post");
+            unset($cond['category']);
         }
         
-        return $this->getByCond([], $rpp, $page, $order);
+        return $this->getByCond($cond, $rpp, $page, $order);
     }
     
     /**
@@ -75,17 +71,9 @@ class Post_model extends MY_Model
     public function findByCondTotal($cond){
         $post = $this->table;
         
-        if(array_key_exists('q', $cond))
+        if(array_key_exists('q', $cond)){
             $this->db->like('post.title', $cond['q']);
-        
-        if(array_key_exists('status', $cond)){
-            $method = is_array($cond['status']) ? 'where_in' : 'where';
-            $this->db->$method('post.status', $cond['status']);
-        }
-        
-        if(array_key_exists('user', $cond)){
-            $method = is_array($cond['user']) ? 'where_in' : 'where';
-            $this->db->$method('post.user', $cond['user']);
+            unset($cond['q']);
         }
         
         if(array_key_exists('tag', $cond)){
@@ -95,6 +83,7 @@ class Post_model extends MY_Model
             
             $method = is_array($cond['tag']) ? 'where_in' : 'where';
             $this->db->$method("$post_tag.post_tag", $cond['tag']);
+            unset($cond['tag']);
         }
         
         if(array_key_exists('category', $cond)){
@@ -104,8 +93,9 @@ class Post_model extends MY_Model
             
             $method = is_array($cond['category']) ? 'where_in' : 'where';
             $this->db->$method("$post_category.post_category", $cond['category']);
+            unset($cond['category']);
         }
         
-        return $this->countByCond([]);
+        return $this->countByCond($cond);
     }
 }

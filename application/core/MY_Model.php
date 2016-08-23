@@ -22,9 +22,10 @@ class MY_Model extends CI_Model
         if(!count($cond))
             return $this;
         
+        $table = $this->table;
         foreach($cond as $field => $value){
             if(is_array($value)){
-                $this->db->where_in($field, $value);
+                $this->db->where_in("`$table`.`$field`", $value);
                 
             }elseif(is_object($value)){
                 $value = (array)$value;
@@ -33,18 +34,18 @@ class MY_Model extends CI_Model
                 $value = $value[1];
                 
                 if(in_array($operator, array('>', '<', '!=', '=', '>=', '<=')))
-                    $this->db->where("$field $operator", $value);
+                    $this->db->where("`$table`.`$field` $operator", $value);
                 elseif($operator == 'LIKE')
-                    $this->db->like($field, $value, $wildcard);
+                    $this->db->like("`$table`.`$field`", $value, $wildcard);
                 elseif($operator == 'NOT LIKE')
-                    $this->db->not_like($field, $value, $wildcard);
+                    $this->db->not_like("`$table`.`$field`", $value, $wildcard);
                 elseif($operator == 'IN')
-                    $this->db->where_in($field, $value);
+                    $this->db->where_in("`$table`.`$field`", $value);
                 elseif($operator == 'NOT IN')
-                    $this->db->where_not_in($field, $value);
+                    $this->db->where_not_in("`$table`.`$field`", $value);
                 
             }else{
-                $this->db->where($field, $value);
+                $this->db->where("`$table`.`$field`", $value);
                 
             }
         }

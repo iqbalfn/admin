@@ -42,8 +42,15 @@ class Setting extends MY_Controller
                     $this->form->setError('email', 'The email already exists');
             }
             
-            if(array_key_exists('password', $user))
-                $user['password'] = password_hash($user['password'], PASSWORD_DEFAULT);
+            if(array_key_exists('password', $user)){
+                if($user['password'])
+                    $user['password'] = password_hash($user['password'], PASSWORD_DEFAULT);
+                else{
+                    unset($user['password']);
+                    if(!count($user))
+                        $user = true;
+                }
+            }
         }
         
         if(!$this->form->errors){
