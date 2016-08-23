@@ -16,6 +16,7 @@ class Trending extends MY_Controller
         $this->load->model('Posttagchain_model', 'PTChain');
         $this->load->model('Posttrending_model', 'PTrending');
         $this->load->model('Postcategorychain_model', 'PCChain');
+        $this->load->model('Poststatistic_model', 'PStatistic');
         $this->load->library('Google');
     }
     
@@ -36,20 +37,26 @@ class Trending extends MY_Controller
             'filters' => 'ga:pagePath=@/post/read',
             'dimensions' => 'ga:pagePath',
             'sort' => '-ga:pageviews',
-            'max-results' => 200
+            'max-results' => 500
         );
-        $result = $ga_analytics->data_ga->get("ga:$view_id", $date_start, $date_end, 'ga:pageviews', $opts);
+        $result = $ga_analytics->data_ga->get("ga:$view_id", $date_start, $date_end, 'ga:pageviews,ga:users,ga:sessions', $opts);
         
         if($result->error)
             deb($result->error);
-        
+            
         $rows = $result->rows;
         $post_views = array();
         
         foreach($rows as $row){
             $slug = str_replace('/post/read/', '', $row[0]);
-            $view = $row[1];
-            $post_views[$slug] = $view;
+            $pageviews = $row[1];
+            $users = $row[2];
+            $sessions = $row[3];
+            $post_views[$slug] = array( 
+                'pageviews' => $pageviews,
+                'sessions'  => $sessions,
+                'users'     => $users
+            );
         }
         
         // we need to process them separatly to reduce server usage
@@ -63,17 +70,22 @@ class Trending extends MY_Controller
                 continue;
             
             $posts = prop_as_key($posts, 'slug');
-            foreach($group as $slug => $view){
+            foreach($group as $slug => $stat){
                 if(!array_key_exists($slug, $posts))
                     continue;
-                $posts[$slug]->view = $view;
+                $posts[$slug]->view = $stat['pageviews'];
                 $insertion[] = array(
                     'post' => $posts[$slug]->id,
                     'tag'  => null,
                     'category' => null,
-                    'view' => $view
+                    'view' => $stat['pageviews']
                 );
+                
+                $group[$slug]['post'] = $posts[$slug]->id;
             }
+            
+            $post_statistics = array_values($group);
+            $this->PStatistic->update($post_statistics);
             
             $posts_by_id = prop_as_key($posts, 'id');
             

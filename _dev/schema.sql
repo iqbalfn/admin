@@ -154,6 +154,14 @@ CREATE TABLE `post_selection` (
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE `post_statistic` (
+    `post` BIGINT NOT NULL UNIQUE PRIMARY KEY,
+    `pageviews` INTEGER DEFAULT 0,
+    `sessions` INTEGER DEFAULT 0,
+    `users` INTEGER DEFAULT 0,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 DROP TABLE IF EXISTS `post_suggestion`;
 CREATE TABLE `post_suggestion` (
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
