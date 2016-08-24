@@ -25,8 +25,8 @@ class ObjectFormatter
             '/vimeo\.com\/(.*)\/([0-9]+)/'                          => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 425, 'height' => 350, 'src' => 'https://player.vimeo.com/video/$2?title=0&amp;byline=0&amp;portrait=0&color=e3a01b', 'allowFullscreen' => '1' ] ],
             '/dailymotion.com\/embed\/video\/([^_]+)/'              => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 480, 'height' => 270, 'src' => 'https://www.dailymotion.com/embed/video/$1', 'allowFullscreen' => '1', 'frameborder' => '0' ] ],
             '/dailymotion.com\/video\/([^_]+)/'                     => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 480, 'height' => 270, 'src' => 'https://www.dailymotion.com/embed/video/$1', 'allowFullscreen' => '1', 'frameborder' => '0' ] ],
-            '/vidio.com\/watch\/([\w\-]+)/'                         => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 480, 'height' => 270, 'src' => 'https://www.vidio.com/embed/$1?autoplay=true&amp;player_only=true', 'frameborder' => '0', 'class' => 'vidio-embed', 'scrolling' => 'no' ] ],
-            '/vidio.com\/embed\/([\w\-]+)/'                         => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 480, 'height' => 270, 'src' => 'https://www.vidio.com/embed/$1?autoplay=true&amp;player_only=true', 'frameborder' => '0', 'class' => 'vidio-embed', 'scrolling' => 'no' ] ],
+            '/vidio.com\/watch\/([\w\-]+)/'                         => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 480, 'height' => 270, 'src' => 'https://www.vidio.com/embed/$1?player_only=true', 'frameborder' => '0', 'class' => 'vidio-embed', 'scrolling' => 'no' ] ],
+            '/vidio.com\/embed\/([\w\-]+)/'                         => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 480, 'height' => 270, 'src' => 'https://www.vidio.com/embed/$1?player_only=true', 'frameborder' => '0', 'class' => 'vidio-embed', 'scrolling' => 'no' ] ],
             '/facebook.com/'                                        => [ 'tag' => 'div',    'attrs' => [ 'data-href' => $url, 'data-width' => '670', 'data-show-text' => 'false', 'class' => 'fb-video', 'data-allowfullscreen' => 'true' ] ],
             '/liveleak.com\/ll_embed\?f=([\w\-]+)/'                 => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 640, 'height' => 360, 'src' => 'http://www.liveleak.com/ll_embed?f=$1', 'frameborder' => '0' ] ],
             '/dailymail.co.uk\/video\/([\w]+)\/video-([0-9]+)/'     => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 698, 'height' => 573, 'src' => 'http://www.dailymail.co.uk/embed/video/$2.html', 'frameborder' => '0', 'allowfullscreen' => '1', 'scrolling' => 'no' ] ],
@@ -157,7 +157,7 @@ class ObjectFormatter
                     
                     foreach($objects as $obj){
                         $value = NULL;
-                        if(in_array($type, array('chain', 'member')))
+                        if(in_array($type, array('chain', 'member', 'partial')))
                             $value = $obj->id;
                         elseif($type == 'parent')
                             $value = $obj->$field;
@@ -170,14 +170,18 @@ class ObjectFormatter
                     if(!$table_ids)
                         continue;
                     
-                    if($type == 'parent'){
+                    if(in_array($type, ['parent', 'partial'])){
+                        $table_field = 'id';
+                        if($type == 'partial')
+                            $table_field = $name;
+                        
                         $dbrows = $this->CI->db
-                            ->where_in('id', $table_ids)
+                            ->where_in($table_field, $table_ids)
                             ->get($table);
                         
                         if($dbrows->num_rows()){
                             $dbrows = $dbrows->result();
-                            $dbrows = $this->format($table, $dbrows, 'id', $fetch[$field]);
+                            $dbrows = $this->format($table, $dbrows, $table_field, $fetch[$field]);
                             $other_tables[$field]['rows'] = $dbrows;
                         }
                     
@@ -237,7 +241,8 @@ class ObjectFormatter
                 if(array_key_exists($field, $other_tables)){
                     $other_field = $other_tables[$field];
                     $rows = $other_field['rows'];
-                    if(in_array($other_field['type'], array('chain', 'member')))
+                    
+                    if(in_array($other_field['type'], array('chain', 'member', 'partial')))
                         $rows_id = $object->id;
                     else
                         $rows_id = $object->$field;

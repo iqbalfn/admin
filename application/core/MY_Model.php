@@ -61,8 +61,13 @@ class MY_Model extends CI_Model
     private function _implementOrder($order){
         if(is_string($order))
             $order = [$order=>'DESC'];
-        foreach($order as $field => $ord)
+        
+        $table = $this->table;
+        foreach($order as $field => $ord){
+            if(strstr($table, '.') !== false)
+                $field = "`$table`.`$field`";
             $this->db->order_by($field, $ord);
+        }
         return $this;
     }
     

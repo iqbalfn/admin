@@ -61,6 +61,30 @@ class Post_model extends MY_Model
             unset($cond['category']);
         }
         
+        // let see the order in case it's ordered by `pageviews`, `sessions`, 
+        // or `users` field which is in different table
+        $new_order = [];
+        $use_page_statistic = false;
+        $page_statistic_fields = ['pageviews', 'sessions', 'users'];
+        $this->load->model('Poststatistic_model', 'PStatistic');
+        $post_statistic = $this->PStatistic->table;
+        foreach($order as $field => $value){
+            if(is_numeric($field)){
+                $field = $value;
+                $value = 'ASC';
+            }
+            
+            if(in_array($field, $page_statistic_fields)){
+                $use_page_statistic = true;
+                $field = "$post_statistic.$field";
+            }
+            $new_order[$field] = $value;
+        }
+        $order = $new_order;
+        
+        if($use_page_statistic)
+            $this->db->join($post_statistic, "$post_statistic.post = $post.id", 'INNER');
+        
         return $this->getByCond($cond, $rpp, $page, $order);
     }
     
