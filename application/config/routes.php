@@ -104,6 +104,7 @@ $route['admin/post/tag/(:num)']         = 'admin/post/tag/edit/$1';
 $route['admin/post/tag/(:num)/remove']  = 'admin/post/tag/remove/$1';
 
 $route['admin/post/trending'] = 'admin/post/trending/index';
+$route['admin/post/statistic'] = 'admin/post/statistic/index';
 
 $route['admin/setting/enum']                = 'admin/setting/enum/object/index';
 $route['admin/setting/enum/(:num)']         = 'admin/setting/enum/object/edit/$1';

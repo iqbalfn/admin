@@ -1,6 +1,9 @@
 $(function(){
     var ajaxContentEls = $('.ajax-content');
     
+    if(!ajaxContentEls.length)
+        return;
+    
     var storage = {
             exists: function(name){ return window.localStorage && window.localStorage[name]; },
             value : function(name){ return window.localStorage && window.localStorage[name] ? window.localStorage[name] : false },

@@ -350,7 +350,7 @@ class ObjectMeta
      * @param string|array files List of additional files to append
      * @return string scripts tag
      */
-    public function footer($files){
+    public function footer($files=array()){
         $tx = '';
         
         if($files)

@@ -10,7 +10,7 @@ function implement_url_pagination($url){
     foreach($params as $param){
         $sign = strstr($url, '?') ? '&amp;' : '?';
         $value= ci()->input->get($param);
-        if($value)
+        if($value && $value != 1)
             $url.= $sign . $param . '=' . $value;
     }
     
@@ -26,7 +26,7 @@ function implement_title_pagination($str){
     $params = ['page', 'gallery'];
     foreach($params as $param){
         $value= ci()->input->get($param);
-        if($value)
+        if($value && $value != 1)
             $str = ucfirst($param) . ' ' . $value . ': ' . $str;
     }
     

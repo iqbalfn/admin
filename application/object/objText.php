@@ -38,6 +38,10 @@ class objText implements JsonSerializable
         return implode(' ', $ctx);
     }
     
+    public function safe(){
+        return htmlspecialchars($this->value, ENT_QUOTES);
+    }
+    
     function __toString(){
         return $this->value;
     }

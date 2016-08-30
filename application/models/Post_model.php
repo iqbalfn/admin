@@ -30,12 +30,12 @@ class Post_model extends MY_Model
      * @param array order The order condition.
      */
     public function findByCond($cond, $rpp=12, $page=1, $order=['id'=>'DESC']){
-        $this->db->select('post.*');
-        
         $post = $this->table;
         
+        $this->db->select("$post.*");
+        
         if(array_key_exists('q', $cond)){
-            $this->db->like('post.title', $cond['q']);
+            $this->db->like("$post.title", $cond['q']);
             unset($cond['q']);
         }
         
@@ -96,7 +96,7 @@ class Post_model extends MY_Model
         $post = $this->table;
         
         if(array_key_exists('q', $cond)){
-            $this->db->like('post.title', $cond['q']);
+            $this->db->like($post . '.title', $cond['q']);
             unset($cond['q']);
         }
         

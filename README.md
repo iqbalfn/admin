@@ -16,3 +16,9 @@ The CI Admin
 2. Post preview before posting
 3. Searh page
 4. File manager
+5. Additional Metas
+    1. meta name="msapplication-TileColor"
+    2. meta name="msapplication-TileImage"
+    3. meta name="theme-color"
+    4. link rel="icon"
+    5. link rel="manifest"

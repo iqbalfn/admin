@@ -24,21 +24,16 @@ class Poststatistic_model extends MY_Model
     
     /**
      * Replace exists data 
-     * @param array list of data to replace
+     * @param array the row object
      */
-    public function update($data){
-        if(!count($data))
-            return false;
-        
-        $qry = 'REPLACE `' . $this->table . '` ( `post`, `pageviews`, `users`, `sessions` ) VALUES ';
-        $ros = [];
-        foreach($data as $row){
-            if(array_key_exists('post', $row))
-                $ros[] = "( $row[post], $row[pageviews], $row[users], $row[sessions] )";
+    public function incStat($data){
+        foreach($data as $field => $value){
+            if($field == 'post')
+                $this->db->where('post', $value);
+            else
+                $this->db->set($field, "$field+$value", false);
         }
         
-        $qry.= implode(', ', $ros);
-        
-        $this->db->query($qry);
+        return $this->db->update($this->table);
     }
 }

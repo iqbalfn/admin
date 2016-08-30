@@ -16,7 +16,6 @@ class Trending extends MY_Controller
         $this->load->model('Posttagchain_model', 'PTChain');
         $this->load->model('Posttrending_model', 'PTrending');
         $this->load->model('Postcategorychain_model', 'PCChain');
-        $this->load->model('Poststatistic_model', 'PStatistic');
         $this->load->library('Google');
     }
     
@@ -83,9 +82,6 @@ class Trending extends MY_Controller
                 
                 $group[$slug]['post'] = $posts[$slug]->id;
             }
-            
-            $post_statistics = array_values($group);
-            $this->PStatistic->update($post_statistics);
             
             $posts_by_id = prop_as_key($posts, 'id');
             
