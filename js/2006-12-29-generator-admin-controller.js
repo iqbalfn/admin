@@ -97,12 +97,12 @@ class #ctrl_name# extends #ctrl_parent#                                         
             $page = 1;                                                          | ctrl_index, ctrl_index_rpp
         $rpp = true;                                                            | ctrl_index, !ctrl_index_rpp
         $page= false;                                                           | ctrl_index, !ctrl_index_rpp
-                                                                                | ctrl_index
-        $result = $this->#model_name#->getByCond($cond, $rpp, $page);                               | ctrl_index
-        if($result){                                                                                | ctrl_index
-            $this->load->library('ObjectFormatter', '', 'formatter');           | ctrl_index
-            $params['#ctrl_index_param_name#'] = $this->formatter->#table_name#($result, false, true); | ctrl_index
-        }                                                                              | ctrl_index, ctrl_index_rpp
+                                                                                                        | ctrl_index
+        $result = $this->#model_name#->getByCond($cond, $rpp, $page);                                   | ctrl_index
+        if($result){                                                                                    | ctrl_index
+            $this->load->library('ObjectFormatter', '', 'formatter');                                   | ctrl_index
+            $params['#ctrl_index_param_name#'] = $this->formatter->#table_name#($result, false, true);  | ctrl_index
+        }                                                                                               | ctrl_index
                                                                                        | ctrl_index, ctrl_index_rpp
         // for pagination                                                              | ctrl_index, ctrl_index_rpp
         $total = $this->#model_name#->countByCond($cond);                              | ctrl_index, ctrl_index_rpp
