@@ -21,6 +21,13 @@ Sebelum melakukan instalasi, pastikan server sudah terinstal dev~ di bawah:
     1. libcurl
 3. MySQL 5.6.x
 
+## Catatan
+
+Engine ini dibuat untuk berjalan di top domain, sangat tidak dianjurkan untuk menginstallnya
+di subfolder seperti `localhost/admin-master` atau `domain.name/project-name`. Install
+project ini di `localhost`, atau `domain.name` tanpa embel-embel subfolder. Gunakan vhost 
+pada apache di localhost.
+
 ## Proses Instalasi
 
 1. [Clone Project dari Github]({{ site.baseurl }}{% post_url 2000-12-30-clone-project-dari-github %})

@@ -6,6 +6,7 @@ category: Generator
 
 <form id="form">
     <input type="text" id="form-table" placeholder="Table name" autofocus="autofocus" pattern="^[a-z]([\w\-]+)$">
+    <input type="text" id="form-database" placeholder="Database name" pattern="^[a-z]([\w\-]+)$">
     <button>Generate</button> <a id="btn-download">Download</a>
 </form>
 
@@ -20,6 +21,7 @@ btnDownload.style.display = 'none';
 form.addEventListener('submit', function(e){
     var tableName = document.querySelector('#form-table').value;
     var modelName = ( tableName[0].toUpperCase() + tableName.slice(1).toLowerCase() ).replace(/[^a-zA-Z0-9]/g, '') + '_model';
+    var dbName    = document.querySelector('#form-database').value;
     
     btnDownload.style.display = 'inline';
     btnDownload.setAttribute('download', modelName + '.php');
@@ -40,7 +42,21 @@ form.addEventListener('submit', function(e){
             '     * @var string',
             '     */',
             '    public $table = \'' + tableName + '\';',
-            '',
+            ''
+        ];
+    
+    if(dbName){
+        script = script.concat([
+            '    /**',
+            '     * Database name',
+            '     * @var string',
+            '     */',
+            '    public $dbname = \'' + dbName + '\';',
+            ''
+        ]);
+    }
+    
+    script = script.concat([
             '    /**',
             '     * Constructor',
             '     */',
@@ -49,7 +65,7 @@ form.addEventListener('submit', function(e){
             '        parent::__construct();',
             '    }',
             '}'
-        ];
+    ]);
     
     script = script.join('\n');
     
