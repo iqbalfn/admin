@@ -271,6 +271,7 @@ class SiteForm
         
         $input_group = false;
         $with_prefix = array_key_value_or('prefix', $this->input);
+        $with_suffix = array_key_value_or('suffix', $this->input);
         $special_input = in_array($this->input_type, [
             'color',
             'date',
@@ -283,7 +284,7 @@ class SiteForm
             'time'
         ]);
         
-        if($special_input || $with_prefix)
+        if($special_input || $with_prefix || $with_suffix)
             $input_group = true;
         
         if(!$input_group)
@@ -327,6 +328,21 @@ class SiteForm
         }
         
         $input_group['children'][] =&$input;
+        
+        // with suffix
+        if($with_suffix){
+            $span = array(
+                'tag' => 'span',
+                'attrs' => array(
+                    'class' => 'input-group-addon',
+                    'id'    => $this->input_id . '-suffix'
+                ),
+                'children' => $with_suffix
+            );
+            $input['attrs']['aria-describedby'] = $this->input_id . '-suffix';
+            
+            $input_group['children'][] = $span;
+        }
         
         // password with mask toggler
         if($this->input_type == 'password'){

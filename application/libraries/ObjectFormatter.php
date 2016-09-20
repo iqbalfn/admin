@@ -112,6 +112,7 @@ class ObjectFormatter
         
         $rules = $rules[$name];
         $other_tables = array();
+        $used_model = array();
         
         if($fetch){
             if(is_string($fetch))
@@ -140,20 +141,31 @@ class ObjectFormatter
                     $type = $match[1];
                     $table= $match[2];
                     
+                    $model = ucfirst(str_replace('_', '', $table));
+                    $model_name = $model . '_model';
+                    if(!array_key_exists($model_name, $used_model))
+                        $used_model[$model_name] = $model;
+                    
                     $other_tables[$field] = array(
-                        'type' => $type,
-                        'table'=> $table,
-                        'rows' => array()
+                        'type'  => $type,
+                        'table' => $table,
+                        'model' => $model,
+                        'rows'  => array()
                     );
                 }
             }
             $fetch = $new_fetch;
             
             if($other_tables){
+                if($used_model){
+                    foreach($used_model as $model_name => $model)
+                        $this->CI->load->model($model_name, $model);
+                }
                 foreach($other_tables as $field => $cond){
                     $table_ids = array();
                     $type = $cond['type'];
                     $table = $cond['table'];
+                    $model = $cond['model'];
                     
                     foreach($objects as $obj){
                         $value = NULL;
@@ -175,12 +187,13 @@ class ObjectFormatter
                         if($type == 'partial')
                             $table_field = $name;
                         
-                        $dbrows = $this->CI->db
-                            ->where_in($table_field, $table_ids)
-                            ->get($table);
+//                         $dbrows = $this->CI->db
+//                             ->where_in($table_field, $table_ids)
+//                             ->get($table);
                         
-                        if($dbrows->num_rows()){
-                            $dbrows = $dbrows->result();
+                        $dbrows = $this->CI->$model->getByCond([$table_field=>$table_ids], true);
+                        
+                        if($dbrows){
                             $dbrows = $this->format($table, $dbrows, $table_field, $fetch[$field]);
                             $other_tables[$field]['rows'] = $dbrows;
                         }

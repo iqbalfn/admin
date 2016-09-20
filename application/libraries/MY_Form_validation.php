@@ -12,15 +12,18 @@ class MY_Form_validation extends CI_Form_validation
      */
     public function in_table($str, $rule){
         sscanf($rule, '%[^.].%[^.]', $table, $field);
-        if(!isset($this->CI->db))
-            return FALSE;
+        $ci =&get_instance();
         if(!$str)
             return TRUE;
         
-        $row = $this->CI->db->get_where($table, array($field=>$str));
+        // model name
+        $model = ucfirst(str_replace('_', '', $table));
+        $model_name = $model . '_model';
+        $ci->load->model($model_name, $model);
         
-        if($row->num_rows())
-            return TRUE;    
+        $row = $ci->$model->getByCond([$field=>$str],1);
+        if($row)
+            return TRUE;
         return FALSE;
     }
     
@@ -72,12 +75,15 @@ class MY_Form_validation extends CI_Form_validation
         $field = $table[1];
         $table = $table[0];
         
-        $row = $ci->db->where($field, $str)->get($table);
-        if(!$row->num_rows())
+        // model name
+        $model = ucfirst(str_replace('_', '', $table));
+        $model_name = $model . '_model';
+        $ci->load->model($model_name, $model);
+        
+        $row = $ci->$model->getBy($field, $str, 1);
+        if(!$row)
             return true;
-        
-        $row = $row->row();
-        
+            
         if($uri_segment == 0){
             if($row->id == $ci->user->id)
                 return true;

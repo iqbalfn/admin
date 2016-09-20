@@ -36,11 +36,16 @@ class Object extends MY_Controller
         if(!$this->can_i($field['perms']))
             return $this->ajax('not authorized');
         
-        $rows = $this->db->like($field['field'], $query)->limit(20)->get($table);
-        if(!$rows->num_rows())
-            return $this->ajax(false, 'not found');
+        $model = ucfirst(str_replace('_', '', $table));
+        $model_name = $model . '_model';
+        $this->load->model($model_name, $model);
         
-        $rows = $rows->result();
+        $cond = array(
+            $field['field'] => (object)['LIKE', $query]
+        );
+        $rows = $this->$model->getByCond($cond, 20);
+        if(!$rows)
+            return $this->ajax(false, 'not found');
         
         $this->load->library('ObjectFormatter', '', 'formatter');
         $rows = $this->formatter->$table($rows);
