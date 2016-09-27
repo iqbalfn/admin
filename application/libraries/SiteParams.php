@@ -23,6 +23,8 @@ class SiteParams
             $this->CI->cache->file->save('site_params', $site_params, 604800);
         }
         
+        if(!$site_params)
+            $site_params = array();
         $this->site_params = $site_params;
     }
     

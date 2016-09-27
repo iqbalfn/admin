@@ -141,16 +141,39 @@ class ObjectFormatter
                     $type = $match[1];
                     $table= $match[2];
                     
-                    $model = ucfirst(str_replace('_', '', $table));
-                    $model_name = $model . '_model';
-                    if(!array_key_exists($model_name, $used_model))
-                        $used_model[$model_name] = $model;
+                    $model_chain = null;
+                    $model_main  = null;
+                    $table_chain = null;
+                    $table_main  = null;
+                    
+                    if($type == 'chain' && !strstr($table, ','))
+                        $table.= ',' . $table . '_chain';
+                    
+                    $tables = explode(',', $table);
+                    
+                    foreach($tables as $index => $tab){
+                        $tab = trim($tab);
+                        $model = ucfirst(str_replace('_', '', $tab));
+                        $model_name = $model . '_model';
+                        if(!array_key_exists($model_name, $used_model))
+                            $used_model[$model_name] = $model;
+                        
+                        if(!$index){
+                            $table_main = $tab;
+                            $model_main = $model;
+                        }else{
+                            $table_chain= $tab;
+                            $model_chain= $model;
+                        }
+                    }
                     
                     $other_tables[$field] = array(
-                        'type'  => $type,
-                        'table' => $table,
-                        'model' => $model,
-                        'rows'  => array()
+                        'type'        => $type,
+                        'table'       => $table_main,
+                        'table_chain' => $table_chain,
+                        'model'       => $model_main,
+                        'model_chain' => $model_chain,
+                        'rows'        => array()
                     );
                 }
             }
@@ -165,7 +188,9 @@ class ObjectFormatter
                     $table_ids = array();
                     $type = $cond['type'];
                     $table = $cond['table'];
+                    $table_chain = $cond['table_chain'];
                     $model = $cond['model'];
+                    $model_chain = $cond['model_chain'];
                     
                     foreach($objects as $obj){
                         $value = NULL;
@@ -187,10 +212,6 @@ class ObjectFormatter
                         if($type == 'partial')
                             $table_field = $name;
                         
-//                         $dbrows = $this->CI->db
-//                             ->where_in($table_field, $table_ids)
-//                             ->get($table);
-                        
                         $dbrows = $this->CI->$model->getByCond([$table_field=>$table_ids], true);
                         
                         if($dbrows){
@@ -199,6 +220,13 @@ class ObjectFormatter
                         }
                     
                     }elseif($type == 'member'){
+                        $cond = array(
+                            'user' => $current_user,
+                            $name  => $table_ids
+                        );
+                        $dbrows = $this->CI->$model->getByCond($cond, true);
+                        
+                        /*
                         $dbrows = $this->CI->db 
                             ->where_in($name, $table_ids)
                             ->where('user', $current_user)
@@ -209,23 +237,23 @@ class ObjectFormatter
                             $dbrows = prop_as_key($dbrows, $name);
                             $other_tables[$field]['rows'] = $dbrows;
                         }
+                        */
+                        
+                        if($dbrows){
+                            $dbrows = prop_as_key($dbrows, $name);
+                            $other_tables[$field]['rows'] = $dbrows;
+                        }
                     
                     }elseif($type == 'chain'){
-                        $dbrows = $this->CI->db 
-                            ->where_in($name, $table_ids)
-                            ->get($table . '_chain');
+                        $dbrows = $this->CI->$model_chain->getByCond([$name=>$table_ids], true);
                         
-                        if($dbrows->num_rows()){
-                            $dbrows = $dbrows->result();
+                        if($dbrows){
                             $chain_ids = prop_values($dbrows, $table);
                             $chain_ids = array_unique($chain_ids);
                             
-                            $chain_values = $this->CI->db 
-                                ->where_in('id', $chain_ids)
-                                ->get($table);
+                            $chain_values = $this->CI->$model->getByCond(['id' => $chain_ids], true);
                             
-                            if($chain_values->num_rows()){
-                                $chain_values = $chain_values->result();
+                            if($chain_values){
                                 $chain_values = $this->format($table, $chain_values, 'id', $fetch[$field]);
                                 
                                 $dbrows_result = array();

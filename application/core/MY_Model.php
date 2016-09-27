@@ -11,6 +11,25 @@ class MY_Model extends CI_Model
     }
     
     /**
+     * Set active database to current model db 
+     */
+    private function _setModelDB(){
+        if(!$this->db->multiple)
+            return;
+        
+        if(!property_exists($this, 'dbname')){
+            if(!file_exists($file_path = APPPATH.'config/'.ENVIRONMENT.'/database.php') && !file_exists($file_path = APPPATH.'config/database.php'))
+                show_error('The configuration file database.php does not exist.');
+            include($file_path);
+            $this->dbname = $db['default']['database'];
+        }
+        
+        if($this->db->database != $this->dbname)
+            $this->db->db_select($this->dbname);
+        return $this;
+    }
+    
+    /**
      * Implement condition
      * @param array cond The condition
      * @return $this
@@ -98,6 +117,17 @@ class MY_Model extends CI_Model
     }
     
     /**
+     * Set table index
+     * @param integer index The index number
+     * @return $this
+     */
+    public function setTableIndex($index){
+        $index = (string)$index;
+        $valid_index = substr($index, -1);
+        $this->table = $this->table_index . '_' . $valid_index;
+    }
+    
+    /**
      * Get avg value of field.
      * @param string field The field name to calculate.
      * @return integer average or false.
@@ -124,6 +154,7 @@ class MY_Model extends CI_Model
      * @return integer avg number or false.
      */
     public function avgByCond($cond, $field){
+        $this->_setModelDB();
         $this->_implementCondition($cond);
         $this->db->select_avg($field);
         
@@ -158,6 +189,7 @@ class MY_Model extends CI_Model
      * @return integer total rows or false.
      */
     public function countByCond($cond){
+        $this->_setModelDB();
         $this->_implementCondition($cond);
         return $this->db->count_all_results($this->table);
     }
@@ -189,6 +221,7 @@ class MY_Model extends CI_Model
      * @return array field-total pair of the result
      */
     public function countGroupedByCond($cond, $field){
+        $this->_setModelDB();
         $this->_implementCondition($cond);
         $this->db->select("$field, COUNT(*) AS total");
         $this->db->group_by($field);
@@ -205,6 +238,7 @@ class MY_Model extends CI_Model
      * @return integer inserted id or false.
      */
     public function create($row){
+        $this->_setModelDB();
         if($this->db->insert($this->table, $row))
             return $this->db->insert_id();
         return false;
@@ -216,6 +250,7 @@ class MY_Model extends CI_Model
      * @return number of inserted row or false.
      */
     public function create_batch($rows){
+        $this->_setModelDB();
         return $this->db->insert_batch($this->table, $rows);
     }
     
@@ -253,6 +288,7 @@ class MY_Model extends CI_Model
      * @return true on success, false otherwise.
      */
     public function decByCond($cond, $field, $total=1, $update_field=false){
+        $this->_setModelDB();
         $this->_implementCondition($cond);
         $this->db->set($field, "$field-$total", false);
         if($update_field)
@@ -294,6 +330,7 @@ class MY_Model extends CI_Model
      * @return array list of rows or single row object.
      */
     public function getByCond($cond, $total=1, $page=1, $order=['id'=>'DESC']){
+        $this->_setModelDB();
         $this
             ->_implementCondition($cond)
             ->_implementPagination($total, $page)
@@ -343,6 +380,7 @@ class MY_Model extends CI_Model
      * @return true on success, false otherwise.
      */
     public function incByCond($cond, $field, $total=1, $update_field=false){
+        $this->_setModelDB();
         $this->_implementCondition($cond);
         $this->db->set($field, "$field+$total", false);
         if($update_field)
@@ -377,6 +415,7 @@ class MY_Model extends CI_Model
      * @return integer max number or false.
      */
     public function maxByCond($cond, $field){
+        $this->_setModelDB();
         $this->_implementCondition($cond);
         $this->db->select_max($field);
         
@@ -414,6 +453,7 @@ class MY_Model extends CI_Model
      * @return integer min number or false.
      */
     public function minByCond($cond, $field){
+        $this->_setModelDB();
         $this->_implementCondition($cond);
         $this->db->select_min($field);
         
@@ -450,6 +490,7 @@ class MY_Model extends CI_Model
      * @return true on success, false otherwise.
      */
     public function removeByCond($cond){
+        $this->_setModelDB();
         $this->_implementCondition($cond);
         return $this->db->delete($this->table);
     }
@@ -482,6 +523,7 @@ class MY_Model extends CI_Model
      * @return true on success, false otherwise.
      */
     public function setByCond($cond, $fields){
+        $this->_setModelDB();
         $this->_implementCondition($cond);
         return $this->db->update($this->table, $fields);
     }
@@ -513,6 +555,7 @@ class MY_Model extends CI_Model
      * @return integer sum number or false.
      */
     public function sumByCond($cond, $field){
+        $this->_setModelDB();
         $this->_implementCondition($cond);
         $this->db->select_sum($field);
         
@@ -527,6 +570,7 @@ class MY_Model extends CI_Model
      * Truncate table
      */
     public function truncate(){
+        $this->_setModelDB();
         return $this->db->truncate($this->table);
     }
 }

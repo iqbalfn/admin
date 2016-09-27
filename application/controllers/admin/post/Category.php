@@ -124,12 +124,9 @@ class Category extends MY_Controller
 
         $this->event->post_category->deleted($category);
         
-        $category = $this->formatter->post_category($category, false, false);    
+        $category = $this->formatter->post_category($category, false, false);
         $this->output->delete_cache($category->page);
         $this->output->delete_cache($category->page . '/feed.xml');
-        
-        // TODO 
-        // delete all post cache that use me.
         
         $this->PCategory->remove($id);
         $this->PCChain->removeBy('post_category', $id);

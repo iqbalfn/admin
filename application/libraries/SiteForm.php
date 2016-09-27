@@ -573,7 +573,8 @@ class SiteForm
         $input = array(
             'children' => array(),
             'attrs' => array(
-                'class' => 'form-control-multiple'
+                'class' => 'form-control-multiple',
+                'id' => 'field-' . $this->input_name
             )
         );
         
