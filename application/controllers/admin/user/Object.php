@@ -168,6 +168,9 @@ class Object extends MY_Controller
                 $cond[$arg] = $arg_val;
         }
         
+        if(!array_key_exists('status', $cond))
+            $cond['status'] = (object)['>', 0];
+        
         $rpp = 30;
         $page= $this->input->get('page');
         if(!$page)
@@ -204,7 +207,7 @@ class Object extends MY_Controller
             return $this->show_404();
 
         $this->event->user->deleted($id);
-        $this->user->set($id, ['status'=>0]);
+        $this->User->set($id, ['status'=>0]);
         $this->redirect('/admin/user');
     }
 }

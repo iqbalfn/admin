@@ -20,7 +20,7 @@
             if($header_submenu){
                 $tx.= ' aria-expanded="false" aria-haspopup="true" role="button" class="dropdown-toggle"';
                 if(!$active_on_hover)
-                    $tx.= ' class="dropdown-toggle" data-toggle="dropdown"';
+                    $tx.= ' data-toggle="dropdown"';
             }
             $tx.= '>';
             

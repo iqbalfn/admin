@@ -13,6 +13,7 @@ class Object extends MY_Controller
         parent::__construct();
 
         $this->load->model('Page_model', 'Page');
+        $this->load->library('ObjectFormatter', '', 'formatter');
     }
 
     function edit($id=null){
@@ -80,10 +81,8 @@ class Object extends MY_Controller
         $page= false;
 
         $result = $this->Page->getByCond($cond, $rpp, $page, ['title'=>'ASC']);
-        if($result){
-            $this->load->library('ObjectFormatter', '', 'formatter');
+        if($result)
             $params['pages'] = $this->formatter->page($result);
-        }
         
         $this->respond('page/index', $params);
     }

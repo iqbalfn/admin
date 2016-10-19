@@ -12,9 +12,9 @@
         var formData = new FormData(),
             xhr = new XMLHttpRequest();
         
-        formData.append('file', file, file.name);
         for(var k in opts)
             formData.append(k, opts[k]);
+        formData.append('file', file, file.name);
         
         xhr.open('POST', '/upload', true);
         

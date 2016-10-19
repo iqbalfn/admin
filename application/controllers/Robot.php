@@ -1,5 +1,8 @@
 <?php
 
+if(!defined('BASEPATH'))
+    die;
+
 class Robot extends MY_Controller
 {
     function __construct(){
