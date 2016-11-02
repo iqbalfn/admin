@@ -14,6 +14,7 @@ class Media extends MY_Controller
 
         $this->load->model('Gallerymedia_model', 'GMedia');
         $this->load->model('Gallery_model', 'Gallery');
+        $this->load->library('ObjectFormatter','','formatter');
     }
     
     private function _removePostCache($gallery){
@@ -92,9 +93,7 @@ class Media extends MY_Controller
         $albums = $this->Gallery->getByCond([], 7);
         if(!$albums)
             return $this->show_404();
-        
-        $this->load->library('ObjectFormatter', '', 'formatter');
-        
+            
         $albums = $this->formatter->gallery($albums, true);
         if(!array_key_exists($gallery, $albums))
             return $this->show_404();
