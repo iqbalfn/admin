@@ -32,7 +32,8 @@ class ObjectFormatter
             '/dailymail.co.uk\/video\/([\w]+)\/video-([0-9]+)/'     => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 698, 'height' => 573, 'src' => 'http://www.dailymail.co.uk/embed/video/$2.html', 'frameborder' => '0', 'allowfullscreen' => '1', 'scrolling' => 'no' ] ],
             '/dailymail.co.uk\/([\w]+)\/video\/([0-9]+)/'           => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 698, 'height' => 573, 'src' => 'http://www.dailymail.co.uk/embed/video/$2.html', 'frameborder' => '0', 'allowfullscreen' => '1', 'scrolling' => 'no' ] ],
             '/vid.me\/([\w\-]+)/'                                   => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 854, 'height' => 480, 'src' => 'https://vid.me/e/$1?tools=1', 'frameborder' => '0', 'allowfullscreen' => '1', 'scrolling' => 'no' ] ],
-            '/vid.me\/e\/([\w\-]+)/'                                => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 854, 'height' => 480, 'src' => 'https://vid.me/e/$1?tools=1', 'frameborder' => '0', 'allowfullscreen' => '1', 'scrolling' => 'no' ] ]
+            '/vid.me\/e\/([\w\-]+)/'                                => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 854, 'height' => 480, 'src' => 'https://vid.me/e/$1?tools=1', 'frameborder' => '0', 'allowfullscreen' => '1', 'scrolling' => 'no' ] ],
+            '/imdb.com\/video\/imdb\/([\w]+)/'                      => [ 'tag' => 'iframe', 'attrs' => [ 'width' => 854, 'height' => 400, 'src' => 'http://www.imdb.com/videoembed/$1', 'allowfullscreen' => '1' ]]
         ];
         
         $tx = '';
