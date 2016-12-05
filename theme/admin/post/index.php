@@ -69,12 +69,23 @@
                     
                     <div class="col-md-9">
                         <?php if($posts): ?>
+                            <?php
+                                $can_edit = ci()->can_i('update-post');
+                                $can_edit_other = ci()->can_i('update-post_other_user');
+                            ?>
                             <?php foreach($posts as $post): ?>
+                            <?php
+                                $html_tag = 'div';
+                                if($post->user == $this->user->id && $can_edit)
+                                    $html_tag = 'a';
+                                if($post->user != $this->user->id && $can_edit_other)
+                                    $html_tag = 'a';
+                            ?>
                             <div class="list-group">
-                                <a class="list-group-item" href="<?= base_url('/admin/post/' . $post->id) ?>">
+                                <<?= $html_tag ?> class="list-group-item" href="<?= base_url('/admin/post/' . $post->id) ?>">
                                     <h4 class="list-group-item-heading"><?= $post->title ?></h4>
                                     <p class="list-group-item-text"><?= base_url($post->page) ?></p>
-                                </a>
+                                </<?= $html_tag ?>>
                                 <div class="list-group-closer">
                                     <?php if($post->status->value == 1): ?>
                                     <span class="label label-default">draft</span>

@@ -16244,9 +16244,9 @@ $(function(){
         var formData = new FormData(),
             xhr = new XMLHttpRequest();
         
-        formData.append('file', file, file.name);
         for(var k in opts)
             formData.append(k, opts[k]);
+        formData.append('file', file, file.name);
         
         xhr.open('POST', '/upload', true);
         
@@ -17869,7 +17869,7 @@ $(function(){
                 selector: '.tinymce',
                 menubar: false,
                 plugins: 'link table image media fullscreen pagebreak contextmenu autoresize paste wordcount',
-                toolbar: 'undo redo | styleselect | bold italic link | bullist numlist | table image media | pagebreak | fullscreen',
+                toolbar: 'undo redo | styleselect | bold italic link | bullist numlist | table image media | pagebreak | paste | fullscreen',
                 content_css: '/theme/admin/static/css/tinymce-content.css',
                 
                 // autoresize plugins

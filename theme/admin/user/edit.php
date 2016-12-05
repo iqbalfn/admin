@@ -47,7 +47,7 @@
                                         <?= $this->form->field('password') ?>
                                         <?php endif; ?>
                                         <?= $this->form->field('website') ?>
-                                        <?= $this->form->field('status', 'user.status') ?>
+                                        <?= $this->form->field('status', $statuses) ?>
                                     </div>
                                 </div>
                                 <?php if(ci()->can_i('update-user_permission')): ?>

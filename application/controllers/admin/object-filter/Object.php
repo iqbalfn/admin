@@ -43,7 +43,8 @@ class Object extends MY_Controller
         $cond = array(
             $field['field'] => (object)['LIKE', $query]
         );
-        $rows = $this->$model->getByCond($cond, 20);
+        $this->db->select( '`'. $table . '`.*, LENGTH(`'. $table . '`.`' . $field['field'] . '`) AS `strlen`', false );
+        $rows = $this->$model->getByCond($cond, 20, false, ['strlen'=>'ASC']);
         if(!$rows)
             return $this->ajax(false, 'not found');
         

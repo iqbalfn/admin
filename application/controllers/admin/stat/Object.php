@@ -47,7 +47,8 @@ class Object extends MY_Controller
     }
     
     public function _calculate_similarweb(){
-        $uri = 'https://www.similarweb.com/website/' . base_url();
+        $urls = parse_url(base_url());
+        $uri = 'https://www.similarweb.com/website/' . $urls['host'];
         
         $cu = curl_init($uri);
         curl_setopt($cu, CURLOPT_RETURNTRANSFER, true);

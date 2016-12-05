@@ -70,7 +70,7 @@ class Object extends MY_Controller
                 $object->category = [];
             if($this->can_i('read-post_tag'))
                 $object->tag = [];
-            
+                
             $params['title'] = _l('Create New Post');
         }
 
@@ -90,25 +90,28 @@ class Object extends MY_Controller
             $params['categories'] = $categories ? $categories : array();
         }
         
-        if($this->can_i('read-post_tag')){
-            $all_tags = array();
-            $params['tags'] = array();
+        $chain_multiple_fields_set = array(
+            'tag'    => [ 'read-post_tag',  'tags',     'PTag', 'name' ]
+        );
+        
+        foreach($chain_multiple_fields_set as $prop => $rules){
+            $perm  = $rules[0];
+            $vars  = $rules[1];
+            $model = $rules[2];
+            $label = $rules[3];
             
-            $tags = $this->PTag->getByCond([], true, false, ['name'=>'ASC']);
-            if($tags){
-                $all_tags = $this->formatter->post_tag($tags, 'id', false);
-                $params['tags'] = prop_as_key($tags, 'id', 'name');
-                
-                // let show only all selected tag
-                $visible_tag = array();
-                if($object->tag){
-                    foreach($object->tag as $tag){
-                        if(array_key_exists($tag, $params['tags']))
-                            $visible_tag[$tag] = $params['tags'][$tag];
-                    }
-                }
-                
-                $params['tags'] = $visible_tag;
+            $params[$vars] = array();
+            $posted_data = $this->input->post($prop);
+            
+            if(!$this->can_i($perm) || (!$object->$prop && !$posted_data))
+                continue;
+            
+            if(!$posted_data)
+                $posted_data = $object->$prop;
+            if($posted_data){
+                $visible_objs  = $this->$model->get($posted_data, true);
+                if($visible_objs)
+                    $params[$vars] = prop_as_key($visible_objs, 'id', $label);
             }
         }
         
@@ -179,125 +182,74 @@ class Object extends MY_Controller
         if($id && array_key_exists('slug', $new_object) && !$this->can_i('update-post_slug'))
             unset($new_object['slug']);
         
-        // save category chain
-        $to_insert_category = array();
-        if(!array_key_exists('category', $new_object))
-            $new_object['category'] = array();
-        
-        $new_categories = $new_object['category'];
-        unset($new_object['category']);
-        
-        if($this->can_i('read-post_category')){
+        $chain_to_insert = array(
+            'PCChain'  => [ 'rows' => [], 'prop' => 'post_category' ],
+            'PTChain'  => [ 'rows' => [], 'prop' => 'post_tag' ]
+        );
+        $save_chains = array(
+            'category'  => [ 'PCategory',   'PCChain',  'posts',    'post_category',    'read-post_category' ],
+            'tag'       => [ 'PTag',        'PTChain',  'posts',    'post_tag',         'read-post_tag' ]
+        );
+        foreach($save_chains as $prop => $rules){
+            if(!array_key_exists($prop, $new_object))
+                $new_object[$prop] = array();
             
-            $old_categories = array();
+            $new_objs = $new_object[$prop];
+            unset($new_object[$prop]);
+            
+            $model = $rules[0];
+            $chain = $rules[1];
+            $dienc = $rules[2];
+            $format= $rules[3];
+            $perms = $rules[4];
+            
+            if(!$this->can_i($perms))
+                continue;
+            
+            $old_objs = [];
             if($id)
-                $old_categories = $object->category;
+                $old_objs = $object->$prop;
             
-            $to_insert = array();
-            $to_delete = array();
+            $obj_to_delete = array();
+            $obj_to_insert = array();
+            $obj_effected  = array();
             
-            foreach($new_categories as $cat){
-                if(!in_array($cat, $old_categories)){
-                    $category = null;
-                    if(array_key_exists($cat, $all_categories))
-                        $category = $all_categories[$cat];
-                    if(!$category)
-                        continue;
-                    
-                    $to_insert[] = $cat;
-                    $this->PCategory->inc($cat, 'posts', 1, true);
-                    $this->output->delete_cache($category->page);
-                    $this->output->delete_cache($category->page . '/feed.xml');
+            foreach($new_objs as $obj){
+                if(in_array($obj, $old_objs))
+                    continue;
+                $obj_effected[] = $obj;
+                $obj_to_insert[] = $obj;
+            }
+            
+            foreach($old_objs as $obj){
+                if(in_array($obj, $new_objs))
+                    continue;
+                $obj_effected[] = $obj;
+                $obj_to_delete[]= $obj;
+            }
+            
+            if($dienc){
+                if($obj_to_delete)
+                    $this->$model->dec($obj_to_delete, $dienc, 1, true);
+                if($obj_to_insert)
+                    $this->$model->inc($obj_to_insert, $dienc, 1, true);
+            }
+            
+            $chain_to_insert[$chain]['rows'] = $obj_to_insert;
+            
+            if($obj_effected){
+                $obj_effected = $this->$model->get($obj_effected, true);
+                if($obj_effected){
+                    $obj_effected = $this->formatter->$format($obj_effected, false, false);
+                    foreach($obj_effected as $obj){
+                        $this->output->delete_cache($obj->page);
+                        $this->output->delete_cache($obj->page . '/feed.xml');
+                    }
                 }
             }
             
-            foreach($old_categories as $cat){
-                $old_category = null;
-                if(array_key_exists($cat, $all_categories))
-                    $old_category = $all_categories[$cat];
-                    
-                if(!in_array($cat, $new_categories)){
-                    $category = null;
-                    if(array_key_exists($cat, $all_categories))
-                        $category = $all_categories[$cat];
-                    if(!$category)
-                        continue;
-                    
-                    $to_delete[] = $cat;
-                    $this->PCategory->dec($cat, 'posts', 1, true);
-                }
-                
-                // delete all post category cache
-                if($old_category){
-                    $this->output->delete_cache($old_category->page);
-                    $this->output->delete_cache($old_category->page . '/feed.xml');
-                }
-            }
-            
-            if($to_delete)
-                $this->PCChain->removeByCond(['post'=>$id, 'post_category'=>$to_delete]);
-
-            if($to_insert)
-                $to_insert_category = $to_insert;
-        }
-        
-        // save tag chain
-        $to_insert_tag = array();
-        if(!array_key_exists('tag', $new_object))
-            $new_object['tag'] = array();
-        
-        $new_tags = $new_object['tag'];
-        unset($new_object['tag']);
-        
-        if($this->can_i('read-post_tag')){
-        
-            $old_tags = array();
-            if($id)
-                $old_tags = $object->tag;
-            
-            $to_insert = array();
-            $to_delete = array();
-            
-            foreach($new_tags as $cat){
-                if(!in_array($cat, $old_tags)){
-                    $tag = null;
-                    if(array_key_exists($cat, $all_tags))
-                        $tag = $all_tags[$cat];
-                    if(!$tag)
-                        continue;
-                    
-                    $to_insert[] = $cat;
-                    $this->PTag->inc($cat, 'posts', 1, true);
-                    $this->output->delete_cache($tag->page);
-                    $this->output->delete_cache($tag->page . '/feed.xml');
-                }
-            }
-            
-            foreach($old_tags as $cat){
-                $old_tag = null;
-                if(array_key_exists($cat, $all_tags))
-                    $old_tag = $all_tags[$cat];
-                if(!in_array($cat, $new_tags)){
-                    $tag = null;
-                    if(array_key_exists($cat, $all_tags))
-                        $tag = $all_tags[$cat];
-                    if(!$tag)
-                        continue;
-                    
-                    $to_delete[] = $cat;
-                    $this->PTag->dec($cat, 'posts', 1, true);
-                }
-                if($old_tag){
-                    $this->output->delete_cache($old_tag->page);
-                    $this->output->delete_cache($old_tag->page . '/feed.xml');
-                }
-            }
-            
-            if($to_delete)
-                $this->PTChain->removeByCond(['post'=>$id, 'post_tag'=>$to_delete]);
-
-            if($to_insert)
-                $to_insert_tag = $to_insert;
+            if($obj_to_delete)
+                $this->$chain->removeByCond(['post' => $id, $format => $obj_to_delete]);
         }
         
         $this->output->delete_cache('/post/feed.xml');
@@ -333,16 +285,15 @@ class Object extends MY_Controller
             }
         }
         
-        if($to_insert_tag && $id){
-            foreach($to_insert_tag as $index => $tag)
-                $to_insert_tag[$index] = ['post'=>$id, 'post_tag'=>$tag];
-            $this->PTChain->create_batch($to_insert_tag);
-        }
-        
-        if($to_insert_category && $id){
-            foreach($to_insert_category as $index => $cat)
-                $to_insert_category[$index] = ['post'=>$id, 'post_category'=>$cat];
-            $this->PCChain->create_batch($to_insert_category);
+        if($id){
+            foreach($chain_to_insert as $model => $data){
+                if(!count($data['rows']))
+                    continue;
+                $new_data = array();
+                foreach($data['rows'] as $obj)
+                    $new_data[] = array( 'post' => $id, $data['prop'] => $obj );
+                $this->$model->create_batch($new_data);
+            }
         }
         
         $this->redirect('/admin/post');
@@ -429,47 +380,34 @@ class Object extends MY_Controller
         $this->load->model('Posttagchain_model', 'PTChain');
         $this->load->model('Posttag_model', 'PTag');
         $this->load->model('Postselection_model', 'PSelection');
+        $this->load->model('Poststatistic_model', 'PStatistic');
         
         $this->Post->remove($id);
         
-        // remove post category chain and dec total posts of the category
-        $cats_chain = $this->PCChain->getBy('post', $id, true);
-        if($cats_chain){
-            $cats_chain_id = array();
-            $cats_id = prop_values($cats_chain, 'post_category');
-            $cats = $this->PCategory->get($cats_id, true);
-            $cats = $this->formatter->post_category($cats, 'id', false);
-            foreach($cats_chain as $cat_chain){
-                $cats_chain_id[] = $cat_chain->id;
-                if(!array_key_exists($cat_chain->post_category, $cats))
-                    continue;
-                $cat = $cats[$cat_chain->post_category];
-                $this->PCategory->dec($cat->id, 'posts', 1, true);
-                $this->output->delete_cache($cat->page);
-                $this->output->delete_cache($cat->page . '/feed.xml');
-            }
-            
-            $this->PCChain->remove($cats_chain_id);
-        }
+        // list of chains to be removed
+        $remove_chains = array(
+            'tag'       => [ 'PTag',        'PTChain',  'posts',    'post_tag'  ],
+            'category'  => [ 'PCategory',   'PCChain',  'posts',    'post_category' ]
+        );
         
-        // remove post tag chain and dec total posts of the tag
-        $tags_chain = $this->PTChain->getBy('post', $id, true);
-        if($tags_chain){
-            $tags_chain_id = array();
-            $tags_id = prop_values($tags_chain, 'post_tag');
-            $tags = $this->PTag->get($tags_id, true);
-            $tags = $this->formatter->post_tag($tags, 'id', false);
-            foreach($tags_chain as $tag_chain){
-                $tags_chain_id[] = $tag_chain->id;
-                if(!array_key_exists($tag_chain->post_tag, $tags))
-                    continue;
-                $tag = $tags[$tag_chain->post_tag];
-                $this->PTag->dec($tag->id, 'posts', 1, true);
-                $this->output->delete_cache($tag->page);
-                $this->output->delete_cache($tag->page . '/feed.xml');
+        foreach($remove_chains as $tag => $props){
+            $model = $props[0];
+            $chain = $props[1];
+            $decc  = $props[2];
+            $format= $props[3];
+        
+            $chain_obj = $this->$chain->getBy('post', $id, true);
+            if(!$chain_obj)
+                continue;
+            $chain_obj = $this->formatter->$format($chain_obj, false, false);
+            foreach($chain_obj as $obj){
+                if($decc)
+                    $this->$model->dec($obj->$format, $decc, 1, true);
+                $this->output->delete_cache($obj->page);
+                $this->output->delete_cache($obj->page . '/feed.xml');
             }
             
-            $this->PTChain->remove($tags_chain_id);
+            $this->$chain->removeBy('post', $id);
         }
         
         // remove post selection
@@ -478,6 +416,9 @@ class Object extends MY_Controller
             $this->cache->file->delete('post_selection');
             $this->PSelection->removeBy('post', $post->id);
         }
+        
+        // remove post trending
+        $this->PStatistic->removeBy('post', $post->id);
         
         $this->event->post->deleted($post);
         

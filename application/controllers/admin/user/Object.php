@@ -54,6 +54,10 @@ class Object extends MY_Controller
         $this->load->library('SiteForm', '', 'form');
 
         $params = [];
+        
+        $statuses = $this->enum->item('user.status');
+        unset($statuses[0]);
+        $params['statuses'] = $statuses;
 
         if($id){
             $object = $this->User->get($id);

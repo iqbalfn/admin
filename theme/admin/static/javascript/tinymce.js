@@ -5,7 +5,7 @@ $(function(){
                 selector: '.tinymce',
                 menubar: false,
                 plugins: 'link table image media fullscreen pagebreak contextmenu autoresize paste wordcount',
-                toolbar: 'undo redo | styleselect | bold italic link | bullist numlist | table image media | pagebreak | fullscreen',
+                toolbar: 'undo redo | styleselect | bold italic link | bullist numlist | table image media | pagebreak | paste | fullscreen',
                 content_css: '/theme/admin/static/css/tinymce-content.css',
                 
                 // autoresize plugins
