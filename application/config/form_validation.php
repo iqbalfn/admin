@@ -1057,10 +1057,11 @@ $config = array(
         'status' => array(
             'field' => 'status',
             'label' => 'Status',
-            'rules' => '',
+            'rules' => 'required',
             'input' => array(
                 'type' => 'select'
             )
         )
     )
+    
 );

@@ -51,7 +51,7 @@ class Robot extends MY_Controller
                 
                 if(property_exists($post, 'category')){
                     foreach($post->category as $cat)
-                        $page->categories[] = $cat->name;
+                        $page->categories[] = hs($cat->name);
                 }
                 
                 $pages[] = $page;

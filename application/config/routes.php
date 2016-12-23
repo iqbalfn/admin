@@ -60,9 +60,10 @@ $route['admin/event']                = 'admin/event/object/index';
 $route['admin/event/(:num)']         = 'admin/event/object/edit/$1';
 $route['admin/event/(:num)/remove']  = 'admin/event/object/remove/$1';
 
-$route['admin/gallery']                = 'admin/gallery/object/index';
-$route['admin/gallery/(:num)']         = 'admin/gallery/object/edit/$1';
-$route['admin/gallery/(:num)/remove']  = 'admin/gallery/object/remove/$1';
+$route['admin/gallery']                 = 'admin/gallery/object/index';
+$route['admin/gallery/(:num)']          = 'admin/gallery/object/edit/$1';
+$route['admin/gallery/(:num)/remove']   = 'admin/gallery/object/remove/$1';
+$route['admin/gallery/(:num)/download'] = 'admin/gallery/object/download/$1';
 
 $route['admin/gallery/(:num)/media']                = 'admin/gallery/media/index/$1';
 $route['admin/gallery/(:num)/media/(:num)']         = 'admin/gallery/media/edit/$2/$1';

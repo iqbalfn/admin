@@ -55,7 +55,7 @@ class Post extends MY_Controller
                 'position' => $index,
                 'item' => array(
                     '@id' => base_url($cat->page),
-                    'name' => $cat->name
+                    'name' => hs($cat->name)
                 )
             );
         }
@@ -444,7 +444,7 @@ class Post extends MY_Controller
                 
                 if(property_exists($post, 'category')){
                     foreach($post->category as $cat)
-                        $page->categories[] = $cat->name;
+                        $page->categories[] = hs($cat->name);
                 }
                 
                 $pages[] = $page;
@@ -525,7 +525,7 @@ class Post extends MY_Controller
                 
                 if(property_exists($post, 'category')){
                     foreach($post->category as $cat)
-                        $page->categories[] = $cat->name;
+                        $page->categories[] = hs($cat->name);
                 }
                 
                 $pages[] = $page;
@@ -673,7 +673,7 @@ class Post extends MY_Controller
                 
                 if(property_exists($post, 'category')){
                     foreach($post->category as $cat)
-                        $page->categories[] = $cat->name;
+                        $page->categories[] = hs($cat->name);
                 }
                 
                 $pages[] = $page;

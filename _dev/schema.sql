@@ -154,8 +154,10 @@ CREATE TABLE `post_selection` (
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+DROP TABLE IF EXISTS `post_statistic`;
 CREATE TABLE `post_statistic` (
-    `post` BIGINT NOT NULL UNIQUE PRIMARY KEY,
+    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `post` BIGINT NOT NULL UNIQUE,
     `pageviews` INTEGER DEFAULT 0,
     `sessions` INTEGER DEFAULT 0,
     `users` INTEGER DEFAULT 0,
@@ -302,6 +304,7 @@ CREATE TABLE `user_session` (
 DROP TABLE IF EXISTS `perms`;
 CREATE TABLE `perms` (
     `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `worker` VARCHAR(150),
     `group` VARCHAR(25),
     `name` VARCHAR(50),
     `label` VARCHAR(50),

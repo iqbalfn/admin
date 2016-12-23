@@ -35,6 +35,32 @@ class Object extends MY_Controller
                 $this->output->delete_cache($post->page);
         }
     }
+    
+    public function download($id=null){
+        if(!$this->user)
+            return $this->redirect('/admin/me/login?next=' . uri_string());
+        if(!$id || !$this->can_i('read-gallery') || !$this->can_i('read-gallery_media'))
+            return $this->show_404();
+        
+        $gallery = $this->Gallery->get($id);
+        if(!$gallery)
+            return $this->show_404();
+        
+        $this->load->library('zip');
+        
+        $medias = $this->GMedia->getBy('gallery', $gallery->id, true, false);
+        if($medias){
+            foreach($medias as $med){
+                $file_addr = dirname(BASEPATH) . $med->media;
+                $file_name = explode('/', $med->media);
+                $file_name = end($file_name);
+                
+                $this->zip->read_file($file_addr, $file_name);
+            }
+        }
+        
+        $this->zip->download($gallery->name . '.zip');
+    }
 
     public function edit($id=null){
         if(!$this->user)
@@ -90,17 +116,33 @@ class Object extends MY_Controller
 
         $params = array(
             'title' => _l('Galleries'),
+            'total' => 0,
+            'pagination' => [],
             'albums' => []
         );
 
         $cond = array();
-
-        $rpp = true;
-        $page= false;
+        $pagination_cond = $cond;
+        if($this->input->get('q')){
+            $cond['name'] = (object)['LIKE', $this->input->get('q')];
+            $pagination_cond['q'] = $this->input->get('q');
+        }
+        
+        $rpp = 21;
+        $page= $this->input->get('page');
+        if(!$page)
+            $page = 1;
 
         $result = $this->Gallery->getByCond($cond, $rpp, $page, ['name'=>'ASC']);
         if($result)
             $params['albums'] = $this->formatter->gallery($result);
+        $params['total'] = $this->Gallery->countByCond($cond);
+        
+        $total_result = $params['total'];
+        if($total_result > $rpp){
+            $this->load->helper('pagination');
+            $params['pagination'] = calculate_pagination($total_result, $page, $rpp, $pagination_cond);
+        }
         
         $this->respond('gallery/index', $params);
     }

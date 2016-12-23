@@ -627,7 +627,8 @@ var AjaxBootstrapSelectList = function (plugin) {
                     selected: true
                 });
             });
-            that.replaceOptions(that.cacheGet(that.plugin.query));
+//             that.replaceOptions(that.cacheGet(that.plugin.query));
+            that.replaceOptions(that.selected);
         });
     }
 };

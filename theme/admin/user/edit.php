@@ -56,15 +56,58 @@
                                         <fieldset>
                                             <legend><?= _l('Permissions') ?></legend>
                                             
+                                            <div class="row">
+                                                <div class="col-md-12 text-right">
+                                                    <div class="btn-group btn-group-xs" role="group">
+                                                        <button type="button" class="btn btn-default" onclick="selectAll()" title="Select All"><i class="glyphicon glyphicon-check"></i> All</button>
+                                                        <button type="button" class="btn btn-default" onclick="unselectAll()" title="Select None"><i class="glyphicon glyphicon-unchecked"></i> None</button>
+                                                    </div>
+                                                    <div class="btn-group btn-group-xs" role="group">
+                                                        <?php
+                                                            $groups = [];
+                                                            foreach($permissions as $perms){
+                                                                foreach($perms as $perm){
+                                                                    $workers = $perm->worker;
+                                                                    if(!$workers)
+                                                                        continue;
+                                                                    $workers = explode(' ', $workers);
+                                                                    foreach($workers as $worker){
+                                                                        if(!in_array($worker, $groups))
+                                                                            $groups[] = $worker;
+                                                                    }
+                                                                }
+                                                            }
+                                                            asort($groups);
+                                                            foreach($groups as $group)
+                                                                echo '<button type="button" onclick="selectByClass(\'' . $group . '\')" class="btn btn-default" title="Select All ' . $group . '">' . $group . '</button>';
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
                                             <?php $permissions = group_per_column($permissions, 3); ?>
                                             <?php foreach($permissions as $index => $perms): ?>
                                             <div class="row">
                                                 <?php foreach($perms as $group => $perm): ?>
                                                 <div class="col-md-4">
-                                                    <h4><?= $group ?></h4>
+                                                    <h4>
+                                                        <div class="btn-group btn-group-xs" role="group">
+                                                            <button class="btn btn-default btn-xs" type="button" onclick="selectParentSub(this)" title="Select All"><i class="glyphicon glyphicon-check"></i></button>
+                                                            <button class="btn btn-default btn-xs" type="button" onclick="unselectParentSub(this)" title="Select None"><i class="glyphicon glyphicon-unchecked"></i></button>
+                                                        </div>
+                                                        <?= $group ?>
+                                                    </h4>
                                                     <?php foreach($perm as $per): ?>
+                                                        <?php
+                                                            $cls = '';
+                                                            if($per->worker){
+                                                                $cls = explode(' ', $per->worker);
+                                                                $cls = array_map(function($e){ return 'prm-' . $e; }, $cls);
+                                                                $cls = ' ' . implode(' ', $cls);
+                                                            }
+                                                        ?>
                                                     <div class="checkbox">
-                                                        <input type="checkbox" id="perm-<?= $per->name ?>" name="perms[<?= $per->name ?>]"<?= ($per->checked?' checked="checked"':'')?>>
+                                                        <input type="checkbox" class="prm-All<?= $cls ?>" id="perm-<?= $per->name ?>" name="perms[<?= $per->name ?>]"<?= ($per->checked?' checked="checked"':'')?>>
                                                         <label for="perm-<?= $per->name ?>" title="<?= $per->description ?>"><?= $per->label ?></label>
                                                     </div>
                                                     <?php endforeach; ?>
@@ -100,5 +143,22 @@
     
     <?= $this->theme->file('foot') ?>
     <?= $this->form->focusInput(); ?>
+    <script>
+    function selectParentSub(el){
+        $(el).parent().parent().parent().find('input[type=checkbox]').prop('checked', true);
+    }
+    function unselectParentSub(el){
+        $(el).parent().parent().parent().find('input[type=checkbox]').prop('checked', false);
+    }
+    function unselectAll(){
+        $('.prm-All').prop('checked', false);
+    }
+    function selectAll(){
+        $('.prm-All').prop('checked', true);
+    }
+    function selectByClass(cls){
+        $('.prm-' + cls).prop('checked', true);
+    }
+    </script>
 </body>
 </html>

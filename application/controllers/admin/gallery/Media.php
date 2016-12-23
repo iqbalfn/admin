@@ -90,19 +90,22 @@ class Media extends MY_Controller
         if(!$this->can_i('read-gallery_media'))
             return $this->show_404();
         
+        $album = $this->Gallery->get($gallery);
+        if(!$album)
+            return $this->show_404();
+        $album = $this->formatter->gallery($album, false, false);
+        
         $albums = $this->Gallery->getByCond([], 7);
         if(!$albums)
             return $this->show_404();
             
         $albums = $this->formatter->gallery($albums, true);
-        if(!array_key_exists($gallery, $albums))
-            return $this->show_404();
-
+        
         $params = array(
-            'title' => _l('Album') . ' `' . $albums[$gallery]->name . '`',
+            'title' => _l('Album') . ' `' . $album->name . '`',
             'media' => [],
             'albums' => $albums,
-            'album' => $albums[$gallery]
+            'album' => $album
         );
 
         $cond = array('gallery'=>$gallery);

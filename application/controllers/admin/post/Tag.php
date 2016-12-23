@@ -91,8 +91,14 @@ class Tag extends MY_Controller
         );
 
         $cond = array();
+        $pagination_cond = $cond;
+        
+        if($this->input->get('q')){
+            $cond['name'] = (object)['LIKE', $this->input->get('q')];
+            $pagination_cond['q'] = $this->input->get('q');
+        }
 
-        $rpp = 100;
+        $rpp = 102;
         $page= $this->input->get('page');
         if(!$page)
             $page = 1;
@@ -102,9 +108,9 @@ class Tag extends MY_Controller
             $params['tags'] = $this->formatter->post_tag($result, false, true);
 
         // for pagination
-        $total_result = $this->PTag->count();
+        $total_result = $this->PTag->countByCond($cond);
+        $params['total'] = $total_result;
         if($total_result > $rpp){
-            $pagination_cond = $cond;
             $this->load->helper('pagination');
             $params['pagination'] = calculate_pagination($total_result, $page, $rpp, $pagination_cond);
         }
