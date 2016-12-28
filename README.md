@@ -1,4 +1,4 @@
 # admin
 The CI Admin
 
-[http://iqbalfn.github.io/admin](get there)
+[get there](http://iqbalfn.github.io/admin)
