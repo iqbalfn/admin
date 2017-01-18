@@ -52,6 +52,7 @@ class Object extends MY_Controller
         
         $cu = curl_init($uri);
         curl_setopt($cu, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($cu, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0');
         $result = curl_exec($cu);
         if(!$result)
             return false;
@@ -81,7 +82,7 @@ class Object extends MY_Controller
         
         $ranks = $this->{'_calculate_' . $vendor}();
         if(!$ranks)
-            return $this->redirect('/admin/stat');
+            return $this->redirect('/admin/stat/ranks');
         
         $cond = array(
             'vendor' => $vendor,
