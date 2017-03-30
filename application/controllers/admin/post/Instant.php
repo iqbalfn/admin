@@ -21,12 +21,11 @@ class Instant extends MY_Controller
             'total' => 0
         );
         
-        $total = $this->Post->countBy('instant_content !=', NULL);
+        $total = $this->Post->countByCond(['instant_content' => (object)['IS NOT', null]]);
         $params['total'] = $total;
         
-        if($total){
+        if($total)
             $this->Post->setByCond([], ['instant_content'=>NULL]);
-        }
         
         $this->event->post_instant->cleared();
         $this->respond('post/instant/clear', $params);

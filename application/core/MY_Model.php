@@ -52,7 +52,7 @@ class MY_Model extends CI_Model
                 $wildcard = array_key_exists(2, $value) ? $value[2] : 'both';
                 $value = $value[1];
                 
-                if(in_array($operator, array('>', '<', '!=', '=', '>=', '<=')))
+                if(in_array($operator, array('>', '<', '!=', '=', '>=', '<=', 'IS NOT', 'IS')))
                     $this->db->where("`$table`.`$field` $operator", $value);
                 elseif($operator == 'LIKE')
                     $this->db->like("`$table`.`$field`", $value, $wildcard);
