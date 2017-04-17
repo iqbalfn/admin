@@ -4,7 +4,7 @@
     <atom:link href="<?= $feed_url ?>" rel="self" type="application/rss+xml" />
     <title><?= $feed_title ?></title>
     <link><?= $feed_owner_url ?></link>
-    <description><?= $feed_description ?></description>
+    <description><?= hs($feed_description) ?></description>
     <language>id-id</language>
     <image>
         <url><?= $feed_image_url ?></url>
@@ -16,14 +16,14 @@
     <item>
         <atom:link href="<?= $feed_url ?>" rel="self" type="application/rss+xml" />
         <guid><?= $page->page ?></guid>
-        <title><?= htmlspecialchars($page->title, ENT_QUOTES) ?></title>
+        <title><?= hs($page->title) ?></title>
         <link><?= $page->page ?></link>
         <?php if($page->categories): ?>
             <?php foreach($page->categories as $cat): ?>
                 <category><?= $cat ?></category>
             <?php endforeach; ?>
         <?php endif; ?>
-        <description><?= $page->description ?></description>
+        <description><?= hs($page->description) ?></description>
     </item>
     <?php endforeach; ?>
 </channel>

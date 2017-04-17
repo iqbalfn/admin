@@ -460,7 +460,7 @@ class Post extends MY_Controller
         $params = array('pages' => $pages);
         
         $params['feed_url'] = base_url($category->page . '/feed.xml');
-        $params['feed_title'] = $this->setting->item('site_name') . ' &#187; Post &#187; Category &#187; ' . $category->name;
+        $params['feed_title'] = hs($this->setting->item('site_name')) . ' &#187; Post &#187; Category &#187; ' . hs($category->name);
         $params['feed_owner_url'] = base_url($category->page);
         $params['feed_description'] = $category->seo_description->value ? $category->seo_description : $category->description;
         $params['feed_image_url'] = $this->theme->asset('/static/image/logo/feed.jpg');
@@ -541,7 +541,7 @@ class Post extends MY_Controller
         $params = array('pages' => $pages);
         
         $params['feed_url'] = base_url('/post/feed.xml');
-        $params['feed_title'] = $this->setting->item('site_name') . ' &#187; Post';
+        $params['feed_title'] = hs($this->setting->item('site_name')) . ' &#187; Post';
         $params['feed_owner_url'] = base_url();
         $params['feed_description'] = $this->setting->item('site_frontpage_description');
         $params['feed_image_url'] = $this->theme->asset('/static/image/logo/feed.jpg');
@@ -689,7 +689,7 @@ class Post extends MY_Controller
         $params = array('pages' => $pages);
         
         $params['feed_url'] = base_url($tag->page . '/feed.xml');
-        $params['feed_title'] = $this->setting->item('site_name') . ' &#187; Post &#187; Tag &#187; ' . $tag->name;
+        $params['feed_title'] = hs($this->setting->item('site_name')) . ' &#187; Post &#187; Tag &#187; ' . hs($tag->name);
         $params['feed_owner_url'] = base_url($tag->page);
         $params['feed_description'] = $tag->seo_description->value ? $tag->seo_description : $tag->description;
         $params['feed_image_url'] = $this->theme->asset('/static/image/logo/feed.jpg');
