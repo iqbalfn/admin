@@ -12,11 +12,44 @@ class objMedia implements JsonSerializable
         $this->value = $value;
         if(substr($value, 0, 4) == 'http')
             $this->hotlinking = true;
+        
+        // download the image if the image is not there and it's not live site
+        if(config_item('base_url') == 'https://merahputih.com/')
+            return;
+        
+        $abs_file = dirname(BASEPATH) . $value;
+        if(file_exists($abs_file))
+            return;
+        
+        $xval = trim($value, '/');
+        $xvals= explode('/', $xval);
+        array_pop($xvals);
+        $current_dir = dirname(BASEPATH) . '/';
+        foreach($xvals as $dir){
+            $current_dir.= $dir . '/';
+            if(!is_dir($current_dir)){
+                mkdir($current_dir);
+                copy(APPPATH . 'index.html', $current_dir.'index.html');
+            }
+        }
+        
+        $live_version = 'https://merahputih.com' . $value;
+        $cu = curl_init($live_version);
+        curl_setopt($cu, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($cu, CURLOPT_FOLLOWLOCATION, 1);
+        $binary = curl_exec($cu);
+        curl_close($cu);
+        
+        $f = fopen($abs_file, 'w');
+        fwrite($f, $binary);
+        fclose($f);
     }
     
     private function absURL($file=null){
         if(!$file)
             $file = $this->value;
+        if(!$file)
+            return '';
         
         if($this->hotlinking)
             return $file;
